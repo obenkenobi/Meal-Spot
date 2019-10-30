@@ -104,6 +104,4 @@ venv.bak/
 .mypy_cache/
 
 # Editor/IDE specific files
-trydjango.sublime-project
-trydjango.sublime-workspace
 .idea/
