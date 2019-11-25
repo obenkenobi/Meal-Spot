@@ -21,6 +21,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('customer/', include('customer.urls')),
+    path('dekiverer/', include('deliverer.urls')),
+    path('home/', include('home.urls')),
+    path('manager/', include('manager.urls')),
+    path('salesperson/', include('salesperson.urls')),
     path('', RedirectView.as_view(url='home/', permanent=True)), # '/' redirects to /home
     path('accounts/', include('django.contrib.auth.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

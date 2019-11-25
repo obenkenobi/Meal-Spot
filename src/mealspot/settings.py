@@ -41,6 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Custom Apps
+    'cook',
+    'customer',
+    'deliverer',
+    'home',
+    'manager',
+    'salesperson',
 
     # Third Party Apps
 ]
@@ -130,8 +136,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = ( # Recognized global static file
     os.path.join(BASE_DIR, "static"),
 )
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles') # Where we will collect all our static files
 
 
 # Login Redirection
