@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'home',
     'manager',
     'salesperson',
+    'database',
 
     # Third Party Apps
 ]
