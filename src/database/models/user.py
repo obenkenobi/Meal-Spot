@@ -24,8 +24,7 @@ class Staff(UserType):
         default="N"
     )
     warnings = models.IntegerField(default=0)
-    # TODO: Add the following
-    # Foreign Key to Resturant must be added
+    resturant = models.ForeignKey('Resturant', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         abstract = True
@@ -39,8 +38,7 @@ class Customer(UserType):
 
 
 class Manager(UserType):
-    # add oneToOne field for Resturant
-    pass
+    pass # All needed fields are inhereted, resturant references manager
 
 
 # Staff User Types
@@ -53,5 +51,5 @@ class DeliveryPerson(Staff):
 
 class SalesPerson(Staff):
     # TODO: Add the following
-    # Commission
+    # Commission (I don't know the purpose of that in the ER diagram????? ~ Oren)
     pass
