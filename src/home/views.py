@@ -14,6 +14,7 @@ def signup(request):
     signup
     """
     if(request.POST):
+        print("testing signup")
         print(request.body)
         response = redirect('home-nexus')
         return response
