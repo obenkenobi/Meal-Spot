@@ -1,0 +1,51 @@
+{% extends "base_customer.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+{% endblock %}
+
+{% block page_js %}
+
+<script>
+function displayRestaurants() {
+
+  var restaurants = ['jack', 'blolc', 'eheh'];
+
+  for (var i = 0; i < restaurants.length; i ++)
+  {
+
+    var node = document.createElement("A");
+    var textnode = document.createTextNode(restaurants[i]);
+    node.appendChild(textnode);
+    node.setAttribute('href', 'amazon.com');
+    document.getElementById("restaurant-list").appendChild(node);
+
+    var status = document.createElement("p");
+    var statusText = document.createTextNode("customer status");
+    status.appendChild(statusText);
+    document.getElementById("restaurant-list").appendChild(status);
+
+    var lineBreak = document.createElement("br");
+    document.getElementById("restaurant-list").appendChild(lineBreak);
+
+  }
+}
+
+
+document.getElementsByTagName("BODY").addEventListener("onload", displayRestaurants());
+</script>
+
+
+{% endblock %}
+
+{% block page_content %}
+
+    <div id="restaurant-list">
+      <h1> Restaurants: </h1>
+
+    </div>
+
+{% endblock %}
