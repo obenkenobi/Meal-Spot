@@ -1,1 +1,150 @@
-{% extends "base-home.html" %}
+{% extends "base_home.html" %}
+{% load static %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box}
+
+input, #state {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+.cancelbtn, .signupbtn {
+  float: left;
+  width: 50%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+}
+button:hover {
+  opacity:1;
+}
+.cancelbtn {
+  padding: 14px 20px;
+  background-color: #f44336;
+}
+
+.container {
+  padding: 16px;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+</style>
+{% endblock %}
+
+{% block page_js %}
+<!-- page javascript -->
+<script>
+  $(document).ready(function(){
+  		$("#cust").hide(1000);
+        $("#mang").hide(1000);
+      $('#mySelect').on('change', function() {
+        if (this.value == 'all' || this.value == 'cook' || this.value == 'salespers' || this.value == 'deliverer'){
+          $("#all").show(1000);
+          $("#cust").hide(1000);
+          $("#mang").hide(1000);
+        }
+        else if (this.value == 'cust'){
+          $("#all").show(1000);
+          $("#cust").show(1000);
+          $("#mang").hide(1000);
+        }
+        else if (this.value == 'mang'){
+          $("#all").show(1000);
+          $("#cust").show(1000);
+          $("#mang").show(1000);
+        }
+      });
+  });
+
+</script>
+{% endblock %}
+
+{% block page_content %}
+<!-- page html -->
+<form action="ADD LATER" style="border:1px solid #ccc">
+  <div class="container">
+    <h1>Sign Up</h1>
+    <p>Please fill in this form to create an account.</p>
+    <select id="mySelect">
+    	<option value="all">User Type</option>
+     	<option value="cook">Cook</option>
+      	<option value="salespers">Salesperson</option>
+      	<option value="deliverer">Deliverer</option>
+        <option value="cust">Customer</option>
+        <option value="mang">Manager</option>
+    </select>
+    <hr>
+
+	<div id ="all">
+      <label for="usrname"><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="usrname" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+
+      <label for="psw-repeat"><b>Repeat Password</b></label>
+      <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+
+      <label for="email"><b>Email</b></label>
+      <input type="email" placeholder="Enter Email" name="email" required>
+   	</div>
+
+    <div id="cust">
+      <label for="usrname"><b>Street Address</b></label>
+      <input type="text" placeholder="Enter Username" name="usrname" required>
+      <input type="text" placeholder="Apt." name="apt" maxlength="10">
+
+      <label for="city"><b>City</b></label>
+      <input type="text" placeholder="Enter City" name="city" maxlength="50" required>
+
+      <label for="state"><b>State</b></label>
+      <select id="state" name="state">
+          <option value="one">one</option>
+          <option value="two">two</option>
+          <option value="usa">three</option>
+      </select>
+
+      <label for="zipcode"><b>Zip Code</b></label>
+      <input type="number" placeholder="Enter Zip Code" name="zipcode" required>
+    </div>
+
+    <div id="mang">
+      <label for="restname"><b>Restaurant Name</b></label>
+      <input type="text" placeholder="Enter Restaurant Name" name="restname" required>
+    </div>
+
+    <div class="clearfix">
+      <button type="reset" class="cancelbtn">Cancel</button>
+      <button type="submit" class="signupbtn">Sign Up</button>
+    </div>
+
+  </div>
+</form>
+
+
+{% endblock %}
