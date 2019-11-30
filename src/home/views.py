@@ -44,20 +44,24 @@ def signup(request):
             new_resturant_address = RestaurantAddress(
                 street_address = body['street-address'],
                 apt = body['apt'],
-                city = body['city'],
+                city = body
+                ['city'],
                 state = body['state'],
                 zip_code = body['zip-code'],
-                customer = new_resturant.id
+                restaurant = new_resturant.id
             )
             new_resturant_address.save()
         elif(body['usertype']=='cook'):
-            new_cook = Cook(user=user_id)
-        elif(body['usertype']=='cook'):
-            new_cook = Cook(user=user_id)
-
-
+            new_staff = Cook(user=user_id)
+            new_staff.save()
+        elif(body['usertype']=='salesperson'):
+            new_staff = Salesperson(user=user_id)
+            new_staff.save()
+        elif(body['usertype']=='deliverer'):
+            new_staff = Deliverer(user=user_id)
+            new_staff.save()
         response = redirect('home-nexus')
         return response
     else:
-        render(request, 'home/signup.html')
+        return render(request, 'home/signup.html')
 
