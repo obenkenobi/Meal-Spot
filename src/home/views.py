@@ -14,3 +14,4 @@ def signup(request):
     signup
     """
     render(request, 'home/signup.html')
+
