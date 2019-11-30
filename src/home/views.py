@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
-from src.database.models.user import Customer, Manager, Cook, Salesperson, Deliverer
-from src.database.models.restaurant import Restaurant
-from src.database.models.address import CustomerAddress, RestaurantAddress
+from database.models.user import Customer, Manager, Cook, Salesperson, Deliverer
+from database.models.restaurant import Restaurant
+from database.models.address import CustomerAddress, RestaurantAddress
 
 # Create your views here.
 
@@ -59,5 +59,5 @@ def signup(request):
         response = redirect('home-nexus')
         return response
     else:
-        render(request, 'home/signup.html')
+        return render(request, 'home/signup.html')
 
