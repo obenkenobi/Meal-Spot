@@ -8,3 +8,9 @@ def nexus(request):
         url based on what usertype they are
     """
     return render(request, 'home/index.html', context={}) # rendering index.html for testing
+
+def signup(request):
+    """
+    signup
+    """
+    render(request, 'home/signup.html')

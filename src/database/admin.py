@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Importing all models
 from database.models.user import Customer, Manager, Cook, Salesperson, Deliverer # importing all user types
-from database.models.address import CustomerAddress
+from database.models.address import CustomerAddress, RestaurantAddress
 from database.models.restaurant import Restaurant, Order, Order_Food, Food, SupplyOrder, DeliveryBid, CustomerStatus
 
 # Register your models here.
@@ -20,3 +20,4 @@ admin.site.register(SupplyOrder)
 admin.site.register(DeliveryBid)
 admin.site.register(CustomerStatus)
 admin.site.register(CustomerAddress)
+admin.site.register(RestaurantAddress)

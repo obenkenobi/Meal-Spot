@@ -66,3 +66,7 @@ class Address(models.Model):
 class CustomerAddress(Address):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
     default = models.BooleanField(default = False)
+
+class RestaurantAddress(Address):
+    restaurant = models.ForeignKey('Restaurant', on_delete=models.CASCADE)
+    default = models.BooleanField(default = False)
