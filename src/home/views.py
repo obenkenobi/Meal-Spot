@@ -15,15 +15,18 @@ def nexus(request):
     user = request.user
     userIs = userTypeChecker(user)
     response = None
-    if userIs(Manager):
-        response = redirect('manager-home')
-    elif userIs(Deliverer):
-        response = redirect('deliverer-home')
-    elif userIs(Cook):
-        response = redirect('cook-home')
-    elif userIs(Salesperson):
-        response = redirect('salesperson-home')
-    else:
+    try:
+        if userIs(Manager):
+            response = redirect('manager-home')
+        elif userIs(Deliverer):
+            response = redirect('deliverer-home')
+        elif userIs(Cook):
+            response = redirect('cook-home')
+        elif userIs(Salesperson):
+            response = redirect('salesperson-home')
+        else:
+            response = redirect('customer-home')
+    except:
         response = redirect('customer-home')
     return response
 
