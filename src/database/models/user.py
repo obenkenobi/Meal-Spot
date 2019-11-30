@@ -14,7 +14,7 @@ class UserType(models.Model):
 
 class Staff(UserType):
     STATUS_CHOICES = [ # No need for status table, this also works
-        ('L', 'Laif Off'),
+        ('L', 'Laid Off'),
         ('N', 'Not Hired'),
         ('H', 'Hired')
     ]
@@ -23,8 +23,9 @@ class Staff(UserType):
         choices=STATUS_CHOICES,
         default="N"
     )
+
     warnings = models.IntegerField(default=0)
-    resturant = models.ForeignKey('Resturant', on_delete=models.SET_NULL, null=True)
+    restaurant = models.ForeignKey('Restaurant', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         abstract = True
@@ -33,23 +34,33 @@ class Staff(UserType):
 # Non-Staff user types
 
 class Customer(UserType):
-    order_count = models.IntegerField(default=0)
     pass
 
 
 class Manager(UserType):
-    pass # All needed fields are inhereted, resturant references manager
+    pass # All needed fields are inherited, restaurant references manager
 
 
 # Staff User Types
 
 class Cook(Staff):
-    food_drop_count = models.IntegerField(default=0)
+    food_drops = models.IntegerField(default=0)
+    
+    def update_status(self, newRating):
+    #TODO query last 2 order ratings from Orders DB based on self.restaurant, store as rating1, rating2
+        avg_rating = (rating1 + rating2 + newRating) / 3
 
-class DeliveryPerson(Staff):
-    pass # All needed fields are inhereted
+        if (avg_rating < 2):
+            #TODO remove food from Food DB
+            self.food_drops+=1
+            self.warnings = self.food_drops%2
 
-class SalesPerson(Staff):
+        if (self.warnings > 3):
+            self.status = 'L'
+
+class Deliverer(Staff):
+    pass # All needed fields are inherited
+
+class Salesperson(Staff):
     # TODO: Add the following
-    # Commission (I don't know the purpose of that in the ER diagram????? ~ Oren)
-    pass
+    commission = models.FloatField(default = 100)
