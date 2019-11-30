@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator
 
 class Address(models.Model):
     STATE_CHOICES = [
@@ -54,13 +55,13 @@ class Address(models.Model):
         ('WY', 'Wyoming')
     ]
     street_address = models.TextField()
-    apt_number = models.IntegerField(max_length = 10)
+    apt = models.CharField(max_length = 10)
     city = models.CharField(max_length = 50)
     state = models.CharField(
         max_length = 2,
         choices=STATE_CHOICES,
     )
-    zip_code = models.IntegerField(max_length = 5)
+    zip_code = models.IntegerField(validators=[MaxValueValidator(99999)]) 
 
 class CustomerAddress(Address):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
