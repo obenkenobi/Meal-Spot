@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from database.models.user import Customer, Manager, Cook, Salesperson, Deliverer
 from database.models.restaurant import Restaurant
 from database.models.address import CustomerAddress, RestaurantAddress
-from helper import parse_req_body
+from helper import parse_req_body, userTypeChecker
 
 # Create your views here.
 
@@ -12,7 +12,20 @@ def nexus(request):
         This view will simply redirect the user to another
         url based on what usertype they are
     """
-    return render(request, 'home/index.html', context={}) # rendering index.html for testing
+    user = request.user
+    userIs = userTypeChecker(user)
+    response = None
+    if userIs(Manager):
+        response = redirect('manager-home')
+    elif userIs(Deliverer):
+        response = redirect('deliverer-home')
+    elif userIs(Cook):
+        response = redirect('cook-home')
+    elif userIs(Salesperson):
+        response = redirect('salesperson-home')
+    else:
+        response = redirect('customer-home')
+    return response
 
 def signup(request):
     """
