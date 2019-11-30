@@ -86,7 +86,7 @@ button:hover {
 
 {% block page_content %}
 <!-- page html -->
-<form method="POST" action="{% url 'home-signup' %}" style="border:1px solid #ccc">
+<form method="POST" action="{% url 'home-signup' %}" style="border:1px solid #ccc">{% csrf_token %}
   <div class="container">
     <h1>Sign Up</h1>
     <p>Please fill in this form to create an account.</p>
@@ -124,9 +124,9 @@ button:hover {
 
       <label for="state"><b>State</b></label>
       <select id="state" name="state">
-          <option value="one">one</option>
-          <option value="two">two</option>
-          <option value="usa">three</option>
+          {% for state in states %}
+            <option value="{{ state }}">{{ state }}</option>
+          {% endfor %}
       </select>
 
       <label for="zipcode"><b>Zip Code</b></label>

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from database.models.user import Customer, Manager, Cook, Salesperson, Deliverer
 from database.models.restaurant import Restaurant
-from database.models.address import CustomerAddress, RestaurantAddress
+from database.models.address import CustomerAddress, RestaurantAddress, Address
 from helper import parse_req_body, userTypeChecker
 
 # Create your views here.
@@ -77,5 +77,6 @@ def signup(request):
         response = redirect('home-nexus')
         return response
     else:
-        return render(request, 'home/signup.html')
+        states = [choice[1] for choice in Address.STATE_CHOICES]
+        return render(request, 'home/signup.html', {'states': states})
 
