@@ -6,7 +6,6 @@ from database.models.address import CustomerAddress
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=255)
-    address = models.CharField(max_length=1024)
     manager = models.OneToOneField(Manager, on_delete=models.SET_NULL, null=True)
 
 class Order(models.Model):
@@ -17,15 +16,18 @@ class Order(models.Model):
     ]
     
     status = models.CharField(
-        max_length = 2,
-        choices = STATUS_CHOICES,
-        default = "PE"
+        max_length=2,
+        choices=STATUS_CHOICES,
+        default="PE"
     )
     
     delivery_address = models.ForeignKey('CustomerAddress', on_delete=models.SET_NULL, null=True)
     delivery_rating = models.IntegerField(default=0)
     customer_rating = models.IntegerField(default=0) 
     total_price = models.FloatField(default=0)
+    time_pending = models.DateTimeField(auto_now_add=True)
+    time_prepared = models.DateTimeField(null = True)
+    time_delivered = models.DateTimeField(null = True)
 
 class Order_Food(models.Model):
     quantity = models.IntegerField(default=0)
@@ -62,11 +64,12 @@ class CustomerStatus(models.Model):
         ('N', 'Not Registered'),
         ('R', 'Registered'),
         ('V', 'VIP'),
+        ('P', 'Pending')
     ]
     status = models.CharField(
-        max_length = 2,
-        choices = STATUS_CHOICES,
-        default = "N"
+        max_length=2,
+        choices=STATUS_CHOICES,
+        default="N"
     )
     order_count = models.IntegerField(default=0)
     avg_rating = models.FloatField(default=0)
@@ -84,4 +87,12 @@ class CustomerStatus(models.Model):
                 self.status == 'N'
             elif (self.avg_rating > 4):
                 self.status == 'V'
+
+    def request_registration(self):
+        if self.status == 'N':
+            self.status = 'P'
+
+    def approve_registration(self):
+        if self.status == 'P':
+            self.status = 'R'
 
