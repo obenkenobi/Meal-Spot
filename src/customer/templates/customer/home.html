@@ -5,6 +5,32 @@
 
 {% block page_css %}
 <!-- page css -->
+<style>
+        .vertical-menu {
+          width: 80%;
+          margin: auto;
+          padding: 10px;
+        }
+        .vertical-menu a {
+          background-color: #eee;
+          color: black;
+          display: block;
+          padding: 12px;
+          text-decoration: none;
+          text-align: center;
+        }
+        .vertical-menu a:hover {
+          background-color: #ccc;
+        }
+        .vertical-menu a.active {
+          background-color: #4CAF50;
+          color: white;
+        }
+        .vertical-menu a.active:hover {
+           background-color: #4CAF50;
+           color: white;
+        }
+      </style>
 {% endblock %}
 
 {% block page_js %}
@@ -12,29 +38,22 @@
 <script>
 function displayRestaurants() {
 
-  var restaurants = ['jack', 'blolc', 'eheh'];
+  var restaurants = ['Jack', 'Blolc', 'Eheh'];
 
-  for (var i = 0; i < restaurants.length; i ++)
-  {
-
+  for (var i = 0; i < restaurants.length; i ++){
     var node = document.createElement("A");
+    var x = document.createElement("B");
     var textnode = document.createTextNode(restaurants[i]);
-    node.appendChild(textnode);
+    x.appendChild(textnode);
+    node.appendChild(x);
     node.setAttribute('href', 'amazon.com');
-    document.getElementById("restaurant-list").appendChild(node);
-
-    var status = document.createElement("p");
-    var statusText = document.createTextNode("customer status");
-    status.appendChild(statusText);
-    document.getElementById("restaurant-list").appendChild(status);
-
     var lineBreak = document.createElement("br");
-    document.getElementById("restaurant-list").appendChild(lineBreak);
-
+    node.appendChild(lineBreak);
+    var statusText = document.createTextNode("customer status");
+    node.appendChild(statusText);
+    document.getElementById("restaurant-list").appendChild(node);
   }
 }
-
-
 document.getElementsByTagName("BODY").addEventListener("onload", displayRestaurants());
 </script>
 
@@ -43,9 +62,8 @@ document.getElementsByTagName("BODY").addEventListener("onload", displayRestaura
 
 {% block page_content %}
 
-    <div id="restaurant-list">
-      <h1> Restaurants: </h1>
-
+    <div id="restaurant-list" class="vertical-menu">
+      <a class="active">My Restaurants</a>
     </div>
 
 {% endblock %}
