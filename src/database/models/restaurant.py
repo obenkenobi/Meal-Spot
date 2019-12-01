@@ -1,12 +1,19 @@
 from django.db import models
 from database.models.user import Customer, Manager, Cook, Salesperson, Deliverer
-from database.models.address import CustomerAddress
+from database.models.address import Address, CustomerAddress
+from django.core.validators import RegexValidator
 
 # Non user type datamodels get dumped here
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=255)
     manager = models.OneToOneField(Manager, on_delete=models.SET_NULL, null=True)
+    phone_number = models.CharField(
+        max_length=10,
+        validators=[RegexValidator(r'^\d{10}$')],
+        null=True,
+    )
+    description = models.TextField(null=True)
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -20,7 +27,8 @@ class Order(models.Model):
         choices=STATUS_CHOICES,
         default="PE"
     )
-    
+    customer = models.ForeignKey('Customer', on_delete=models.SET_NULL, null=True)
+    deliverer = models.ForeignKey('Deliverer', on_delete=models.SET_NULL, null=True)
     delivery_address = models.ForeignKey('CustomerAddress', on_delete=models.SET_NULL, null=True)
     delivery_rating = models.IntegerField(default=0)
     customer_rating = models.IntegerField(default=0) 
