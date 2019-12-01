@@ -20,26 +20,26 @@ def manager_home(request):
     else:
        return render(request, 'manager-home.html')
 
-def restaurant(request):
-    if request.method == 'POST':
-        # TODO
-        # edit restaurant name
-        # edit restaurant phonenumber
-        # edit restaurant description
-    else:
-        return render(request, 'restaurant.html')
+# def restaurant(request):
+#     if request.method == 'POST':
+#         # TODO
+#         # edit restaurant name
+#         # edit restaurant phonenumber
+#         # edit restaurant description
+#     else:
+#         return render(request, 'restaurant.html')
 
 def delivery_bids(request, order_id):
     if request.method == 'POST':
         # delivery_bid chosen marked as DeliveryBid.won = True
-        if order_id != null:
-            lowest_bid = DeliveryBid.objects.get(order=order_id)
-            lowest_bid.win = True
-            lowest_bid.save()
-            order = Order.objects.get(order=order_id)
-            deliverer = lowest_bid.deliverer
-            order.deliverer = deliverer
-            order.save()
+        # get order_id idk how
+        lowest_bid = DeliveryBid.objects.get(order=order_id)
+        lowest_bid.win = True
+        lowest_bid.save()
+        order = Order.objects.get(order=order_id)
+        deliverer = lowest_bid.deliverer
+        order.deliverer = deliverer
+        order.save()
     else:
         # view deliverybids, list in increasing order
         delivery_bids = DeliveryBid.objects.filter(order=order_id).order_by('price')
@@ -54,9 +54,9 @@ def delivery_bids(request, order_id):
 
 #TODO def hire(request):
 
-def pending_registrations(request):
-    if request.method == 'POST':
-
-    else:
-        customers = CustomerStatus.objects.filter(status='P')
-        return render(request, 'pending_registrations.html', context=customers)
+# def pending_registrations(request):
+#     if request.method == 'POST':
+#
+#     else:
+#         customers = CustomerStatus.objects.filter(status='P')
+#         return render(request, 'pending_registrations.html', context=customers)
