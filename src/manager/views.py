@@ -1,12 +1,24 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from database.models.restaurant import *
 # Create your views here.
 
 def manager_home(request):
     if request.method == 'POST':
         #redirect to the link
+        if request.path == 'restaurant':
+            return redirect('restaurant')
+        elif request.path == 'delivery_bids':
+            return redirect('delivery_bids')
+        elif request.path == 'staff':
+            return redirect('staff')
+        elif request.path == 'customers':
+            return redirect('customers')
+        elif request.path == 'hire':
+            return redirect('hire')
+        elif request.path == 'pending_registrations':
+            return redirect('pending_registrations')
     else:
-       return render(request, 'manager_home.html')
+       return render(request, 'manager-home.html')
 
 def restaurant(request):
     if request.method == 'POST':
