@@ -21,13 +21,10 @@ class Order(models.Model):
         default="PE"
     )
     
-    delivery_address = models.ForeignKey('CustomerAddress', on_delete=models.SET_NULL, null=True)
-    delivery_rating = models.IntegerField(default=0)
-    customer_rating = models.IntegerField(default=0) 
+    customer = models.ForeignKey('Customer', on_delete=models.SET_NULL, null=True)
+    delivery_rating = models.IntegerField(null=True)
+    customer_rating = models.IntegerField(null=True) 
     total_price = models.FloatField(default=0)
-    time_pending = models.DateTimeField(auto_now_add=True)
-    time_prepared = models.DateTimeField(null = True)
-    time_delivered = models.DateTimeField(null = True)
 
 class Order_Food(models.Model):
     quantity = models.IntegerField(default=0)
