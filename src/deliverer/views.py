@@ -38,14 +38,14 @@ def home(request):
         new_bid.save()
     open_bids = restaurant.DeliveryBid.filter(deliverer__isnull=True)
     pending_bids = restaurant.DeliveryBid.filter(deliverer=my_deliverer).filter(win=False)
-    my_orders = restaurant.DeliveryBid.filter(deliverer=my_deliverer).filter(win=True).select_related('Order')
+    won_bids = restaurant.DeliveryBid.filter(deliverer=my_deliverer).filter(win=True)
     print(open_bids.query)
     print(pending_bids.query)
     print(my_orders.query)
     context = {
         'openBids': open_bids,
         'pendingBids': pending_bids,
-        'my_orders': my_orders
+        'winningBids': won_bids
     }
     return render(request, 'deliverer/home.html', context=context)
 

@@ -36,10 +36,6 @@ def delivery_bids(request, order_id):
         lowest_bid = DeliveryBid.objects.get(order=order_id)
         lowest_bid.win = True
         lowest_bid.save()
-        order = Order.objects.get(order=order_id)
-        deliverer = lowest_bid.deliverer
-        order.deliverer = deliverer
-        order.save()
     else:
         # view deliverybids, list in increasing order
         delivery_bids = DeliveryBid.objects.filter(order=order_id).order_by('price')
