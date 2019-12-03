@@ -10,17 +10,21 @@ def home(request):
     # makes sure user is deliverer
     try:
         my_user = request.user
-        userIs = userTypeChecker(user)
+        userIs = userTypeChecker(my_user)
         if userIs(user.Deliverer) != True:
             response = redirect('home-nexus')
             return response
-    except:
+    except Exception:
+        print(Exception.stack)
         response = redirect('home-nexus')
         return response
 
-    my_deliverer = user.Deliverer.get(user=my_user)
+    for elem in dir(user.Deliverer.objects):
+        print(elem)
+
+    my_deliverer = user.Deliverer.objects.get(user=my_user)
     
-    registered = len(user.Deliverer.objects.filter(user=user).exclude(restaurant__isnull=True)) > 0 and my_deliverer.status == 'H'
+    registered = len(user.Deliverer.objects.filter(user=my_user).exclude(restaurant__isnull=True)) > 0 and my_deliverer.status == 'H'
 
     if registered != True: # if not registered
         restaurants = restaurant.Restaurant.objects.all()
@@ -36,12 +40,9 @@ def home(request):
         order = restaurant.Order.get(id=order_id)
         new_bid = restaurant.DeliveryBid(deliverer=my_deliverer, win=False, price=amount, order=order)
         new_bid.save()
-    open_bids = restaurant.DeliveryBid.filter(deliverer__isnull=True)
-    pending_bids = restaurant.DeliveryBid.filter(deliverer=my_deliverer).filter(win=False)
-    won_bids = restaurant.DeliveryBid.filter(deliverer=my_deliverer).filter(win=True)
-    print(open_bids.query)
-    print(pending_bids.query)
-    print(my_orders.query)
+    open_bids = restaurant.DeliveryBid.objects.filter(deliverer__isnull=True)
+    pending_bids = restaurant.DeliveryBid.objects.filter(deliverer=my_deliverer).filter(win=False)
+    won_bids = restaurant.DeliveryBid.objects.filter(deliverer=my_deliverer).filter(win=True)
     context = {
         'openBids': open_bids,
         'pendingBids': pending_bids,
@@ -63,10 +64,10 @@ def register(request):
         return response
 
     my_deliverer = user.Deliverer.get(user=my_user)
-    registered = len(user.Deliverer.objects.filter(user=user).exclude(restaurant__isnull=True)) > 0 and my_deliverer.status == 'H'
+    registered = len(user.Deliverer.objects.filter(user=my_user).exclude(restaurant__isnull=True)) > 0 and my_deliverer.status == 'H'
     if registered:
         return redirect('deliverer-home')
-    registering = len(user.Deliverer.objects.filter(user=user).exclude(restaurant__isnull=False)) > 0 and my_deliverer.status != 'H'
+    registering = len(user.Deliverer.objects.filter(user=my_user).exclude(restaurant__isnull=False)) > 0 and my_deliverer.status != 'H'
 
     restaurants = restaurant.Restaurant.objects.all()
     context={'restaurants': restaurants, 'registering': registering}
@@ -74,7 +75,7 @@ def register(request):
     if registering != True and request.method == "POST":
         body = parse_req_body(request.body)
         resturant_id = int(body['id'])
-        reg_resturant = restaurant.Restaurant.get(id=resturant_id)
+        reg_resturant = restaurant.Restaurant.objects.get(id=resturant_id)
         my_deliverer.update(restaurant = reg_resturant)
         context['registering'] = True
     return render(request, 'deliverer/register.html', context=context)
