@@ -7,6 +7,10 @@ from django.contrib.auth.models import User # This is so the built in user is ad
 class UserType(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
 
+    def __str__(self):
+        return str(self.user)
+    
+
     class Meta: # Makes sure it is an abstract user model/class
         abstract = True
 

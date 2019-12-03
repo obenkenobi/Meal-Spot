@@ -55,7 +55,7 @@ class Address(models.Model):
         ('WY', 'Wyoming')
     ]
     street_address = models.TextField()
-    apt = models.CharField(max_length=10)
+    apt = models.CharField(max_length=10, default=None, blank=True, null=True)
     city = models.CharField(max_length=50)
     state = models.CharField(
         max_length=2,
@@ -66,6 +66,10 @@ class Address(models.Model):
 class CustomerAddress(Address):
     customer = models.ForeignKey('Customer', on_delete=models.CASCADE)
     default = models.BooleanField(default=False)
+    def __str__(self):
+        return str(self.customer)+' addresss'
 
 class RestaurantAddress(Address):
     restaurant = models.ForeignKey('Restaurant', on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.restaurant)+' addresss'

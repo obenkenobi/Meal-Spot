@@ -15,6 +15,9 @@ class Restaurant(models.Model):
     )
     description = models.TextField(null=True)
 
+    def __str__(self):
+        return str(self.name)
+
 class Order(models.Model):
     STATUS_CHOICES = [
         ('PE', 'Pending'),
@@ -45,6 +48,8 @@ class Food(models.Model):
     vip_free = models.BooleanField(default = False)
     avg_rating = models.FloatField(default=0)
     cook = models.OneToOneField(Cook, on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.name)
 
 class SupplyOrder(models.Model):
     order_description = models.TextField()
