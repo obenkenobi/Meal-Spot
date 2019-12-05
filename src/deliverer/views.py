@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_list_or_404
+from django.shortcuts import render, redirect, get_list_or_404, get_obj_or_404
 from database.models import user, restaurant, address
 from helper import parse_req_body, userTypeChecker
 import django.views

@@ -34,6 +34,7 @@ class Order(models.Model):
     delivery_rating = models.IntegerField(null=True)
     customer_rating = models.IntegerField(null=True) 
     total_price = models.FloatField(default=0)
+    chose_bid = models.BooleanField(default=False)
 
 class Order_Food(models.Model):
     quantity = models.IntegerField(default=0)
