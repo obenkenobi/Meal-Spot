@@ -19,9 +19,6 @@ def home(request):
         response = redirect('home-nexus')
         return response
 
-    for elem in dir(user.Deliverer.objects):
-        print(elem)
-
     my_deliverer = user.Deliverer.objects.get(user=my_user)
     
     registered = len(user.Deliverer.objects.filter(user=my_user).exclude(restaurant__isnull=True)) > 0 and my_deliverer.status == 'H'
@@ -41,6 +38,7 @@ def home(request):
     pending_bids = restaurant.DeliveryBid.objects.filter(deliverer=my_deliverer).filter(win=False)
     won_bids = restaurant.DeliveryBid.objects.filter(deliverer=my_deliverer).filter(win=True)
     context = {
+        'warnings': my_deliverer.warnings,
         'openBids': open_bids,
         'pendingBids': pending_bids,
         'winningBids': won_bids
@@ -77,8 +75,8 @@ def register(request):
         context['registering'] = True
     return render(request, 'deliverer/register.html', context=context)
 
-def order(request, primary_key):
-    order = get_object_or_404(restaurant.Order, pk=primary_key)
+def order(request, pk):
+    order = get_object_or_404(restaurant.Order, pk=pk)
     customer = order.customer
     customer_address = address.CustomerAddress.get(customer=customer)
 
@@ -86,11 +84,17 @@ def order(request, primary_key):
     restaurant_address = address.RestaurantAddress.get(restaurant=restaurant)
 
     if(request.method == "POST"):
-        order.status = 'D'
         body = parse_req_body(request.body)
-        rating = body['rating']
-        order.delivery_rating = rating
-        customer_status = restaurant.CustomerStatus.get(customer=customer, restaurant=my_resturant)
-        customer_status.update_status(rating)
-        order.save()
-    return render(request, 'catalog/book_detail.html', context={'order': order, 'customerAddress': customer_address, 'restaurantAddress': restaurant_address})
+        rating = int(body['rating'])
+        if 0 <= rating or rating <= 5:
+            order.status = 'D'
+            order.customer_rating = rating
+            customer_status = restaurant.CustomerStatus.get(customer=customer, restaurant=my_resturant)
+            customer_status.update_status(rating)
+            order.save()
+    rating = order.delivery_rating
+    return render(request, 'deliverer/order.html', context={
+        'order': order,
+        'customerAddress': customer_address, 
+        'restaurantAddress': restaurant_address
+    })

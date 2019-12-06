@@ -1,0 +1,35 @@
+{% extends "base_deliverer.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+{% endblock %}
+
+{% block page_js %}
+<!-- page javascript -->
+{% endblock %}
+
+{% block page_content %}
+<!-- page html -->
+<h1>Order {{ order.id }}</h1>
+
+{% if order.delivery_rating != None %}
+<h2> Your Rating: {{ order.delivery_rating }}</h2>
+{% endif %}
+
+{% if order.customer_rating == None %}
+<form method="POST" action="/deliverer/order/{{ order.id }}">
+    <label for="rating">Customer Rating</label>
+    <input type="number" name="rating" id="rating" min="0" max="5" placeholder="Input a value from 0 to 5" />
+    <input type="submit" value="Submit" />
+</form>
+{% else %}
+<h2> Customer Rating: {{ order.customer_rating }}</h2>
+{% endif %}
+
+<div id="directions">
+{% comment %} Use Google Maps API here {% endcomment %}
+</div>
+{% endblock %}
