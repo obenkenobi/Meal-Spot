@@ -14,8 +14,11 @@ def home(request):
         if userIs(user.Deliverer) != True:
             response = redirect('home-nexus')
             return response
-    except Exception:
-        print(Exception.stack)
+    except Exception as e:
+        print(e)
+        response = redirect('home-nexus')
+        return response
+    except:
         response = redirect('home-nexus')
         return response
 
