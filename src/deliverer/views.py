@@ -30,9 +30,6 @@ def home(request):
         restaurants = restaurant.Restaurant.objects.all()
         return redirect('deliverer-register')
 
-    if my_deliverer.status == 'L': # if Laid off
-        return render(request, 'deliverer/laidOff.html')
-
     if request.method == "POST": # If bidded
         body = parse_req_body(request.body)
         amount = body['amount']
