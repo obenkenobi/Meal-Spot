@@ -27,9 +27,9 @@
     {% csrf_token %}
     <input type="hidden" name="orderId" value="{{ bid.order.id }}" />
     <tr>
-      <th>{{ bid.order.id }}</th>
-      <th><input type="number" name="amount" min="1"></th>
-      <th><input type="submit" value="submit">Bid!</input></th>
+      <td>{{ bid.order.id }}</td>
+      <td><input type="number" name="amount" min="1"></td>
+      <td><input type="submit" value="submit">Bid!</input></td>
     </tr>
   </form>
   {% endfor %}
@@ -43,8 +43,8 @@
   </tr>
   {% for bid in pending_bids %}
   <tr>
-    <th>{{ bid.order.id }}</th>
-    <th>{{ bid.price }}</th>
+    <td>{{ bid.order.id }}</td>
+    <td>{{ bid.price }}</td>
   </tr>
   {% endfor %}
 </table>
@@ -58,13 +58,13 @@
   </tr>
   {% for bid in winningBids %}
   <tr>
-    <th>{{ bid.order.id }}</th>
-    <th>{{ bid.order.status }}</th>
-    <th>
+    <td>{{ bid.order.id }}</td>
+    <td>{{ bid.order.status }}</td>
+    <td>
       <a href="{% url "deliverer-order" bid.order.id %}">
         <button>Click to see order</button>
       </a>
-    </th>
+    </td>
   </tr>
   {% endfor %}
 </table>

@@ -30,6 +30,7 @@ class Order(models.Model):
         choices=STATUS_CHOICES,
         default="PE"
     )    
+    restaurant = models.ForeignKey('Restaurant', on_delete=models.SET_NULL, null=True)
     customer = models.ForeignKey('Customer', on_delete=models.SET_NULL, null=True)
     delivery_rating = models.IntegerField(null=True)
     customer_rating = models.IntegerField(null=True) 
