@@ -12,8 +12,8 @@
   $(document).ready(function(){
     var origin_address = "{{ customerAddress.street_address }}+{{ customerAddress.city }}+{{ customerAddress.state }}+{{ customerAddress.zip_code }}";
     var dest_address = "{{ {{ customerAddress.street_address }}+{{ customerAddress.city }}+{{ customerAddress.state }}+{{ customerAddress.zip_code }} }}";
-    console.log('origin: ',origin_address);
-    console.log('destination: 'dest_address);
+    console.log('origin: ', origin_address);
+    console.log('destination: ', dest_address);
     $.ajax({
       url: 
         "https://maps.googleapis.com/maps/api/directions/json?origin="+origin_address+

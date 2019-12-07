@@ -1,0 +1,88 @@
+{% extends "base_manager.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+
+{% endblock %}
+
+{% block page_js %}
+
+<script>
+</script>
+
+
+{% endblock %}
+
+{% block page_content %}
+
+<button id = "back-button">Back to restaurants</button>
+
+    <div id = "restaurant"></div>
+      <h2 id = "title">Shelby's Cafe</h2>
+
+      <p id = "description">Shelby's cafe is a casual restaurant serving Italian.</p>
+
+    </div>
+    <button id = "register">Register</button>
+    
+    <div class = "order">
+      <h2>Order:</h2>
+
+      <form id = "order-form">
+        <table id = "order-table">
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+          </tr>
+
+          <!--Loop restaurant items putting quantity input-->
+
+          <tr>
+            <td>Chicken</td>
+            <td><input type = "number" min = "0" max = "20"></td>
+            <td>6.99</td>
+          </tr>
+          
+        </table>
+
+        <br>
+        <table id = "order-details">
+        
+          <tr>
+            <th>Discount:</th>
+            <td id = "discount"> 5%</td>
+          </tr>
+          <tr>
+            <th>Total:</th>
+            <td id = "total">21.99</td>
+          </tr>
+          <tr>
+            <th>Card Number:</th>
+            <td id = "card">
+              <input maxlength="16" minlength="16" placeholder="xxxx-xxxx-xxxx-xxxx">
+            </td>
+          </tr>
+          <tr>
+            <th>Address:</th>
+
+            <!--Placeholder shows customer stored address(default)-->
+
+            <td id = "address">
+              <input id = "address-input" minlength="12" placeholder = "123 45th St NY 11111">
+            </td>
+          </tr>
+         
+        </table>
+
+      <input type="checkbox" value="address"> Use default address
+      <br><br>
+
+      <input type="submit" value="Order">
+      </form>
+    </div>
+
+{% endblock %}
