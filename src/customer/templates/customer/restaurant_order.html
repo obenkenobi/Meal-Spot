@@ -1,0 +1,172 @@
+{% extends "base_manager.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+
+{% endblock %}
+
+{% block page_js %}
+
+<script>
+function calculateTotal()
+{
+  var total = 0;
+  var discount = document.getElementById("discount").innerText;
+  
+  var items = document.getElementsByClassName("item");
+  for(var i = 0; i < items.length; i ++){
+    var item = items[i];
+    var price = Number(item.getElementsByClassName("price")[0].innerHTML);
+    var qty = Number(item.getElementsByClassName("quantity")[0].value);
+    total += price * qty;
+  }
+  total = total - total * discount;
+  var subTotal = total.toFixed(2);
+  document.getElementById("total").innerHTML = subTotal;
+}
+
+function itemDescription()
+{
+  alert("This is a description of the item");
+}
+
+
+function speechTranscript() {
+  window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+      let finalTranscript = '';
+      let recognition = new window.SpeechRecognition();
+      var fullTranscript;
+      recognition.interimResults = true;
+      recognition.maxAlternatives = 10;
+      recognition.continuous = true;
+      recognition.onresult = (event) => {
+        let interimTranscript = '';
+        for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+          let transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+        ullTranscript = finalTranscript + interimTranscript;
+        
+      }
+      recognition.start();
+      return fullTranscript;
+}
+
+function speechToItems(fullTranscript){
+    var foodQuant;
+    for (let i = 0; i < fullTranscript.length; i++){
+        var quantity = fullTranscript[i]
+        i += 2;
+        let j = i;
+        var itemName;
+        while(fullTranscript[j] != " ") {
+            itemName += fullTranscript[j];
+            j++;
+            i++;
+        }
+        foodQuant.push({name: itemName, qty: quantity});
+    }
+
+    var itemNames = document.getElementsByClassName("item-name").innerHTML;
+
+    for(let i = 0; i < foodQuant.length; i ++) {
+        for (let j = 0; j < itemNames.length; j ++){
+            if(foodQuant[i].itemName == itemNames[j]){
+                document.getElementsByClassName("quantity")[j].value = foodQuant[j].qty;
+                break;
+            }
+        }
+    }
+
+}
+</script>
+
+
+{% endblock %}
+
+{% block page_content %}
+
+//html
+    <div class = "order">
+        <button id = "back-button">Back to restaurant </button>
+        <h2>Order:</h2>
+  
+        <button id="speech-order" onclick="speechToItems(speechTranscript())">Order by voice</button>
+  
+        <form id = "order-form">
+          <table id = "order-table">
+            <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Rating</th>
+            </tr>
+  
+            <!--Loop restaurant items putting quantity form-->
+  
+            <tr class = "item">
+              <td class="item-name">Chicken</td>
+              <td><input class="quantity" type = "number" min = "0" max = "20" onchange = "calculateTotal()"></td>
+              <td class="price">6.99</td>
+              <td class="rating">3.5/5</td>
+            </tr>
+            <tr class = "item">
+              <td class="item-name">Salad</td>
+              <td><input class="quantity" type = "number" min = "0" max = "20" onchange = "calculateTotal()"></td>
+              <td class="price">10.99</td>
+              <td class="rating">4.5/5</td>
+            </tr>
+            <tr class = "item">
+              <td class="item-name">Fish</td>
+              <td><input class="quantity" type = "number" min = "0" max = "20" onchange = "calculateTotal()"></td>
+              <td class="price">12.99</td>
+              <td class="rating">3.3/5</td>
+            </tr>
+            
+          </table>
+  
+          <br>
+          <table id = "order-details">
+          
+            <tr>
+              <th>Discount:</th>
+              <td id = "discount"> 0.05</td>
+            </tr>
+            <tr>
+              <th>Total:</th>
+              <td id = "total">0</td>
+            </tr>
+            <tr>
+              <th>Card Number:</th>
+              <td id = "card">
+                <input maxlength="16" minlength="16" placeholder="xxxx-xxxx-xxxx-xxxx">
+              </td>
+            </tr>
+            <tr>
+              <th>Address:</th>
+  
+              <!--Placeholder shows customer stored address(default)-->
+  
+              <td id = "address">
+                <input id = "address-input" minlength="12" placeholder = "123 45th St NY 11111">
+              </td>
+            </tr>
+           
+          </table>
+  
+        <input type="checkbox" value="address"> Use default address
+        <br><br>
+  
+        <input type="submit" value="Submit Order">
+        </form>
+      </div>
+  
+
+{% endblock %}
