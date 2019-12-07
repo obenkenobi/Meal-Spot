@@ -33,14 +33,18 @@ class Order(models.Model):
     restaurant = models.ForeignKey('Restaurant', on_delete=models.SET_NULL, null=True)
     customer = models.ForeignKey('Customer', on_delete=models.SET_NULL, null=True)
     delivery_rating = models.IntegerField(null=True)
-    customer_rating = models.IntegerField(null=True) 
+    delivery_complaint = models.TextField(null=True)
+    customer_rating = models.IntegerField(null=True)
+    customer_complaint = models.TextField(null=True) 
     total_price = models.FloatField(default=0)
     chose_bid = models.BooleanField(default=False)
 
+# when customer adds food to order, create. if remove, delete
 class Order_Food(models.Model):
-    quantity = models.IntegerField(default=0)
+    quantity = models.IntegerField(default=1)
     isFinished = models.BooleanField(default = False)
     food_rating = models.IntegerField(default=0)
+    food_complaint = models.TextField(null=True)
     order = models.OneToOneField(Order, on_delete=models.CASCADE)
 
 class Food(models.Model):
@@ -56,7 +60,8 @@ class Food(models.Model):
 class SupplyOrder(models.Model):
     order_description = models.TextField()
     price = models.FloatField()
-    supply_rating = models.FloatField(default = 0)
+    supply_rating = models.FloatField(null=True)
+    supply_complaint = models.TextField(null=True)
     salesperson = models.ForeignKey('Salesperson', on_delete=models.SET_NULL, null = True)
     cook = models.ForeignKey('Cook', on_delete=models.SET_NULL, null = True)
     finished = models.BooleanField(default=False)
