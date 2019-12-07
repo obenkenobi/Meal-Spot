@@ -23,7 +23,7 @@
         console.log(result);
         var routes = result.routes
         $("#startaddr").html(routes[0].legs[0].start_address)
-        $("#endaddr").html(routes[0].legs[0].start_address)
+        $("#endaddr").html(routes[0].legs[0].end_address)
         $("#routes").html("<div class=\"route\"></div>".repeat(routes.length));
         var route_dom = document.getElementsByClassName("route");
         for(var i = 0; i<routes.length; i++){
