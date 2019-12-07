@@ -27,7 +27,6 @@ def home(request):
     registered = len(user.Deliverer.objects.filter(user=my_user).exclude(restaurant__isnull=True)) > 0 and my_deliverer.status == 'H'
 
     if registered != True: # if not registered
-        restaurants = restaurant.Restaurant.objects.all()
         return redirect('deliverer-register')
 
     if request.method == "POST": # If bidded
@@ -37,7 +36,7 @@ def home(request):
         order = restaurant.Order.get(id=order_id)
         new_bid = restaurant.DeliveryBid(deliverer=my_deliverer, win=False, price=amount, order=order)
         new_bid.save()
-    open_bids = restaurant.DeliveryBid.objects.filter(deliverer__isnull=True)
+    open_bids = restaurant.DeliveryBid.objects.filter(deliverer__isnull=True).filter(order__restaurant = my_deliverer.restaurant)
     pending_bids = restaurant.DeliveryBid.objects.filter(deliverer=my_deliverer).filter(win=False)
     won_bids = restaurant.DeliveryBid.objects.filter(deliverer=my_deliverer).filter(win=True)
     context = {

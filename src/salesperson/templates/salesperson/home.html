@@ -11,7 +11,7 @@ th, td {
     font-family: sans-serif;
     padding: 3px;
     }
-#bigT {
+.bigT {
     width: 100%;
     font-size: 15px;
     }
@@ -30,7 +30,7 @@ tr:nth-child(even) {background-color: #f2f2f2}
     width: 50%;
     font-size: 15px;
     }
-#tabh{
+.tabh{
     background: rgba(76, 175, 80, 0.3);
     color: black;
     border: 0px;
@@ -53,39 +53,52 @@ tr:nth-child(even) {background-color: #f2f2f2}
 
 {% block page_content %}
 <!-- page html -->
-<body>
-    <table id=bigT>
-                <tr id="tabh">
-                    <th id="tabh" colspan="4">Order Supplies</th>
-                </tr>
-                <tr>
-                    <th>Supply ID</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Action</th>
-                </tr>
-                <tr valign='right'>
-                    <td>DATA</td>
-                    <td>DATA2</td>
-                    <td>DATA3</td>
-                    <td>Order</td>
-    </table>
-    <br>
-    <table id=bigT>
-                <tr id="tabh">
-                    <th id="tabh" colspan="4">Ordered Supplies</th>
-                </tr>
-                <tr>
-                    <th>Supply ID</th>
-                    <th>Description</th>
-                    <th>Price</th>
-                    <th>Rating</th>
-                </tr>
-                <tr valign='right'>
-                    <td>DATA</td>
-                    <td>DATA2</td>
-                    <td>DATA3</td>
-                    <td>Rating number</td>
-    </table>
-</body>
+<div>Warnings: {{ warnings }}</div>
+<table class='bigT'>
+            <tr>
+                <th class="tabh" colspan="4">Order Supplies</th>
+            </tr>
+            <tr>
+                <th>Supply Order ID</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+            {% for supplyOrder in supplyOrders %}
+            {% if not supplyOrder.finished %}
+            <tr valign='right'>
+                <form method="POST" action="/salesperson/">
+                    {% csrf_token %}
+                    <input type="hidden" name="orderId" value="{{ supplyOrder.id }}" />       
+                    <td>{{ supplyOrder.id }}</td>
+                    <td>{{ supplyOrder.order_description }}</td>
+                    <td>{{ supplyOrder.price }}</td>
+                    <td><input type="submit" value="submit">Finish Order!!</input></td>
+                </form>
+            </tr>
+            {% endif %}
+            {% endfor %}
+</table>
+<br>
+<table class='bigT'>
+            <tr>
+                <th class="tabh" colspan="4">Ordered Supplies</th>
+            </tr>
+            <tr>
+                <th>Supply ID</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Rating</th>
+            </tr>
+            {% for supplyOrder in supplyOrders %}
+            {% if supplyOrder.finished %}
+            <tr valign='right'>
+                <td>{{ supplyOrder.id }}</td>
+                <td>{{ supplyOrder.order_description }}</td>
+                <td>{{ supplyOrder.price }}</td>
+                <td>{{ supplyOrder.supply_rating }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+</table>
 {% endblock %}
