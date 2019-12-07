@@ -58,6 +58,7 @@ class SupplyOrder(models.Model):
     supply_rating = models.FloatField(default = 0)
     salesperson = models.ForeignKey('Salesperson', on_delete=models.SET_NULL, null = True)
     cook = models.ForeignKey('Cook', on_delete=models.SET_NULL, null = True)
+    finished = models.BooleanField(default=False)
 
 class DeliveryBid(models.Model):
     deliverer = models.ForeignKey('Deliverer', on_delete=models.CASCADE)
