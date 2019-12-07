@@ -11,6 +11,10 @@
 {% block page_js %}
 
 <script>
+function itemDescription()
+{
+  alert("This is a description of the item");
+}
 </script>
 
 
@@ -18,71 +22,82 @@
 
 {% block page_content %}
 
-<button id = "back-button">Back to restaurants</button>
+    <button id = "back-button">Back to restaurants</button>
 
-    <div id = "restaurant"></div>
+    <div class = "restaurant"></div>
       <h2 id = "title">Shelby's Cafe</h2>
 
       <p id = "description">Shelby's cafe is a casual restaurant serving Italian.</p>
 
     </div>
     <button id = "register">Register</button>
-    
-    <div class = "order">
-      <h2>Order:</h2>
 
-      <form id = "order-form">
-        <table id = "order-table">
+    <div class = "recommendations">
+
+      <div class = "history">
+        <h4>Recommendations based on order history:</h4>
+        <table class = "table">
           <tr>
             <th>Item</th>
-            <th>Quantity</th>
             <th>Price</th>
-          </tr>
-
-          <!--Loop restaurant items putting quantity input-->
-
-          <tr>
-            <td>Chicken</td>
-            <td><input type = "number" min = "0" max = "20"></td>
-            <td>6.99</td>
-          </tr>
-          
-        </table>
-
-        <br>
-        <table id = "order-details">
-        
-          <tr>
-            <th>Discount:</th>
-            <td id = "discount"> 5%</td>
+            <th>Rating</th>
           </tr>
           <tr>
-            <th>Total:</th>
-            <td id = "total">21.99</td>
-          </tr>
-          <tr>
-            <th>Card Number:</th>
-            <td id = "card">
-              <input maxlength="16" minlength="16" placeholder="xxxx-xxxx-xxxx-xxxx">
+            <td>
+              <button class = "rec-item" onclick="itemDescription()">Chicken </button>
             </td>
+            <td class = "rec-price">5.99</td>
+            <td class = "rec-rating">4.5/5</td>
+          </tr>
+        <table>
+      </div>
+
+      <div class = "popular">
+        <h4>Most popular visitor items:</h4>
+        <table class = "table">
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Rating</th>
           </tr>
           <tr>
-            <th>Address:</th>
-
-            <!--Placeholder shows customer stored address(default)-->
-
-            <td id = "address">
-              <input id = "address-input" minlength="12" placeholder = "123 45th St NY 11111">
+            <td>
+              <button class = "rec-item" onclick="itemDescription()">Chicken </button>
             </td>
+            <td class = "rec-price">5.99</td>
+            <td class = "rec-rating">4.5/5</td>
           </tr>
-         
-        </table>
+        <table>
+      </div>
 
-      <input type="checkbox" value="address"> Use default address
-      <br><br>
-
-      <input type="submit" value="Order">
-      </form>
     </div>
+    
+    <br>
+    <button id = "order">Make an order</button>
+    
+    <div class="Menu">
+
+      <h2>Menu:</h2>
+      <table class = "table">
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Rating</th>
+          </tr>
+
+          <!--Loop through menu items-->
+
+          <tr>
+            <td>
+              <button class = "item-name" onclick="itemDescription()">Chicken </button>
+            </td>
+            <td class = "price">5.99</td>
+            <td class = "rating">4.5/5</td>
+          </tr>
+      </table>
+    </div>
+
+    <br>
+    <button id = "order">Make an order</button>
 
 {% endblock %}
