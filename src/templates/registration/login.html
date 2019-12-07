@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-11 col-lg-6">
+    <h2>Login</h2>
+  </div>
+</div>
+
+{% if form.errors %}
+  <div class="row justify-content-center">
+    <div class="col-11 col-lg-6">
+      <p class="text-danger">Your username and password didn't match. Please try again.</p>
+    </div>
+  </div>
+{% endif %}
+
+{% if next %}
+  {% if user.is_authenticated %}
+    <div class="row justify-content-center">
+      <div class="col-11 col-lg-6">
+        <p>
+          Your account doesn't have access to this page. To proceed,
+          please login with an account that has access.
+        </p>
+      </div>
+    </div>
+  {% else %}
+    <div class="row justify-content-center">
+      <div class="col-11 col-lg-6">
+        <p>Fill out your credentials</p>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+
+<div class="row justify-content-center">
+  <div class="col-11 col-lg-6">
+    <form method="post" action="{% url 'login' %}">
+    {% csrf_token %}
+
+      <div class="form-group">
+        <div>{{ form.username.label_tag }}</div>
+        <input name="username" value="eeee" autofocus="" required="" id="id_username" class="form-control" type="text">
+      </div>
+
+      <div class="form-group">
+        <div>{{ form.password.label_tag }}</div>
+        <input type="password" name="password" required="" id="id_password" class="form-control">
+      </div>
+
+      <input type="submit" value="login" class="btn btn-primary" />
+      <input type="hidden" name="next" value="{{ next }}" />
+    </form>
+  </div>
+</div>
+
+{# Assumes you setup the password_reset view in your URLconf #}
+<div class="row justify-content-center">
+  <div class="col-11 col-lg-6">
+    <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base_deliverer.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+{% endblock %}
+
+{% block page_js %}
+<!-- page javascript -->
+{% endblock %}
+
+{% block page_content %}
+<!-- page html -->
+{% if registering %}
+    <h3>Pending registration</h3>
+{% else %}
+    <h1>Resturants to register</h1>
+    {% for resturant in some_resturant %}
+    <form method="POST" action="{% url "deliverer-register" %}">
+        {% csrf_token %}
+        <div>
+            <span>{{ resturant.name }}</span> 
+            <input type="hidden" name="id" value="{{ resturant.id }}" />
+            <input type="submit" value="submit">Register</input>
+        </div>
+    </form>
+    {% endfor %}
+{% endif %}
+{% endblock %}

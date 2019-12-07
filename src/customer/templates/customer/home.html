@@ -1,0 +1,51 @@
+{% extends "base_customer.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+<style>
+  .vertical-menu {
+    width: 80%;
+    margin: auto;
+    padding: 10px;
+  }
+  .vertical-menu a {
+    background-color: #eee;
+    color: black;
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    text-align: center;
+  }
+  .vertical-menu a:hover {
+    background-color: #ccc;
+  }
+  .vertical-menu a.active {
+    background-color: #4CAF50;
+    color: white;
+  }
+  .vertical-menu a.active:hover {
+      background-color: #4CAF50;
+      color: white;
+  }
+</style>
+{% endblock %}
+
+{% block page_js %}
+{% endblock %}
+
+{% block page_content %}
+
+  <div id="restaurant-list" class="vertical-menu">
+    <a class="active">My Restaurants</a>
+    {% for restaurant in restaurants %}
+    <a href="/customer/restaurant/{{ restaurant.id }}">
+      <b>{{ restaurant.name }}</b>
+      <br/>
+    </a>
+    {% endfor %}
+  </div>
+
+{% endblock %}

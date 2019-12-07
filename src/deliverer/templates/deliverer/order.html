@@ -1,0 +1,85 @@
+{% extends "base_deliverer.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+{% endblock %}
+
+{% block page_js %}
+<script>
+  var origin_address = "{{ customerAddress.street_address }}+{{ customerAddress.city }}+{{ customerAddress.state }}+{{ customerAddress.zip_code }}";
+  var dest_address = "{{ {{ customerAddress.street_address }}+{{ customerAddress.city }}+{{ customerAddress.state }}+{{ customerAddress.zip_code }} }}";
+  console.log('origin: ',origin_address);
+  console.log('destination: 'dest_address);
+  $.ajax({
+    url: 
+      "https://maps.googleapis.com/maps/api/directions/json?origin="+origin_address+
+      "&destination="+dest_address+
+      "&alternatives=true&key=AIzaSyDPvwQ2ggvJcaRG7wtpqLeD4r0eEYuXGNI", 
+    success: function(result){
+      console.log(result);
+      var routes = result.routes
+      $("#startaddr").html(routes[0].legs[0].start_address)
+      $("#endaddr").html(routes[0].legs[0].start_address)
+      $("#routes").html("<div class=\"route\"></div>".repeat(routes.length));
+      var route_dom = document.getElementsByClassName("route");
+      for(var i = 0; i<routes.length; i++){
+        var currRouteDom = route_dom[i];
+        var legZero = routes.legs[0];
+        var innerHtml = "";
+        innerHtml += "<h3><b>Route:</b> "+i+"</h3>";
+        innerHtml += "<div><b>Distance:</b> "+ legZero.distance.text +"</div>";
+        innerHtml += "<div><b>Duration:</b> "+ legZero.duration.text +"</div>";
+        innerHtml += "<h4><b><u>Directions</u></b></h4>";
+        var steps = legZero.steps;
+        for(var j = 0; j<steps.length; j++){
+          var currentStep = steps[j];
+          var stepHTML = "<div>Step "+j+"</div>";
+          stepHTML += "<div> step distance: "+currentStep.distance.text+"</div>";
+          stepHTML += "<div> step duration: "+currentStep.duration.text+"</div>";
+          stepHTML += "<div>"+currentStep.html_instructions+"</div>";
+          innerHtml += "<div class=\"border border-dark\">" + stepHTML + "</div>";
+        }
+        innerHtml = "<div class=\"border border-success\">" + innerHtml + "</div>";
+        currRouteDom.innerHTML = innerHtml;
+      }
+    },
+    'error': function(xhr,status,error){
+      $("#directions").addClass("text-danger");
+      $("#directions").html("<div>Status: "+status+"</div><div>Error: "+error+"</div>");
+    }
+  });
+</script>
+{% endblock %}
+
+{% block page_content %}
+<!-- page html -->
+<h1>Order {{ order.id }}</h1>
+
+{% if order.delivery_rating != None %}
+<h2> Your Rating: {{ order.delivery_rating }}</h2>
+{% endif %}
+
+{% if order.customer_rating == None %}
+<form method="POST" action="/deliverer/order/{{ order.id }}">
+  <label for="rating">Customer Rating</label>
+  <input type="number" name="rating" id="rating" min="0" max="5" placeholder="Input a value from 0 to 5" />
+  <input type="submit" value="Submit" />
+</form>
+{% else %}
+<h2> Customer Rating: {{ order.customer_rating }}</h2>
+{% endif %}
+
+<div id="directions">
+{% comment %} Use Google Maps API here {% endcomment %}
+  <h1>Directions</h1>
+  <h2>Start Address:</h2>
+  <p id="startaddr"></p>
+  <h2>End Address:</h2>
+  <p id="endaddr"></p>
+  <div id="routes">
+  </div>
+</div>
+{% endblock %}
