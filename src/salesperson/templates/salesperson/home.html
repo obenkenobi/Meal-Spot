@@ -5,6 +5,46 @@
 
 {% block page_css %}
 <!-- page css -->
+th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    padding: 3px;
+    }
+#bigT {
+    width: 100%;
+    font-size: 15px;
+    }
+th {
+    font-size: 20px;
+    text-align: center;
+    }
+tr:nth-child(even) {background-color: #f2f2f2}
+#small{
+    text-align: left;
+    background-color: white;
+    border: 0px;
+    }
+#smallT{
+    border: 0px;
+    width: 50%;
+    font-size: 15px;
+    }
+#tabh{
+    background: rgba(76, 175, 80, 0.3);
+    color: black;
+    border: 0px;
+    padding: 15px;
+    }
+.button {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+            }
 {% endblock %}
 
 {% block page_js %}
@@ -13,4 +53,39 @@
 
 {% block page_content %}
 <!-- page html -->
+<body>
+    <table id=bigT>
+                <tr id="tabh">
+                    <th id="tabh" colspan="4">Order Supplies</th>
+                </tr>
+                <tr>
+                    <th>Supply ID</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+                <tr valign='right'>
+                    <td>DATA</td>
+                    <td>DATA2</td>
+                    <td>DATA3</td>
+                    <td>Order</td>
+    </table>
+    <br>
+    <table id=bigT>
+                <tr id="tabh">
+                    <th id="tabh" colspan="4">Ordered Supplies</th>
+                </tr>
+                <tr>
+                    <th>Supply ID</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Rating</th>
+                </tr>
+                <tr valign='right'>
+                    <td>DATA</td>
+                    <td>DATA2</td>
+                    <td>DATA3</td>
+                    <td>Rating number</td>
+    </table>
+</body>
 {% endblock %}
