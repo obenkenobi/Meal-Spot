@@ -21,7 +21,9 @@
     <h2 id = "title">Customer Info:</h2>
   
     <!--Get list of all customers from restaurant-->
-  
+    
+    <!--Table header-->
+
     <table id = "cust-name">
         <tr>
             <th>Last Name:</th>
@@ -30,6 +32,7 @@
             <th>Rating:</th>
             <th># Complaints:</th>
         </tr>
+        <!--Get customer info for row below-->
         <tr>
             <td class = "last-n">Smith</td>
             <td class = "first-n">John</td>
@@ -40,7 +43,7 @@
     </table>
 
         
-
+    <!--Table header-->
     <div id = "staff-complaints">
         <h3>Staff complaints for customer:</h3>
         <table id="complaint-list">
@@ -60,7 +63,7 @@
                     
         </table>
     </div>
-
+        <!--Table header-->
         <h3 id = "complaints">Food Complaints:</h3>
         <table id="complaint-list">
           <tr>
@@ -70,8 +73,7 @@
             <th>Complaint:</th>
           </tr>
 
-           <!--Loop complaints here-->
-
+          <!--Loop complaint row below-->
           <tr>
             <td class = "complaint-id">00232</td>
             <td class = "complaint-name">Chicken</td>
@@ -81,6 +83,7 @@
           
         </table>
 
+        <!--Table header-->
         <div id = "delivery-complaints">
             <h3>Delivery Complaints:</h3>
             <table id = "delivery-comp-table">
@@ -89,6 +92,8 @@
                     <th>Deliverer:</th>
                     <th>Complaint:</th>
                 </tr>
+
+                <!--Loop complaint row below-->
                 <tr>
                     <td class = "deliverer-comp-id">00032</td>
                     <td class = "deliverer-name">Josh Howard</td>
@@ -106,6 +111,8 @@
           <tr>
             <th>Order ID:</th>
             <td class="order-id">000432</td>
+            <th>Date:</th>
+            <td class="date">03-12-19</td>
             <th>Total:</th>
             <td class="total">34.99</td>
             <th>Total items:</th>
@@ -114,6 +121,7 @@
             <td class="delivery-status">Delivered</td>
           </tr>
 
+        <!--Table header-->
           <tr>
               <th>Item</th>
               <th>Quantity</th>
@@ -121,7 +129,7 @@
               <th>Rating</th>
           </tr>
 
-  
+          <!--For each item in order, row below is looped-->
           <tr class = "item">
             <td class="item-name">Chicken</td>
             <td class="quantity">4</td>
