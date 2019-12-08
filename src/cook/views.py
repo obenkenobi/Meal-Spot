@@ -3,6 +3,32 @@ from database.models import user, restaurant, address
 from helper import parse_req_body, userTypeChecker
 import django.views
 
+# helper functions for post request
+def deletefood(my_cook, body):
+    food_id = int(body['foodId'])
+    myfood = restaurant.Food.objects.get(id=food_id)
+    myfood.delete()
+
+def addfood(my_cook, body):
+    name = body['foodname']
+    desc = body['price']
+    price = body['description']
+    vipfree = int(body['vipfree']) == 1
+    newfood = restaurant.Food(name=name, description=desc, price=price, vip_free=vipfree)
+    newfood.save()
+
+def supply_rate(my_cook, body):
+    rating = int(body['rating'])
+    supplyid = int(body['supplyID'])
+    supplyorder = restaurant.SupplyOrder.objects.get(id=supplyid)
+    supplyorder.supply_rating = rating
+    supplyorder.save()
+
+def supply_request(my_cook, body):
+    supplydes = body['supplydes']
+    supplyreq = restaurant.SupplyOrder(order_description=supplydes)
+    supplyreq.save()
+
 # Create your views here.
 
 def home(request):
@@ -30,9 +56,27 @@ def home(request):
         return redirect('cook-register')  
     
     if request.method == "POST":
+        body = parse_req_body(request.body)
+        task = body['task']
+        if task == 'deletefood':
+            deletefood(my_cook, body)
+        elif task == 'addfood':
+            addfood(my_cook, body)
+        elif task=='ratesupply':
+            supply_rate(my_cook, body)
+        elif task=='requestsupply':
+            supply_request(my_cook, body)
         pass
 
-    return render(request, 'cook/home.html', context={})
+    cookfood = restaurant.Food.objects.filter(cook=my_cook)
+    supplyorders = restaurant.SupplyOrder.objects.filter(cook=my_cook)
+
+    context = {
+        'cookfood': cookfood,
+        'supplyorders': supplyorders,
+    }
+
+    return render(request, 'cook/home.html', context=context)
 
 def register(request):
     my_user = None

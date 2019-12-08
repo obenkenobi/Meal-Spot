@@ -43,23 +43,24 @@ class Order(models.Model):
 class Order_Food(models.Model):
     quantity = models.IntegerField(default=1)
     isFinished = models.BooleanField(default = False)
-    food_rating = models.IntegerField(default=0)
+    food_rating = models.IntegerField(null=True)
     food_complaint = models.TextField(null=True)
-    order = models.OneToOneField(Order, on_delete=models.CASCADE)
+    order = models.ForeignKey('Order', on_delete=models.SET_NULL, null=True)
+    food = models.ForeignKey('Food', on_delete=models.SET_NULL, null=True)
 
 class Food(models.Model):
     price = models.FloatField(default=0)
     name = models.CharField(max_length=50)
     description = models.TextField(blank = True)
     vip_free = models.BooleanField(default = False)
-    avg_rating = models.FloatField(default=0)
-    cook = models.OneToOneField(Cook, on_delete=models.CASCADE)
+    avg_rating = models.FloatField(null=True)
+    cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
     def __str__(self):
         return str(self.name)
 
 class SupplyOrder(models.Model):
     order_description = models.TextField()
-    price = models.FloatField()
+    price = models.FloatField(null=True)
     supply_rating = models.FloatField(null=True)
     supply_complaint = models.TextField(null=True)
     salesperson = models.ForeignKey('Salesperson', on_delete=models.SET_NULL, null = True)

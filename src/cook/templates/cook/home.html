@@ -52,7 +52,7 @@ td {
 }
 tr:nth-child(even) {background-color: #f2f2f2}
 
-#edit, #delete {
+.edit, .delete {
   background-color: NULL;
   color: black;
   border: 0px ;
@@ -69,11 +69,11 @@ tr:nth-child(even) {background-color: #f2f2f2}
   background-color: pink;
   color: white;
 }
-#edit:hover {
+.edit:hover {
   background-color: blue;
   color: white;
 }
-#delete:hover {
+.delete:hover {
   background-color: red;
   color: white;
 }
@@ -146,7 +146,7 @@ $("#addSupply").hide()
 });
 function myFunction() {
   var rate = prompt("Please enter rating:", "Rating out of 5");
-  }
+}
 {% endblock %}
 
 {% block page_content %}
@@ -157,22 +157,33 @@ function myFunction() {
       <table class=bigT>
         <tr>
           <th>Food Item</th>
-                <th>Price</th>
-                <th>Action</th>
-             </tr>
-
-             <tr valign='center'>
-                 <td>DATA</td>
-                 <td>DATA2</td>
-                 <td><a href="#" id="edit">Edit </a><a>....</a>
-                 <a href="#" id="delete">Delete</a></td>
-              </tr>
-        </table>
+          <th>Price</th>
+          <th>Action</th>
+        </tr>
+        {% for food in cookfood %}
+        <form method="POST" action="{% url "cook-home" %}">
+          {% csrf_token %}
+          <input type="hidden" name="task" value="deletefood" />
+          <input type="hidden" name="foodId" value="{{ food.id }}" />
+          <tr valign='center'>
+            <td>{{ food.name }}</td>
+            <td>{{ food.price }}</td>
+            <td>
+              <a href="#" class="edit">Edit </a>
+              <a>....</a>
+              <input type="submit" class="delete" value="Delete">
+            </td>
+          </tr>
+        </form>
+        {% endfor %}
+      </table>
       </div>
       <br>
     <button class="text" id="b">Add New Food Item</button>
       <div id="addFood">
-        <form method="POST" style="border:1px solid #ccc" >
+        <form method="POST" action="{% url "cook-home" %}" style="border:1px solid #ccc" >
+          {% csrf_token %}
+          <input type="hidden" name="task" value="addfood" />
           <div class="container">
             <label for="foodname"><b>Food Name</b></label>
             <input type="text" placeholder="Enter Name of Food" name="foodname" required>
@@ -181,6 +192,10 @@ function myFunction() {
 
             <label for="description"><b>Description</b></label>
             <input type="text" placeholder="Enter Description" name="description" required>
+
+            <label for="vipfree"><b>Description</b></label>
+            <input type="hidden" name="vipfree" value="0" />
+            <input type="checkbox" name="vipfree" id="vipfree" value="1" />
 
           <div class="clearfix">
             <button type="submit" class="add">ADD</button>
@@ -194,20 +209,42 @@ function myFunction() {
       <div id = 'supply'>
       <table class=bigT>
         <tr>
-			      <th>Supply Item</th>
+			      <th>Description</th>
             <th>Price</th>
-            <th>Action</th>
-         </tr>
-         <tr valign='center'>
-             <td>DATA</td>
-             <td>DATA2</td>
-             <td><button id="rt" onclick="myFunction()">Rate</button></td></tr>
+            <th>Rate/Rating</th>
+          </tr>
+          {% for supplyorder in supplyorders %}
+            <tr valign='center'>
+              <td>{{ supplyorder.order_description }}</td>
+              <td>{{ supplyorder.price }}</td>
+              <td>
+                {% if supplyorder.supply_rating == None %}
+                  {% if supplyorder.finished %}
+                  <form method="POST" action="{% url "cook-home" %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="task" value="ratesupply" />
+                    <input type="hidden" name="supplyID" value="{{ supplyorder.id }}" />
+                    <input type="number" name="rating" min="0" max="5">
+                    <input type="submit" value="Rate">
+                  </form>
+                  {% else %}
+                  No rating, order unfinished
+                  {% endif %}
+                {% else %}
+                {{ supplyorder.supply_rating }}
+                {% endif %}
+              </td>
+              {% comment %} <td><button id="rt" onclick="myFunction()">Rate</button></td> {% endcomment %}
+            </tr>
+          {% endfor %}
         </table>
       </div>
       <br>
           <button class="text" id="d">Request New Supply</button>
             <div id = "addSupply">
-              <form method="POST" style="border:1px solid #ccc" >
+              <form method="POST" action="{% url "cook-home" %}" style="border:1px solid #ccc" >
+                {% csrf_token %}
+                <input type="hidden" name="task" value="requestsupply" />
                 <div class="container">
                 <label for="supplydes"><b>Supply Description</b></label>
                 <input type="text" placeholder="Enter Description" name="supplydes" required>
