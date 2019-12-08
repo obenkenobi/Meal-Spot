@@ -1,0 +1,134 @@
+{% extends "base_manager.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+{% endblock %}
+
+{% block page_js %}
+<!-- page javascript -->
+{% endblock %}
+
+{% block page_content %}
+<!-- page html -->
+
+<div class = "customer-details">
+
+    <button id = "back">Back to all customers</button>
+
+    <h2 id = "title">Customer Info:</h2>
+  
+    <!--Get list of all customers from restaurant-->
+  
+    <table id = "cust-name">
+        <tr>
+            <th>Last Name:</th>
+            <th>First Name:</th>
+            <th>Status:</th>
+            <th>Rating:</th>
+            <th># Complaints:</th>
+        </tr>
+        <tr>
+            <td class = "last-n">Smith</td>
+            <td class = "first-n">John</td>
+            <td class = "status">Registered</td>
+            <td class = "rating">3.5</td>
+            <td class = "num-complaints">2</td>
+        </tr>
+    </table>
+
+        
+
+    <div id = "staff-complaints">
+        <h3>Staff complaints for customer:</h3>
+        <table id="complaint-list">
+            <tr>
+                <th>Order ID:</th>
+                <th>Complaint from:</th>
+                <th>Complaint:</th>
+            </tr>
+          
+            <!--Loop complaints here-->
+        
+            <tr>
+                <td class = "staff-complaint-id">00232</td>
+                <td class = "staff-name">Josh Howard</td>
+                <td class="staff-complaint">He was so rude.</td>
+            </tr>
+                    
+        </table>
+    </div>
+
+        <h3 id = "complaints">Food Complaints:</h3>
+        <table id="complaint-list">
+          <tr>
+            <th>Order ID:</th>
+            <th>Item Name:</th>
+            <th>Cook:</th>
+            <th>Complaint:</th>
+          </tr>
+
+           <!--Loop complaints here-->
+
+          <tr>
+            <td class = "complaint-id">00232</td>
+            <td class = "complaint-name">Chicken</td>
+            <td class = "cook-name">Mina Kawasaki</td>
+            <td class="complaint">There was a hair in my food.</td>
+          </tr>
+          
+        </table>
+
+        <div id = "delivery-complaints">
+            <h3>Delivery Complaints:</h3>
+            <table id = "delivery-comp-table">
+                <tr>
+                    <th>Order ID:</th>
+                    <th>Deliverer:</th>
+                    <th>Complaint:</th>
+                </tr>
+                <tr>
+                    <td class = "deliverer-comp-id">00032</td>
+                    <td class = "deliverer-name">Josh Howard</td>
+                    <td class = "deliverer-complaint">Took too damn long.</td>
+                </tr>
+            </table>
+        </div>
+
+
+
+        <h3 id = "history-title">Order History:</h3>
+
+        <!--Loop table below for all customer orders-->
+        <table id = "order-history">
+          <tr>
+            <th>Order ID:</th>
+            <td class="order-id">000432</td>
+            <th>Total:</th>
+            <td class="total">34.99</td>
+            <th>Total items:</th>
+            <td class="item-qty">4</td>
+            <th>Delivery Status:</th>
+            <td class="delivery-status">Delivered</td>
+          </tr>
+
+          <tr>
+              <th>Item</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Rating</th>
+          </tr>
+
+  
+          <tr class = "item">
+            <td class="item-name">Chicken</td>
+            <td class="quantity">4</td>
+            <td class="price">6.99</td>
+            <td class="rating">3.5/5</td>
+          </tr>
+
+        </table>
+</div>
+{% endblock %}
