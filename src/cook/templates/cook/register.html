@@ -1,4 +1,4 @@
-{% extends "base_salesperson.html" %}
+{% extends "base_cook.html" %}
 
 <!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
 <!-- feel free to delete this -->
@@ -18,7 +18,7 @@
 {% else %}
     <h1>Resturants to register</h1>
     {% for resturant in some_resturant %}
-    <form method="POST" action="{% url "salesperson-register" %}">
+    <form method="POST" action="{% url "cook-register" %}">
         {% csrf_token %}
         <div>
             <span>{{ resturant.name }}</span> 
