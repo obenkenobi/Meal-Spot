@@ -170,9 +170,34 @@ def customers(request):
         user = request.user
         userIs = userTypeChecker(user)
         if userIs(user.Manager) == True:
-            restaurant = Restaurant.objects.get(manager=user)        
-            customers = CustomerStatus.objects.filter(restaurant=restaurant).order_by('avg_rating')
-            context = { 'customers': customers }
+            restaurant = Restaurant.objects.get(manager=user)  
+                 
+            if request.method == 'POST':
+                body = parse_req_body(request.body) 
+                customer = body['customer']    
+                update_customer = CustomerStatus.objects.filter(restaurant=restaurant).filter(customer=customer)
+                if body['function'] == 'promote':
+                    update_customer.status = 'V'
+                elif body['function'] == 'demote':
+                    update_customer.status = 'R'                    
+                elif body['function'] == 'remove':
+                    update_customer.status = 'N' 
+                elif body['function'] == 'blacklist':
+                    update_customer.status = 'B'                     
+                update_customer.save()
+            
+            registered_customers = CustomerStatus.objects.filter(restaurant=restaurant).order_by('avg_rating')
+            customer_info = []
+            for registered_customer in registered_customers:
+                info_entry = {}
+                info_entry['registered_customer'] = registered_customer
+                complaintcount = len(Order.objects.filter(restaurant=restaurant).filter(customer=customer).filter(customerrating__lte='2'))
+                info_entry['complaintcount'] = complaintcount
+                customer_info.append(info_entry) 
+
+            context = { 
+                'customer_info': customer_info
+            }
             return render(request, 'customers.html', context=context)
         else:
             return redirect('home-nexus')
@@ -217,7 +242,7 @@ def customer_details(request, pk): #must send customerid
     except:
         return redirect('home-nexus')
 
-def pendingregistrations(request): #if post, request must have customer obj
+def pendingregistrations(request): #if post, request must have customer user obj
     try:
         user = request.user
         userIs = userTypeChecker(user)
@@ -225,12 +250,13 @@ def pendingregistrations(request): #if post, request must have customer obj
             restaurant = Restaurant.objects.get(manager=user)
             if request.method == 'POST':
                 body = parse_req_body(request.body)
+                customer = body['customer']  #this is a user object, COULD CAUSE ERRORS
                 if body['function'] == 'accept':
-                    update_customer = CustomerStatus.objects.get(pk=customer.id)
+                    update_customer = CustomerStatus.objects.get(customer=customer)
                     update_customer.approve_status()
                     update_customer.save()
                 elif body['function'] == 'reject':
-                    update_customer = CustomerStatus.objects.get(pk=customer.id)
+                    update_customer = CustomerStatus.objects.get(customer=customer)
                     update_customer.approve_status()  
                     update_customer.save()  
                 elif body['function '] == 'remove':
