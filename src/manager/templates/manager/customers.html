@@ -13,4 +13,38 @@
 
 {% block page_content %}
 <!-- page html -->
+<div class = "customers">
+        <h2 id = "title">All Customers:</h2>
+  
+  
+      <!--Get list of all customers from restaurant-->
+
+      <table id = "cust-name">
+        <tr>
+          <th>Last Name:</th>
+          <th>First Name:</th>
+          <th>Status:</th>
+          <th>Rating:</th>
+          <th># Complaints received:</th>
+        </tr>
+        <tr>
+          <td class = "last-n">Smith</td>
+          <td class = "first-n">John</td>
+          <td class = "status">Registered</td>
+          <td class = "rating">3.5</td>
+          <td class = "num-complaints">2</td>
+          <td class = "more-info">
+              <button>More info</button>
+          </td>
+        </tr>
+      </table>
+
+      <div id = "status-change">
+        <button id = "promote-vip">Promote to VIP</button>
+        <button id = "demote">Demote to regular</button>
+        <button id = "blacklist">Blacklist</button>
+        <button id = "remove">Remove</button>
+      </div>
+
+    </div>
 {% endblock %}
