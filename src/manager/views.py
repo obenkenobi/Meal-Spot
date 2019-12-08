@@ -16,6 +16,8 @@ def home(request):
     except Exception as e:
         print(e)
         return redirect('home-nexus')
+    except:
+        return redirect('home-nexus')
 
 def restaurant(request):
     try:
@@ -38,82 +40,206 @@ def restaurant(request):
             return render(request, 'manager/restaurant.html', context=context)
         else:
             return redirect('home-nexus')
-    except Exception as e:
-        print(e)
+    except:
         return redirect('home-nexus')
 
 def deliverybids(request):
-    # at event that manager selects bid
-    if request.method == 'POST':
-        lowest_bid = DeliveryBid.objects.get(pk=delivery_bid_id)
-        lowest_bid.win = True
-        lowest_bid.save()
-        order_id = lowest_bid.order
-        order = Order.objects.get(pk=order_id)
-        order.chose_bid = True
+    try:
+        user = request.user
+        userIs = userTypeChecker(user)
+        if userIs(user.Manager) == True:
+            # at event that manager selects bid
+            if request.method == 'POST':
+                body = parse_req_body(request.body)
+                chosen_bid = body['deliverybid']
+                win_bid = DeliveryBid.objects.get(id=chosen_bid.id)
+                win_bid.win = True
+                win_bid.save()
+                bid_order = win_bid.order
+                order = Order.objects.get(id=bid_order.id)
+                order.chose_bid = True
+            
+            deliverybids=[]
+            orders = Orders.objects.filter(restaurant=restaurant_id, status='PR', chose_bid=False) #.order_by(order)
+            for order in orders:
+                order_bids={}
+                bids = DeliveryBid.objects.filter(order=order).filter(won=False).order_by('price')
+                order_bids[order] = bids
+                deliverybid.append(order_bids)
 
-    orders = Orders.objects.filter(restaurant=restaurant_id, status='PR', chose_bid=False) #.order_by(order)
-    delivery_bids = DeliveryBid.objects.filter(won=False) #.order_by('price')
-    context = {
-        'orders': orders,
-        'delivery_bids': delivery_bids,
-    }
-    return render(request, 'manager/deliverybids.html', context=context)
+            context = {
+                'orders': orders,
+                'deliverybids': deliverybids,
+            }
+            return render(request, 'manager/deliverybids.html', context=context)
+        else:
+            return redirect('home-nexus')
+    except:
+        return redirect('home-nexus')
 
-def staff(request, staff_id):
+def staff(request):
     #removewarnings,
     #view applications
-    if request.method == 'POST':
-        update_staff = Staff.objects.get(user=staff_id)
-        update_staff.warnings -= 1
-        update_staff.save()
+    try:
+        user = request.user
+        userIs = userTypeChecker(user)
+        if userIs(user.Manager) == True:
+            restaurant = Restaurant.objects.get(manager=user)
 
-    current_user = request.user
-    restaurant_id = Restaurant.objects.get(manager=current_user)
-    staff = Staff.objects.filter(restaurant=restaurant_id, status='H')
-    context = { 'staff': staff }
-    return render(request, 'manager/staff.html', context=context)
+            if request.method == 'POST':
+                body = parse_req_body(request.body)
+                staff = body['staff'] #this is a user object, COULD CAUSE ERRORS
+                update_staff = Staff.objects.get(user=staff) 
+                staffIs = userTypeChecker(staff)
 
-def hirestaff(request, staff_id):   
-    if request.method == 'POST':
-        
-        update_staff = Staff.objects.get(user=staff_id)
-        
-        if request.body == 'hire':
-            update_staff.status = 'H'
-        
-        elif request.body == 'reject':
-            update_staff.status = 'N'
-            update_staff.restaurant = None
-        
-        update_staff.save()
-        
-    current_user = request.user
-    restaurant_id = Restaurant.objects.get(manager=current_user)
-    pending_staff = Staff.objects.filter(restaurant=restaurant_id, status='N')
-    context = { 'pending_staff': pending_staff }
-    return render(request, 'hirestaff.html', context=context)
+                if body['function'] == 'remove_warning':
+                    if update_staff.warnings > 1:
+                        update_staff.warnings -= 1
+                
+                elif body['function'] == 'fire':
+                    if staffIs(Cook): # check if there is enough cooks
+                        if len(Cook.objects.filter(restaurant=restaurant)) > 2:
+                            update_staff.status = 'N'
+                            update_staff.restaurant = None
+                            update_staff.warnings = 0
+                            update_staff.salary = 0
+                    elif staffIs(Salesperson): # check if there is enough salespeople
+                        if len(Salesperson.objects.filter(restaurant=restaurant)) > 2:
+                            update_staff.status = 'N'
+                            update_staff.restaurant = None
+                            update_staff.warnings = 0
+                            update_staff.salary = 0                        
+                    else:
+                        update_staff.status = 'N'
+                        update_staff.restaurant = None
+                        update_staff.warnings = 0
+                        update_staff.salary = 0
+                
+                elif body['function'] == 'edit_salary':
+                    salary = body['salary']
+                    update_staff.salary = salary
 
-def customers(request, customer_id):
-    if request.method == 'POST':
-        update_customer = CustomerStatus.objects.get(user=customer_id)
-        update_customer.warnings -= 1
-        update_customer.save()
+                elif body['function'] == 'hire':
+                    update_staff.status = 'H'
+                    update_staff.salary = 600
+                
+                elif body['function'] == 'reject':
+                    update_staff.status = 'N'
+                    update_staff.restaurant = None                    
 
-    current_user = request.user
-    restaurant_id = Restaurant.objects.get(manager=current_user)
-    customers = CustomerStatus.objects.filter(restaurant=restaurant_id)
-    context = { 'customers': customers }
-    return render(request, 'customers.html', context=context)
+                update_staff.save()        
+            
+            staff = Staff.objects.filter(restaurant=restaurant, status='H')
+            pending_staff = Staff.objects.filter(restaurant=restaurant, status='N')
+            
+            context = { 
+                'staff': staff,
+                'pending_staff': pending_staff
+            }
+            return render(request, 'manager/staff.html', context=context)
+        else:
+            return redirect('home-nexus')
+    except:
+        return redirect('home-nexus')
 
-def pendingregistrations(request, customer_id):
-    current_user = request.user
-    restaurant_id = Restaurant.objects.get(manager=current_user)
-    if request.method == 'POST':
-        customer_status = CustomerStatus.objects.get(pk=customer_id)
-        customer_status.approve_status()
-        customer_status.save()
+def staff_details(request, pk):
+    try:
+        user = request.user
+        userIs = userTypeChecker(user)
+        if userIs(user.Manager) == True:
+            staff = Staff.objects.get(user=pk)
+            if userIs(staff.Cook): 
+                orders = Order.objects.filter(restaurant=restaurant).filter(cook=staff)
+                complaints = []
+                for order in orders:
+                    order_complaints = Order_Food.filter(order = order).filter(food_complaint__isnull=False)
+                    complaints.append(order_complaints)
+            elif userIs(staff.Deliverer):
+                complaints = Order.objects.filter(restaurant=restaurant).filter(deliverer=staff).filter(delivery_complaint__isnull=False)
+            elif userIs(staff.Salesperson):
+                complaints = SupplyOrder.objects.filter(restaurant=restaurant).filter(salesperson=staff).filter(supply_complaint__isnull=False)
+            context = { 'complaints': complaints }
+            return render(request, 'staff_details.html', context=context)
+        else:
+            return redirect('home-nexus')
+    except:
+        return redirect('home-nexus')
 
-    customers = CustomerStatus.objects.filter(restuarant = restaurant_id, status='P')
-    context = { 'customers': customers }
-    return render(request, 'pendingregistrations.html', context=context)
+def customers(request):
+    try:
+        user = request.user
+        userIs = userTypeChecker(user)
+        if userIs(user.Manager) == True:
+            restaurant = Restaurant.objects.get(manager=user)        
+            customers = CustomerStatus.objects.filter(restaurant=restaurant).order_by('avg_rating')
+            context = { 'customers': customers }
+            return render(request, 'customers.html', context=context)
+        else:
+            return redirect('home-nexus')
+    except:
+        return redirect('home-nexus')
+
+def customer_details(request, pk): #must send customerid
+    try:
+        user = request.user
+        userIs = userTypeChecker(user)
+        if userIs(user.Manager) == True:
+            restaurant = Restaurant.objects.get(manager=user) 
+            customer = Customer.objects.get(pk=pk)
+            if request.method == 'POST':
+                body = parse_req_body(request.body)    
+                update_customer = CustomerStatus.objects.filter(restaurant=restaurant).filter(customer=customer)
+                if body['function'] == 'promote':
+                    update_customer.status = 'V'
+                elif body['function'] == 'demote':
+                    update_customer.status = 'R'                    
+                elif body['function'] == 'remove':
+                    update_customer.status = 'N' 
+                elif body['function'] == 'blacklist':
+                    update_customer.status = 'B'                     
+                update_customer.save()
+
+            orders = Order.objects.filter(restaurant=restaurant).filter(customer=customer)
+            complaints_from = []
+            for order in orders:
+                complaints_from.append(Order_Food.objects.filter(customer=customer).filter(order=order).filter(food_complaint__isnull=False))
+            complaints_received = Order.objects.filter(restaurant=restaurant).filter(customer=pk).filter(customerrating__lte='2')
+
+            context = { 
+                'customer': customer,
+                'complaints_received': complaints_received, 
+                'complaints_from': complaints_from,
+                'orders': orders,
+            }
+            return render(request, 'customer_details.html', context=context)
+        else:
+            return redirect('home-nexus')
+    except:
+        return redirect('home-nexus')
+
+def pendingregistrations(request): #if post, request must have customer obj
+    try:
+        user = request.user
+        userIs = userTypeChecker(user)
+        if userIs(user.Manager) == True:
+            restaurant = Restaurant.objects.get(manager=user)
+            if request.method == 'POST':
+                body = parse_req_body(request.body)
+                if body['function'] == 'accept':
+                    update_customer = CustomerStatus.objects.get(pk=customer.id)
+                    update_customer.approve_status()
+                    update_customer.save()
+                elif body['function'] == 'reject':
+                    update_customer = CustomerStatus.objects.get(pk=customer.id)
+                    update_customer.approve_status()  
+                    update_customer.save()  
+                elif body['function '] == 'remove':
+                    update_customer.delete()
+
+                customers = CustomerStatus.objects.filter(restaurant = restaurant, status='P')
+                context = { 'customers': customers }
+                return render(request, 'pendingregistrations.html', context=context)
+        else:
+            return redirect('home-nexus')
+    except:
+        return redirect('home-nexus')

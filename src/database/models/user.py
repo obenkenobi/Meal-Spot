@@ -29,7 +29,8 @@ class Staff(UserType):
 
     warnings = models.IntegerField(default=0)
     restaurant = models.ForeignKey('Restaurant', on_delete=models.SET_NULL, null=True)
-
+    salary = models.FloatField(default = 0)
+    
     class Meta:
         abstract = True
 
@@ -78,8 +79,7 @@ class Deliverer(Staff):
     pass    
 
 class Salesperson(Staff):
-    commission = models.FloatField(default = 100)
-
+    pass
     # prob add to Cook view during rating
     # def update_commission(self, r1, r2, r3):
     #     sum_rating = r1 + r2 + r3

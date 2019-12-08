@@ -53,8 +53,9 @@ tr:nth-child(even) {background-color: #f2f2f2}
                     <input type="hidden" name="orderId" value="{{ supplyOrder.id }}" />       
                     <td>{{ supplyOrder.id }}</td>
                     <td>{{ supplyOrder.order_description }}</td>
-                    <td>{{ supplyOrder.price }}</td>
+                    <td><input type="number" min="0" step="1" name="price" required="required"></td>
                     <td><input type="submit" value="Finish Order!!"></input></td>
+
                 </form>
             </tr>
             {% endif %}
