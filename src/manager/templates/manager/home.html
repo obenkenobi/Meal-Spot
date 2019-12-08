@@ -27,6 +27,9 @@ body {font-family: Arial, Helvetica, sans-serif;}
   background: rgba(76, 175, 80, 0.3);
   color: black;
 }
+#text {
+    padding: 35px;
+}
 {% endblock %}
 
 {% block page_js %}
@@ -36,16 +39,14 @@ body {font-family: Arial, Helvetica, sans-serif;}
 {% block page_content %}
 <h1 style = "text-align:center">Restaurant</h1>
 <div class="menu">
-  <a id="text" class="marg" href="#home">Delivery Bids</a>
-  <a id="text" href="#news">Pending Registration</a>
+  <a id="text" class="marg" href="{% url 'manager-deliverybids' %}">Delivery Bids</a>
+  <a id="text" href="{% url 'manager-pendingregistrations' %}">Pending Registrations</a>
 </div>
 <div class="menu">
- <a id="text" class="marg" href="#home">Hire Staff</a>
- <a id="text" href="#news">Restaurant</a>
+ <a id="text" class="marg" href="{% url 'manager-staff' %}">Staff</a>
+ <a id="text" href="{% url 'manager-customers' %}">Customers</a>
 </div>
 <div class="menu">
- <a id="text" class="marg" href="#home">Staff</a>
- <a id="text" href="#news">Customer</a>
-</div>
-
+  <a id="text" href="{% url 'manager-restaurant' %}">Edit Restaurant</a>
+ </div>
 {% endblock %}
