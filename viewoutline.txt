@@ -1,0 +1,12 @@
+def viewname(request):
+    try:
+        user = request.user
+        userIs = userTypeChecker(user)
+        if userIs(user.insertusertype) == True:
+            if request.method == 'POST':
+                body = parse_req_body(request.body)   
+            return render(request, 'customers.html', context=context)
+        else:
+            return redirect('home-nexus')
+    except:
+        return redirect('home-nexus')
