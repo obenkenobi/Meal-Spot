@@ -29,7 +29,7 @@ class Staff(UserType):
 
     warnings = models.IntegerField(default=0)
     restaurant = models.ForeignKey('Restaurant', on_delete=models.SET_NULL, null=True)
-    salary = models.FloatField(default = 100)
+    salary = models.FloatField(default = 0)
     
     class Meta:
         abstract = True
