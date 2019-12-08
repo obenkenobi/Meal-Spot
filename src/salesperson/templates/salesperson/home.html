@@ -20,31 +20,12 @@ th {
     text-align: center;
     }
 tr:nth-child(even) {background-color: #f2f2f2}
-#small{
-    text-align: left;
-    background-color: white;
-    border: 0px;
-    }
-#smallT{
-    border: 0px;
-    width: 50%;
-    font-size: 15px;
-    }
 .tabh{
     background: rgba(76, 175, 80, 0.3);
     color: black;
     border: 0px;
     padding: 15px;
     }
-.button {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    cursor: pointer;
-            }
 {% endblock %}
 
 {% block page_js %}
@@ -73,7 +54,7 @@ tr:nth-child(even) {background-color: #f2f2f2}
                     <td>{{ supplyOrder.id }}</td>
                     <td>{{ supplyOrder.order_description }}</td>
                     <td>{{ supplyOrder.price }}</td>
-                    <td><input type="submit" value="submit">Finish Order!!</input></td>
+                    <td><input type="submit" value="Finish Order!!"></input></td>
                 </form>
             </tr>
             {% endif %}

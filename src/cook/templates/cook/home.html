@@ -8,39 +8,216 @@
 * {box-sizing: border-box}
 body {font-family: Arial, Helvetica, sans-serif;}
 .menu {
-  width: 90%;
+  width: 85%;
   margin: auto;
 }
-.menu a {
-  border: .5px solid black;
+.text {
   background-color: #4CAF50;
   float: left;
   padding: 12px;
+  margin-bottom: 5px;
   color: white;
   text-decoration: none;
   font-size: 17px;
-  width: 50%;
-  height: 100px;
+  width: 100%;
+  height: 80px;
+  text-align: center;
+  opacity: .9;
+  border: none;
+}
+.text:hover {
+  opacity: 1;
+}
+.text {
+    padding: 35px;
+}
+th, td {
+	border: 0px solid black;
+	border-collapse: collapse;
+	font-family: sans-serif;
+	padding: 3px;
+}
+.bigT {
+	width: 100%;
+	font-size: 15px;
+}
+th {
+  font-size: 20px;
+  text-align: center;
+  background: rgba(76, 175, 80, 0.3);
+}
+td {
+  font-size: 15px;
   text-align: center;
 }
-.menu a:hover {
-  background: rgba(76, 175, 80, 0.3);
+tr:nth-child(even) {background-color: #f2f2f2}
+
+#edit, #delete {
+  background-color: NULL;
   color: black;
+  border: 0px ;
+  text-decoration: none;
 }
+
+#rt {
+  background-color: NULL;
+  color: black;
+  border: 0px ;
+  text-decoration: none;
+}
+#rt:hover {
+  background-color: pink;
+  color: white;
+}
+#edit:hover {
+  background-color: blue;
+  color: white;
+}
+#delete:hover {
+  background-color: red;
+  color: white;
+}
+input, #state {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+.clearfix button {
+  float: left;
+  width: 50%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.8;
+  height: 0%;
+}
+button:hover {
+  opacity:1;
+}
+.clearfix .cancelbtn {
+  padding: 14px 20px;
+  background-color: #f44336;
+}
+
+.container {
+  padding: 16px;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+  color: white;
+}
+
 {% endblock %}
 
 {% block page_js %}
 <!-- page javascript -->
+$(document).ready(function(){
+$("#food").hide()
+$("#addFood").hide()
+$("#supply").hide()
+$("#addSupply").hide()
+  $("#a").click(function(){
+    $("#food").toggle(1000);
+  });
+  $("#b").click(function(){
+    $("#addFood").toggle(1000);
+  });
+  $("#c").click(function(){
+    $("#supply").toggle(1000);
+  });
+  $("#d").click(function(){
+    $("#addSupply").toggle(1000);
+  });
+});
+function myFunction() {
+  var rate = prompt("Please enter rating:", "Rating out of 5");
+  }
 {% endblock %}
 
 {% block page_content %}
-<h1 style = "text-align:center">COOKS</h1>
-<div class="menu">
-  <a href="#home">My Food Items</a>
-  <a href="#news">Add New Food Item</a>
-</div>
-<div class="menu">
- <a href="#home">Supplies</a>
-  <a href="#news">Add New Supplies</a>
-</div>
+  <h1 style = "text-align:center">COOKS Homepage</h1>
+  <div class="menu">
+    <button class="text" id="a">My Food Items</button>
+      <div id = 'food'>
+      <table class=bigT>
+        <tr>
+          <th>Food Item</th>
+                <th>Price</th>
+                <th>Action</th>
+             </tr>
+
+             <tr valign='center'>
+                 <td>DATA</td>
+                 <td>DATA2</td>
+                 <td><a href="#" id="edit">Edit </a><a>....</a>
+                 <a href="#" id="delete">Delete</a></td>
+              </tr>
+        </table>
+      </div>
+      <br>
+    <button class="text" id="b">Add New Food Item</button>
+      <div id="addFood">
+        <form method="POST" style="border:1px solid #ccc" >
+          <div class="container">
+            <label for="foodname"><b>Food Name</b></label>
+            <input type="text" placeholder="Enter Name of Food" name="foodname" required>
+            <label for="price"><b>Price</b></label>
+            <input type="number" placeholder="Enter Price" name="price" required>
+
+            <label for="description"><b>Description</b></label>
+            <input type="text" placeholder="Enter Description" name="description" required>
+
+          <div class="clearfix">
+            <button type="submit" class="add">ADD</button>
+            <button type="reset" class="cancelbtn">Cancel</button>
+          </div>
+         </div>
+        </form>
+      </div>
+      <br>
+      <button class="text" id="c">My Supply Items</button>
+      <div id = 'supply'>
+      <table class=bigT>
+        <tr>
+			      <th>Supply Item</th>
+            <th>Price</th>
+            <th>Action</th>
+         </tr>
+         <tr valign='center'>
+             <td>DATA</td>
+             <td>DATA2</td>
+             <td><button id="rt" onclick="myFunction()">Rate</button></td></tr>
+        </table>
+      </div>
+      <br>
+          <button class="text" id="d">Request New Supply</button>
+            <div id = "addSupply">
+              <form method="POST" style="border:1px solid #ccc" >
+                <div class="container">
+                <label for="supplydes"><b>Supply Description</b></label>
+                <input type="text" placeholder="Enter Description" name="supplydes" required>
+                <div class="clearfix">
+                  <button type="submit" class="add">ADD</button>
+                  <button type="reset" class="cancelbtn">Cancel</button>
+                </div>
+               </div>
+            </form>
+           </div>
+           <br>
+  </div>
 {% endblock %}
