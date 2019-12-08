@@ -74,6 +74,7 @@ function calculateRoute(from, to) {
 
 {% if order.customer_rating == None %}
 <form method="POST" action="/deliverer/order/{{ order.id }}">
+  {% csrf_token %}
   <label for="rating">Customer Rating</label>
   <input type="number" name="rating" id="rating" min="0" max="5" placeholder="Input a value from 0 to 5" />
   <input type="submit" value="Submit" />
