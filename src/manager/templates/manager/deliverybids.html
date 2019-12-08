@@ -13,4 +13,32 @@
 
 {% block page_content %}
 <!-- page html -->
+
+<div id = "deliver_bids">
+
+  <h1 id = "bid_title">Delivery Bids:</h1>
+
+  <table id = "bid_table"
+    <tr class = "table_header">
+      <th>Order ID:</th>
+      <th>Order Time:</th>
+      <th>Total:</th>
+      <th>Qty:</th>
+      <th>Status:</th>
+    </tr>
+
+    <!--Loop row below-->
+    <tr>
+      <td class = "order-id">00342</td>
+      <td class = "time">13:42</td>
+      <td class = "total">22.99</td>
+      <td class = "qty">5</td>
+      <td class = "status">Prepared</td>
+      <td class = "bid-start"><button>Start Bid</button></td>
+      <td class = "cancel"><button>Cancel order</button></td>
+    </tr>
+  </table>
+
+</div>
+
 {% endblock %}

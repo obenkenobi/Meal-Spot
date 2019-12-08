@@ -13,4 +13,60 @@
 
 {% block page_content %}
 <!-- page html -->
+
+<div id = "pending_registrations">
+
+  <div id = "customer-registrations:">
+    <h2> Customer Registrations:</h2>
+
+    <table id = "cust_table">
+      <tr class = "table_header">
+        <th>Last:</th>
+        <th>First:</th>
+        <th>Total orders:</th>
+        <th>Rating:</th>
+        <th>Date Joined:</th>
+        <th>Address:</th>
+      </tr>
+      
+      <!--Loop customer table below for all pending customer-->
+      <tr>
+        <td class = "last">Adams</td>
+        <td class = "first">Bill</td>
+        <td class = "orders">8</td>
+        <td class = "rating">4.2</td>
+        <td class = "date">02-01-18</td>
+        <td class = "address">123 Adams St NY 11111</td>
+        <td class = "approval_button"><button>Approve</button></td>  
+        <td class = "reject_button"><button>Reject</button></td>  
+      </tr>
+
+    </table>
+  </div>
+
+  <div id = "staff-registrations:">
+    <h2>Staff Registrations:</h2>
+
+    <table id = "staff-table">
+      <tr class = "table_header">
+        <th>Last:</th>
+        <th>First:</th>
+        <th>Date Requested:</th>
+        <th>Address:</th>
+      </tr>
+      
+      <!--Loop staff table below for all pending staff-->
+      <tr>
+        <td class = "staff-last">Adams</td>
+        <td class = "staff-first">Bill</td>
+        <td class = "staff-date">02-01-18</td>
+        <td class = "staff-address">123 Adams St NY 11111</td>
+        <td class = "staff-approval-button"><button>Approve</button></td>
+        <td class = "reject_button"><button>Reject</button></td>   
+      </tr>
+
+    </table>
+  </div>
+</div>
+
 {% endblock %}

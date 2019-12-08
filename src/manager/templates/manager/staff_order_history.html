@@ -1,0 +1,56 @@
+{% extends "base_manager.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+{% endblock %}
+
+{% block page_js %}
+<!-- page javascript -->
+{% endblock %}
+
+{% block page_content %}
+<!-- page html -->
+
+<div id = "staff_orders">
+
+  
+  <button id = "back">Back to all staff</button>
+  <h1 id = "title">Staff Order History</h1>
+
+  <table id = "order_history">
+
+   <tr class = "table_header">
+      <th>Last:</th>
+      <th>First:</th>
+      <th>Job:</th>
+    </tr>
+
+    <tr>
+      <td id = "last">Wilkins</td>
+      <td id = "first">Wilbur</td>
+      <td id = "job_title">Deliverer</td>
+    </tr>
+
+    <tr class = "table_header">
+      <th>Order ID:</th>
+      <th>Customer:</th>
+      <th>Date:</th>
+      <th>Total:<th>
+      <th>Quantity:</th>
+    </tr>
+
+    <!--Loop row below for all orders-->
+    <tr id = "order_details">
+      <td class = "order_id">00042</td>
+      <td class = "customer_name">Missy A<td>
+      <td class = "date">02-03-20</td>
+      <td class = "total">23.45</td>
+      <td class = "quantity">6</td>
+    </tr>
+
+  </table>
+</div>
+{% endblock %}
