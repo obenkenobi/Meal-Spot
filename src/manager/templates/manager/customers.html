@@ -27,16 +27,19 @@
           <th>Rating:</th>
           <th># Complaints received:</th>
         </tr>
+        {% for info_entry in customer_info %}
         <tr>
-          <td class = "last-n">Smith</td>
-          <td class = "first-n">John</td>
-          <td class = "status">Registered</td>
-          <td class = "rating">3.5</td>
-          <td class = "num-complaints">2</td>
+        {% registered_customer = info_entry.get('registered_customer') %}
+          <td class = "last-n">{{ registered_customer.customer.last_name }}</td>
+          <td class = "first-n">{{ registered_customer.customer.first_name }}</td>
+          <td class = "status">{{ registered_customer.status }}</td>
+          <td class = "rating">{{ egistered_customer.status }}</td>
+          <td class = "num-complaints">{{ info_entry.get(complaintcount) }}</td>
           <td class = "more-info">
-              <button>More info</button>
+            <a href="{% url 'manager-customerdetails' customer.id %}" class="button">More info</a>
           </td>
         </tr>
+        {% endfor %}
       </table>
 
       <div id = "status-change">
