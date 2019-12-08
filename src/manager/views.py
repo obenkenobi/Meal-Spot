@@ -1,5 +1,5 @@
 from django.db import models
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from database.models.restaurant import *
 from database.models.user import *
 from helper import parse_req_body, userTypeChecker
@@ -174,15 +174,16 @@ def customers(request):
                  
             if request.method == 'POST':
                 body = parse_req_body(request.body) 
-                customer = body['customer']    
+                customer_id = int(body['customer_id'])  
+                customer = User.objects.get(pk=customer_id)
                 update_customer = CustomerStatus.objects.filter(restaurant=restaurant).filter(customer=customer)
-                if body['function'] == 'promote':
+                if request.POST.get("promote"):
                     update_customer.status = 'V'
-                elif body['function'] == 'demote':
+                elif request.POST.get("demote"):
                     update_customer.status = 'R'                    
-                elif body['function'] == 'remove':
+                elif request.POST.get("remove"):
                     update_customer.status = 'N' 
-                elif body['function'] == 'blacklist':
+                elif request.POST.get("blacklist"):
                     update_customer.status = 'B'                     
                 update_customer.save()
             
@@ -210,7 +211,7 @@ def customer_details(request, pk): #must send customerid
         userIs = userTypeChecker(user)
         if userIs(user.Manager) == True:
             restaurant = Restaurant.objects.get(manager=user) 
-            customer = Customer.objects.get(pk=pk)
+            customer = get_object_or_404(User, pk=pk)
             if request.method == 'POST':
                 body = parse_req_body(request.body)    
                 update_customer = CustomerStatus.objects.filter(restaurant=restaurant).filter(customer=customer)
@@ -228,10 +229,12 @@ def customer_details(request, pk): #must send customerid
             complaints_from = []
             for order in orders:
                 complaints_from.append(Order_Food.objects.filter(customer=customer).filter(order=order).filter(food_complaint__isnull=False))
-            complaints_received = Order.objects.filter(restaurant=restaurant).filter(customer=pk).filter(customerrating__lte='2')
+            complaints_received = Order.objects.filter(restaurant=restaurant).filter(customer=pk).filter(customer_rating__lte='2')
+            num_complaints = len(complaints_received)
 
             context = { 
                 'customer': customer,
+                'num_complaints': num_complaints,
                 'complaints_received': complaints_received, 
                 'complaints_from': complaints_from,
                 'orders': orders,
