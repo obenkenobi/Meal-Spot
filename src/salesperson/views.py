@@ -23,7 +23,9 @@ def home(request):
     if request.method == "POST": 
         body = parse_req_body(request.body)
         orderID= body['orderId']
+        price = int(body['price'])
         order = restaurant.SupplyOrder.objects.get(id=orderID)
+        order.price = price
         order.salesperson = my_salesperson
         order.finished = True
         order.save()
