@@ -114,8 +114,12 @@ def resturant_order(request, pk):
         my_order.save()
         total = 0
         for food_id_str in body:
-            qty = body[food_id_str]
-            if body != csr_token and qty > 0:
+            qty = 0
+            try:
+                qty = int(body[food_id_str])
+            except:
+                print('csr_token:', csr_token )
+            if food_id_str != csr_token and qty > 0:
                 food_id = int(food_id_str)
                 myfood = restaurant.Food.objects.get(id=food_id)
                 my_foodorder = restaurant.Order_Food(quantity=qty, order=my_order, food=myfood)

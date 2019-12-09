@@ -11,10 +11,10 @@ def deletefood(my_cook, body):
 
 def addfood(my_cook, body):
     name = body['foodname']
-    desc = body['price']
-    price = body['description']
+    price = float(body['price'])
+    desc = body['description']
     vipfree = int(body['vipfree']) == 1
-    newfood = restaurant.Food(name=name, description=desc, price=price, vip_free=vipfree)
+    newfood = restaurant.Food(name=name, description=desc, price=price, vip_free=vipfree, cook=my_cook)
     newfood.save()
 
 def supply_rate(my_cook, body):
@@ -26,7 +26,7 @@ def supply_rate(my_cook, body):
 
 def supply_request(my_cook, body):
     supplydes = body['supplydes']
-    supplyreq = restaurant.SupplyOrder(order_description=supplydes)
+    supplyreq = restaurant.SupplyOrder(order_description=supplydes, cook=my_cook)
     supplyreq.save()
 
 def finishorder(my_cook, body):
@@ -49,10 +49,12 @@ def finishorder(my_cook, body):
 def home(request):
     my_user = None
     # makes sure user is deliverer
+    print('cook home')
     try:
         my_user = request.user
         userIs = userTypeChecker(my_user)
         if userIs(user.Cook) != True:
+            print('user not cook')
             response = redirect('home-nexus')
             return response
     except Exception as e:
@@ -60,6 +62,7 @@ def home(request):
         response = redirect('home-nexus')
         return response
     except:
+        print('exception occured')
         response = redirect('home-nexus')
         return response
   
@@ -68,6 +71,7 @@ def home(request):
     registered = len(user.Cook.objects.filter(user=my_user).exclude(restaurant__isnull=True)) > 0 and my_cook.status == 'H'
 
     if registered != True: # if not registered
+        print('cook not registered')
         return redirect('cook-register')  
     
     if request.method == "POST":
@@ -87,7 +91,7 @@ def home(request):
     cookfood = restaurant.Food.objects.filter(cook=my_cook)
     supplyorders = restaurant.SupplyOrder.objects.filter(cook=my_cook)
     warnings = my_cook.warnings
-    orders = restaurant.Order.objects.get(restaurant=my_cook.restaurant)
+    orders = restaurant.Order.objects.filter(restaurant=my_cook.restaurant)
     order_data = []
     for order in orders:
         data_entry = {
@@ -96,7 +100,7 @@ def home(request):
             'finished': len(restaurant.Order_Food.objects.filter(order=order).filter(food__cook=my_cook).filter(isFinished=True)) > 0
         }
         order_data.append(data_entry)
-
+    print(supplyorders)
     context = {
         'cookfood': cookfood,
         'supplyorders': supplyorders,
@@ -107,22 +111,28 @@ def home(request):
     return render(request, 'cook/home.html', context=context)
 
 def register(request):
+    print('cook register')
     my_user = None
     try:
         my_user = request.user
         isType = userTypeChecker(my_user)
         if isType(user.Cook) != True:
+            print('user not cook')
             response = redirect('home-nexus')
             return response
     except:
+        print('user not cook')
         response = redirect('home-nexus')
         return response
 
-    my_cook = user.Cook.get(user=my_user)
+    my_cook = user.Cook.objects.get(user=my_user)
+    print('cook status:', my_cook.status)
     registered = len(user.Cook.objects.filter(user=my_user).exclude(restaurant__isnull=True)) > 0 and my_cook.status == 'H'
     if registered:
+        print('cook registered')
         return redirect('cook-home')
     registering = len(user.Cook.objects.filter(user=my_user).exclude(restaurant__isnull=False)) > 0 and my_cook.status != 'H'
+    print('registering:',registering)
 
     restaurants = restaurant.Restaurant.objects.all()
     context={'restaurants': restaurants, 'registering': registering}

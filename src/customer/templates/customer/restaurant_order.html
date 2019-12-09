@@ -102,7 +102,7 @@ function speechToItems(fullTranscript){
   
         <button id="speech-order" onclick="speechToItems(speechTranscript())">Order by voice</button>
   
-        <form id = "order-form">
+        <form id = "order-form" method="POST" action="{% url "customer-restaurant-order" pk=restaurant.id %}">
           {% csrf_token %}
           <table id = "order-table">
             <tr>
@@ -118,11 +118,15 @@ function speechToItems(fullTranscript){
               <td class="item-name">{{ food.name }}</td>
               <td><input class="quantity" name="{{ food.id }}" type = "number" min = "0" max = "20" onchange = "calculateTotal()"></td>
               <td class="price">
-                {% if status == 'V' %}{% if food.vip_free %}
-                0
+                {% if status == 'V' %}
+                  {% if food.vip_free %}
+                  0
+                  {% else %}
+                  {{ food.price }}
+                  {% endif %}
                 {% else %}
-                {{ food.price }}
-                {% endif %}{% endif %}
+                {{ food.price }}      
+                {% endif %}
               </td>
               <td class="rating">{{ food.avg_rating }}/5</td>
             </tr>

@@ -44,11 +44,11 @@ def register(request):
         response = redirect('home-nexus')
         return response
 
-    my_deliverer = user.Salesperson.get(user=my_user)
-    registered = len(user.Salesperson.objects.filter(user=my_user).exclude(restaurant__isnull=True)) > 0 and my_deliverer.status == 'H'
+    mysalesperson = user.Salesperson.objects.get(user=my_user)
+    registered = len(user.Salesperson.objects.filter(user=my_user).exclude(restaurant__isnull=True)) > 0 and mysalesperson.status == 'H'
     if registered:
         return redirect('salesperson-home')
-    registering = len(user.Salesperson.objects.filter(user=my_user).exclude(restaurant__isnull=False)) > 0 and my_deliverer.status != 'H'
+    registering = len(user.Salesperson.objects.filter(user=my_user).exclude(restaurant__isnull=False)) > 0 and mysalesperson.status != 'H'
 
     restaurants = restaurant.Restaurant.objects.all()
     context={'restaurants': restaurants, 'registering': registering}
@@ -57,7 +57,7 @@ def register(request):
         body = parse_req_body(request.body)
         resturant_id = int(body['id'])
         reg_resturant = restaurant.Restaurant.objects.get(id=resturant_id)
-        my_deliverer.update(restaurant = reg_resturant)
+        mysalesperson.update(restaurant = reg_resturant)
         context['registering'] = True
     return render(request, 'salesperson/register.html', context=context)
 

@@ -99,14 +99,14 @@
           </tr>
 
           {% comment %} Loop through menu items {% endcomment %}
-          {% for food in popularRecFood %}
+          {% for food in foods %}
           <tr>
             <td>
               <b>{{ food.name }}</b>
             </td>
             <td class = "price">{{ food.price }}</td>
             <td class = "rating">{{ food.avg_rating }}/5</td>
-            <td class = "description">{{ food.description }}/5</td>
+            <td class = "description">{{ food.description }}</td>
           </tr>
           {% endfor %}
       </table>
