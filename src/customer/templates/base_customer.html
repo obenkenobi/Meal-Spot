@@ -19,6 +19,9 @@
 
 {% block navlist %}
   {% comment %} Navbar contents {% endcomment %}
+  {% if user.is_authenticated %}
+    <li class="nav-item active"><a href="{% url 'customer-orders'%}" class="nav-link">Orders</a></li>   
+  {% endif %}
 {% endblock %}
 
 {% block content %}
