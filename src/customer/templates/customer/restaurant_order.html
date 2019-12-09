@@ -14,7 +14,7 @@
 function calculateTotal()
 {
   var total = 0;
-  var discount = document.getElementById("discount").innerText;
+  var discount = Number(document.getElementById("discount").innerText);
   
   var items = document.getElementsByClassName("item");
   for(var i = 0; i < items.length; i ++){
@@ -93,14 +93,17 @@ function speechToItems(fullTranscript){
 
 {% block page_content %}
 
-//html
+{% comment %} //html {% endcomment %}
     <div class = "order">
-        <button id = "back-button">Back to restaurant </button>
+        <a href="customer/restaurant/{{restaurant.id}}">
+          <button id = "back-button">Back to restaurant </button>
+        </a>
         <h2>Order:</h2>
   
         <button id="speech-order" onclick="speechToItems(speechTranscript())">Order by voice</button>
   
         <form id = "order-form">
+          {% csrf_token %}
           <table id = "order-table">
             <tr>
               <th>Item</th>
@@ -110,46 +113,50 @@ function speechToItems(fullTranscript){
             </tr>
   
             <!--Loop restaurant items putting quantity form-->
-  
+            {% for food in foods %}
             <tr class = "item">
-              <td class="item-name">Chicken</td>
-              <td><input class="quantity" type = "number" min = "0" max = "20" onchange = "calculateTotal()"></td>
-              <td class="price">6.99</td>
-              <td class="rating">3.5/5</td>
+              <td class="item-name">{{ food.name }}</td>
+              <td><input class="quantity" name="{{ food.id }}" type = "number" min = "0" max = "20" onchange = "calculateTotal()"></td>
+              <td class="price">
+                {% if status == 'V' %}{% if food.vip_free %}
+                0
+                {% else %}
+                {{ food.price }}
+                {% endif %}{% endif %}
+              </td>
+              <td class="rating">{{ food.avg_rating }}/5</td>
             </tr>
-            <tr class = "item">
-              <td class="item-name">Salad</td>
-              <td><input class="quantity" type = "number" min = "0" max = "20" onchange = "calculateTotal()"></td>
-              <td class="price">10.99</td>
-              <td class="rating">4.5/5</td>
-            </tr>
-            <tr class = "item">
-              <td class="item-name">Fish</td>
-              <td><input class="quantity" type = "number" min = "0" max = "20" onchange = "calculateTotal()"></td>
-              <td class="price">12.99</td>
-              <td class="rating">3.3/5</td>
-            </tr>
-            
+            {% endfor %}
           </table>
   
           <br>
           <table id = "order-details">
           
             <tr>
-              <th>Discount:</th>
+              <th>Discount (0.05 = 5% ):</th>
+              {% if status == 'V' %}
               <td id = "discount"> 0.05</td>
+              {% elif status == 'R' %}
+              <td id = "discount"> 0.05</td>
+              {% else %}
+              <td id = "discount"> 0.00</td>
+              {% endif %}
             </tr>
             <tr>
               <th>Total:</th>
               <td id = "total">0</td>
             </tr>
-            <tr>
+
+            {% comment %} We don't have time to use credit card # {% endcomment %}
+            {% comment %} <tr>
               <th>Card Number:</th>
               <td id = "card">
                 <input maxlength="16" minlength="16" placeholder="xxxx-xxxx-xxxx-xxxx">
               </td>
-            </tr>
-            <tr>
+            </tr> {% endcomment %}
+
+            {% comment %} Address not needed {% endcomment %}
+            {% comment %} <tr>
               <th>Address:</th>
   
               <!--Placeholder shows customer stored address(default)-->
@@ -157,11 +164,12 @@ function speechToItems(fullTranscript){
               <td id = "address">
                 <input id = "address-input" minlength="12" placeholder = "123 45th St NY 11111">
               </td>
-            </tr>
+            </tr>  {% endcomment %}
            
           </table>
   
-        <input type="checkbox" value="address"> Use default address
+        
+        {% comment %} <input type="checkbox" value="address"> Use default address {% endcomment %}
         <br><br>
   
         <input type="submit" value="Submit Order">

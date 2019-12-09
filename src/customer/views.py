@@ -16,6 +16,7 @@ def home(request):
     return render(request, "customer/home.html", context=context)
 
 def resturant_page(request, pk):
+    userIs = userTypeChecker(request.user)
     my_restaurant = restaurant.Restaurant.objects.get(id=pk)
     my_customer = None
     customer_status_info = None
@@ -51,7 +52,54 @@ def resturant_page(request, pk):
     return render(request, "customer/restaurant.html", context=context)
 
 def resturant_order(request, pk):
-    context = {}
+    userIs = userTypeChecker(request.user)
+    my_restaurant = restaurant.Restaurant.objects.get(id=pk)
+    my_customer = None
+    customer_status_info = None
+    status = 'N'
+    my_restaurant = restaurant.Restaurant.objects.get(id=pk)
+    if request.user.is_authenticated:
+        if userIs(user.Customer) != True:
+            return redirect('home-nexus')
+        else:
+            my_customer = user.Customer.objects.get(user=request.user)
+            customer_status_info = restaurant.CustomerStatus.objects.filter(customer=my_customer).filter(restaurant=my_restaurant)
+            if len(customer_status_info) > 0:
+                customer_status_info = customer_status_info[0]
+                status = customer_status_info.status
+    foods = restaurant.Food.objects.filter(cook__restaurant=my_restaurant)
+    
+    if status == 'B':
+        return redirect('home-nexus')
+
+    if request.method == "POST":
+        csr_token = 'csrfmiddlewaretoken'
+        body = parse_req_body(request.body)
+        my_order = restaurant.Order(restaurant=my_restaurant, customer=my_customer)
+        my_order.save()
+        total = 0
+        for food_id_str in body:
+            qty = body[food_id_str]
+            if body != csr_token and qty > 0:
+                food_id = int(food_id_str)
+                myfood = restaurant.Food.objects.get(id=food_id)
+                my_foodorder = restaurant.Order_Food(quantity=qty, order=my_order, food=myfood)
+                my_foodorder.save()
+                price = myfood.price 
+                if status == 'V' and food.vip_free: 
+                    price = 0
+                total += price*qty
+        discount = 0
+        if status in ['V', 'R']:
+            discount = 0.05
+        total = total*(1-discount)
+        my_order.total_price = total
+        my_order.save()
+    context = {
+        'foods': foods,
+        'restaurant': my_restaurant,
+        'status': status
+    }
     return render(request, "customer/restaurant_order.html", context=context)
 
 def orders(request):

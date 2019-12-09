@@ -29,6 +29,9 @@ def supply_request(my_cook, body):
     supplyreq = restaurant.SupplyOrder(order_description=supplydes)
     supplyreq.save()
 
+def finishorder(my_cook, body):
+    pass
+
 # Create your views here.
 
 def home(request):
@@ -66,7 +69,8 @@ def home(request):
             supply_rate(my_cook, body)
         elif task=='requestsupply':
             supply_request(my_cook, body)
-        pass
+        elif task=='finishorder':
+            finishorder(my_cook, body)
 
     cookfood = restaurant.Food.objects.filter(cook=my_cook)
     supplyorders = restaurant.SupplyOrder.objects.filter(cook=my_cook)
