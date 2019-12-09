@@ -148,7 +148,7 @@ def staff(request):
     except:
         return redirect('home-nexus')
 
-def staff_details(request, pk):
+def staffdetails(request, pk):
     try:
         user = request.user
         userIs = userTypeChecker(user)
@@ -211,7 +211,7 @@ def customers(request):
     except:
         return redirect('home-nexus')
 
-def customer_details(request, pk): #must send customerid
+def customerdetails(request, pk): #must send customerid
     try:
         user = request.user
         userIs = userTypeChecker(user)
