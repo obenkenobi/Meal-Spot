@@ -30,7 +30,7 @@ def supply_request(my_cook, body):
     supplyreq.save()
 
 def finishorder(my_cook, body):
-    orderid = int(body['order_id']) # hidden input field
+    orderid = int(body['orderId']) # hidden input field
     order = restaurant.Order.objects.get(id=orderid)
     order_foods = restaurant.Order_Food.objects.filter(order=order)
     for orderfood in order_foods:
@@ -87,11 +87,21 @@ def home(request):
     cookfood = restaurant.Food.objects.filter(cook=my_cook)
     supplyorders = restaurant.SupplyOrder.objects.filter(cook=my_cook)
     warnings = my_cook.warnings
+    orders = restaurant.Order.objects.get(restaurant=my_cook.restaurant)
+    order_data = []
+    for order in orders:
+        data_entry = {
+            'order': order,
+            'description': order.food_description,
+            'finished': len(restaurant.Order_Food.objects.filter(order=order).filter(food__cook=my_cook).filter(isFinished=True)) > 0
+        }
+        order_data.append(data_entry)
 
     context = {
         'cookfood': cookfood,
         'supplyorders': supplyorders,
         'warnings': warnings,
+        'orderData': order_data,
     }
 
     return render(request, 'cook/home.html', context=context)

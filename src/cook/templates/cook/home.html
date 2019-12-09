@@ -145,6 +145,9 @@ $("#addSupply").hide()
   $("#d").click(function(){
     $("#addSupply").toggle(1000);
   });
+  $("#e").click(function(){
+    $("#finishorder").toggle(1000);
+  });
 });
 function myFunction() {
   var rate = prompt("Please enter rating:", "Rating out of 5");
@@ -258,6 +261,41 @@ function myFunction() {
           </div>
         </div>
       </form>
+    </div>
+    <br>
+
+    <button class="text" id="e">My Supply Items</button>
+    <div id = 'finishorder'>
+      <table class=bigT>
+        <tr>
+          <th>OrderID</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
+        {% for data_entry in orderData %}
+        <tr valign='center'>
+          <td>{{ data_entry.order.id }}</td>
+          <td class="overflow-auto" >{{ data_entry.description }}</td>
+          <td>
+            {% if data_entry.order.status == 'PE' %}
+              {% if not data_entry.finished %}
+              <form method="POST" action="{% url "cook-home" %}">
+                {% csrf_token %}
+                <input type="hidden" name="task" value="finishorder" />
+                <input type="hidden" name="orderId" value="{{ data_entry.order.id }}" />
+                <input type="submit" value="Rate">
+              </form>
+              {% else %}
+              You finished your job
+              {% endif %}
+            {% else %}
+            Order Done!!
+            {% endif %}
+          </td>
+          {% comment %} <td><button id="rt" onclick="myFunction()">Rate</button></td> {% endcomment %}
+        </tr>
+        {% endfor %}
+      </table>
     </div>
     <br>
   </div>
