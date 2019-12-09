@@ -63,7 +63,7 @@ class Order_Food(models.Model):
     order = models.ForeignKey('Order', on_delete=models.SET_NULL, null=True)
     food = models.ForeignKey('Food', on_delete=models.SET_NULL, null=True)
     
-    @classmethod
+    @staticmethod
     def recomended(customer, restaurant):
         def cmp_food(item1, item2):
             if item1['qty'] < item2['qty']:
@@ -91,8 +91,8 @@ class Order_Food(models.Model):
         rec_foods = [item['food'] for item in food_freq_list]
         return rec_foods
    
-    @classmethod
-    def popular(customer, restaurant):
+    @staticmethod
+    def popular(restaurant):
         def cmp_food(item1, item2):
             if item1['qty'] < item2['qty']:
                 return -1

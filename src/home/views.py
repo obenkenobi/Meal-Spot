@@ -17,16 +17,22 @@ def nexus(request):
     response = None
     try:
         if userIs(Manager):
+            print('redirecting to manager-home')
             response = redirect('manager-home')
         elif userIs(Deliverer):
+            print('redirecting to deliverer-home')
             response = redirect('deliverer-home')
         elif userIs(Cook):
+            print('redirecting to cook-home')
             response = redirect('cook-home')
         elif userIs(Salesperson):
+            print('redirecting to salesperson-home')
             response = redirect('salesperson-home')
         else:
+            print('redirecting to customer-home')
             response = redirect('customer-home')
     except:
+        print('redirecting to customer-home')
         response = redirect('customer-home')
     return response
 

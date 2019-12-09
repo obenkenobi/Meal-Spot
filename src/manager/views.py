@@ -6,24 +6,28 @@ from helper import parse_req_body, userTypeChecker
 # Create your views here.
 
 def home(request):
+    print('manager-home')
     try:
         user = request.user
         userIs = userTypeChecker(user)
-        if userIs(user.Manager) == True: # returns true if user is manager, else false
-            return render(request, 'manager-home.html')
+        if userIs(Manager) == True: # returns true if user is manager, else false
+            print('rendering to manager-home')
+            return render(request, 'manager/home.html')
         else:
+            print('redirecting to home')
             return redirect('home-nexus')
     except Exception as e:
         print(e)
         return redirect('home-nexus')
     except:
+        print('redirecting to home')
         return redirect('home-nexus')
 
 def restaurant(request):
     try:
         user = request.user
         userIs = userTypeChecker(user)
-        if userIs(user.Manager) == True: # returns true if user is manager, else false
+        if userIs(Manager) == True: # returns true if user is manager, else false
             if request.method == 'POST':
                 body = parse_req_body(request.body)
                 name = body['name']
@@ -47,7 +51,7 @@ def deliverybids(request):
     try:
         user = request.user
         userIs = userTypeChecker(user)
-        if userIs(user.Manager) == True:
+        if userIs(Manager) == True:
             # at event that manager selects bid
             if request.method == 'POST':
                 if request.POST.get("choose_bid"):
@@ -85,7 +89,7 @@ def staff(request):
     try:
         user = request.user
         userIs = userTypeChecker(user)
-        if userIs(user.Manager) == True:
+        if userIs(Manager) == True:
             restaurant = Restaurant.objects.get(manager=user)
 
             if request.method == 'POST':
@@ -152,7 +156,7 @@ def staffdetails(request, pk):
     try:
         user = request.user
         userIs = userTypeChecker(user)
-        if userIs(user.Manager) == True:
+        if userIs(Manager) == True:
             staff = Staff.objects.get(user=pk)
             if userIs(staff.Cook): 
                 orders = Order.objects.filter(restaurant=restaurant).filter(cook=staff)
@@ -175,7 +179,7 @@ def customers(request):
     try:
         user = request.user
         userIs = userTypeChecker(user)
-        if userIs(user.Manager) == True:
+        if userIs(Manager) == True:
             restaurant = Restaurant.objects.get(manager=user)  
                  
             if request.method == 'POST':
@@ -215,7 +219,7 @@ def customerdetails(request, pk): #must send customerid
     try:
         user = request.user
         userIs = userTypeChecker(user)
-        if userIs(user.Manager) == True:
+        if userIs(Manager) == True:
             restaurant = Restaurant.objects.get(manager=user) 
             customer = get_object_or_404(User, pk=pk)
             if request.method == 'POST':
@@ -271,7 +275,7 @@ def pendingregistrations(request): #if post, request must have customer user obj
     try:
         user = request.user
         userIs = userTypeChecker(user)
-        if userIs(user.Manager) == True:
+        if userIs(Manager) == True:
             restaurant = Restaurant.objects.get(manager=user)
             if request.method == 'POST':
                 body = parse_req_body(request.body)

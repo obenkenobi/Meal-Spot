@@ -95,7 +95,7 @@ function speechToItems(fullTranscript){
 
 {% comment %} //html {% endcomment %}
     <div class = "order">
-        <a href="customer/restaurant/{{restaurant.id}}">
+        <a href="{% url "customer-restaurant" pk=restaurant.id %}">
           <button id = "back-button">Back to restaurant </button>
         </a>
         <h2>Order:</h2>

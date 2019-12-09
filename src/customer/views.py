@@ -54,6 +54,7 @@ def resturant_page(request, pk):
     my_customer = None
     customer_status_info = None
     status = 'N'
+    recfood_order = None
     my_restaurant = restaurant.Restaurant.objects.get(id=pk)
     if request.user.is_authenticated:
         if userIs(user.Customer) != True:
@@ -64,8 +65,8 @@ def resturant_page(request, pk):
             if len(customer_status_info) > 0:
                 customer_status_info = customer_status_info[0]
                 status = customer_status_info.status
-    recfood_order = restaurant.Order_Food.recomended(my_customer, my_restaurant) 
-    recfood_popular = restaurant.Order_Food.popular(my_customer, my_restaurant)
+        recfood_order = restaurant.Order_Food.recomended(my_customer, my_restaurant) 
+    recfood_popular = restaurant.Order_Food.popular(my_restaurant)
     foods = restaurant.Food.objects.filter(cook__restaurant=my_restaurant)
     if request.method == "POST":
         if customer_status_info == None:
@@ -74,6 +75,7 @@ def resturant_page(request, pk):
         customer_status_info.status = status
         customer_status_info.save()
 
+    print('status:',status)
     context = {
         'foods': foods,
         'orderRecFood': recfood_order,

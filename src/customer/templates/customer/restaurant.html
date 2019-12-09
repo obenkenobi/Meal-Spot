@@ -22,17 +22,17 @@
   
     {% comment %} Customer status info {% endcomment %}
     {% if user.is_authenticated %}
-      {% if status == 'N'%}
+      {% if status == "N" %}
       <form method="POST" action="customer/restaurant/{{restaurant.id}}"> {% comment %} Rehister restaurant form {% endcomment %}
         {% csrf_token %}
         <input type="hidden" name="task" value="register" />
         <input type="submit" id="register" value="Register">
       </form>
-      {% elif status = 'P'%}
+      {% elif status == "P" %}
       <div>Registration pending ... </div>
-      {% elif status = 'R'%}
+      {% elif status == "R" %}
       <div>You are Registered</div>
-      {% elif status = 'V'%}
+      {% elif status == "V" %}
       <div>You are VIP</div>
       {% else %}
       <div>You are blacklisted</div>
@@ -87,13 +87,6 @@
 
     </div>
     
-    {% if status == 'B'%}
-    <br>
-    <a href="customer/restaurant/order/{{restaurant.id}}">
-      <button id = "order">Make an order</button>
-    </a>
-    {% endif %}
-    
     <div class="Menu">
 
       <h2>Menu:</h2>
@@ -119,9 +112,9 @@
       </table>
     </div>
 
-    {% if status == 'B'%}
+    {% if status != "B" %}
     <br>
-    <a href="customer/restaurant/order/{{restaurant.id}}">
+    <a href="{% url "customer-restaurant-order" pk=restaurant.id %}">
       <button id = "order">Make an order</button>
     </a>
     {% endif %}
