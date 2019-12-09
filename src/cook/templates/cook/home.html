@@ -157,7 +157,7 @@ function myFunction() {
   <p>Warnings: {{ warnings }}</p>
   <div class="menu">
     <button class="text" id="a">My Food Items</button>
-      <div id = 'food'>
+    <div id = 'food'>
       <table class=bigT>
         <tr>
           <th>Food Item</th>
@@ -181,84 +181,84 @@ function myFunction() {
         </form>
         {% endfor %}
       </table>
-      </div>
-      <br>
+    </div>
+    <br>
     <button class="text" id="b">Add New Food Item</button>
-      <div id="addFood">
-        <form method="POST" action="{% url "cook-home" %}" style="border:1px solid #ccc" >
-          {% csrf_token %}
-          <input type="hidden" name="task" value="addfood" />
-          <div class="container">
-            <label for="foodname"><b>Food Name</b></label>
-            <input type="text" placeholder="Enter Name of Food" name="foodname" required>
-            <label for="price"><b>Price</b></label>
-            <input type="number" placeholder="Enter Price" name="price" required>
+    <div id="addFood">
+      <form method="POST" action="{% url "cook-home" %}" style="border:1px solid #ccc" >
+        {% csrf_token %}
+        <input type="hidden" name="task" value="addfood" />
+        <div class="container">
+          <label for="foodname"><b>Food Name</b></label>
+          <input type="text" placeholder="Enter Name of Food" name="foodname" required>
+          <label for="price"><b>Price</b></label>
+          <input type="number" placeholder="Enter Price" name="price" required>
 
-            <label for="description"><b>Description</b></label>
-            <input type="text" placeholder="Enter Description" name="description" required>
+          <label for="description"><b>Description</b></label>
+          <input type="text" placeholder="Enter Description" name="description" required>
 
-            <label for="vipfree"><b>Description</b></label>
-            <input type="hidden" name="vipfree" value="0" />
-            <input type="checkbox" name="vipfree" id="vipfree" value="1" />
+          <label for="vipfree"><b>Description</b></label>
+          <input type="hidden" name="vipfree" value="0" />
+          <input type="checkbox" name="vipfree" id="vipfree" value="1" />
 
           <div class="clearfix">
             <button type="submit" class="add">ADD</button>
             <button type="reset" class="cancelbtn">Cancel</button>
           </div>
-         </div>
-        </form>
-      </div>
-      <br>
-      <button class="text" id="c">My Supply Items</button>
-      <div id = 'supply'>
+        </div>
+      </form>
+    </div>
+    <br>
+    <button class="text" id="c">My Supply Items</button>
+    <div id = 'supply'>
       <table class=bigT>
         <tr>
-			      <th>Description</th>
+            <th>Description</th>
             <th>Price</th>
             <th>Rate/Rating</th>
           </tr>
-          {% for supplyorder in supplyorders %}
-            <tr valign='center'>
-              <td>{{ supplyorder.order_description }}</td>
-              <td>{{ supplyorder.price }}</td>
-              <td>
-                {% if supplyorder.supply_rating == None %}
-                  {% if supplyorder.finished %}
-                  <form method="POST" action="{% url "cook-home" %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="task" value="ratesupply" />
-                    <input type="hidden" name="supplyID" value="{{ supplyorder.id }}" />
-                    <input type="number" name="rating" min="0" max="5">
-                    <input type="submit" value="Rate">
-                  </form>
-                  {% else %}
-                  No rating, order unfinished
-                  {% endif %}
-                {% else %}
-                {{ supplyorder.supply_rating }}
-                {% endif %}
-              </td>
-              {% comment %} <td><button id="rt" onclick="myFunction()">Rate</button></td> {% endcomment %}
-            </tr>
-          {% endfor %}
-        </table>
-      </div>
-      <br>
-          <button class="text" id="d">Request New Supply</button>
-            <div id = "addSupply">
-              <form method="POST" action="{% url "cook-home" %}" style="border:1px solid #ccc" >
+        {% for supplyorder in supplyorders %}
+        <tr valign='center'>
+          <td>{{ supplyorder.order_description }}</td>
+          <td>{{ supplyorder.price }}</td>
+          <td>
+            {% if supplyorder.supply_rating == None %}
+              {% if supplyorder.finished %}
+              <form method="POST" action="{% url "cook-home" %}">
                 {% csrf_token %}
-                <input type="hidden" name="task" value="requestsupply" />
-                <div class="container">
-                <label for="supplydes"><b>Supply Description</b></label>
-                <input type="text" placeholder="Enter Description" name="supplydes" required>
-                <div class="clearfix">
-                  <button type="submit" class="add">ADD</button>
-                  <button type="reset" class="cancelbtn">Cancel</button>
-                </div>
-               </div>
-            </form>
-           </div>
-           <br>
+                <input type="hidden" name="task" value="ratesupply" />
+                <input type="hidden" name="supplyID" value="{{ supplyorder.id }}" />
+                <input type="number" name="rating" min="0" max="5">
+                <input type="submit" value="Rate">
+              </form>
+              {% else %}
+              No rating, order unfinished
+              {% endif %}
+            {% else %}
+            {{ supplyorder.supply_rating }}
+            {% endif %}
+          </td>
+          {% comment %} <td><button id="rt" onclick="myFunction()">Rate</button></td> {% endcomment %}
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    <br>
+    <button class="text" id="d">Request New Supply</button>
+    <div id = "addSupply">
+      <form method="POST" action="{% url "cook-home" %}" style="border:1px solid #ccc" >
+        {% csrf_token %}
+        <input type="hidden" name="task" value="requestsupply" />
+        <div class="container">
+          <label for="supplydes"><b>Supply Description</b></label>
+          <input type="text" placeholder="Enter Description" name="supplydes" required>
+          <div class="clearfix">
+            <button type="submit" class="add">ADD</button>
+            <button type="reset" class="cancelbtn">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <br>
   </div>
 {% endblock %}
