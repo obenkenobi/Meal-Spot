@@ -65,7 +65,7 @@
                 <td class = "food-complaint-id">{{ complaint.order.id }}</td>
                 <td class = "food-complaint-name">{{ complaint.food }}</td>
                 <td class = "food-cook-name">{{ complaint.food.cook.user.first_name }} {{ complaint.food.cook.user.last_name }}</td>
-                <td class = "food-complaint">There was a hair in my food.</td>
+                <td class = "food-complaint">{{ complaint.food_complaint }}</td>
             </tr>
           
             {% endfor %}
@@ -95,35 +95,37 @@
 
 
     <h3 id = "history-title">Order History:</h3>
-
-        <!--Loop table below for all customer orders-->
-        <table id = "order-history">
-          <tr>
+    <table id = "order-history">
+    {% for info in orders_info %}
+    
+        <tr>
             <th>Order ID:</th>
-            <td class="order-id">000432</td>
-            <th>Total:</th>
-            <td class="total">34.99</td>
-            <th>Total items:</th>
-            <td class="item-qty">4</td>
+            <td class="order-id">{{ info.order.id }}</td>
+            <th>Total Price:</th>
+            <td class="total">{{ info.order.total_price }}</td>
+            <th>Total Items:</th>
+            <td class="item-qty">{{ info.total_items }}</td>
             <th>Delivery Status:</th>
-            <td class="delivery-status">Delivered</td>
-          </tr>
+            <td class="delivery-status">{{ info.order.status }}</td>
+        </tr>
 
-          <tr>
-              <th>Item</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Rating</th>
-          </tr>
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Rating</th>
+        </tr>
 
-  
-          <tr class = "item">
-            <td class="item-name">Chicken</td>
-            <td class="quantity">4</td>
-            <td class="price">6.99</td>
-            <td class="rating">3.5/5</td>
-          </tr>
-
-        </table>
+        {% for food in order.order_Food %} <!-- MIGHT CAUSE PROBLEMS reverse access foreignkey-->
+        <tr class = "item">
+            <td class="item-name">{{ food.name }}</td>
+            <td class="quantity">{{ food.quantity }}</td>
+            <td class="price">{{ food.food.price }}</td>
+            <td class="rating">{{ food.food_rating }}</td>
+        </tr>
+        {% endfor %}
+    
+    {% endfor %}
+    </table>
 </div>
 {% endblock %}
