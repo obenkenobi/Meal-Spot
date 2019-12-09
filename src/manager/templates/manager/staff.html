@@ -22,30 +22,31 @@
   <table id = "cook-table">
       <!--Table header-->
       <tr>
-        <th>Last:</th>
-        <th>First:</th>
-        <th>Rating:</th>
-        <th># Complaints:</th>
+        <th>Last Name:</th>
+        <th>First Name:</th>
         <th>Warnings:</th>
       </tr>
 
-      <!--Loop following 2 rows for all staff of restaurant-->
-      <div id = "staff-data">
+      {% for cook in cooks %}
+      <div id = "cook-data">
         <tr>
-          <td class = "last-n">Smith</td>
-          <td class = "first-n">John</td>
-          <td class = "rating">3.5</td>
-          <td class = "num-complaints">2</td>
-          <td class = "warnings">1</td>
+          <td class = "last-n">{{ cook.user.last_name }}</td>
+          <td class = "first-n">{{ cook.user.first_name }}</td>
+          <td class = "warnings">{{ cook.warnings }}</td>
         </tr>
         <tr>
           <th>Salary:</th>
-          <td class = "salary">500</td>
-          <td><input class = "input-salary"></td>
-          <td><button class = "edit" type="submit">Edit Salary</button></td>
-          <td><button class = "order-hist">View order history</button></td> 
-          <td><button class = "remove-warning">Remove warning</button></td>
-          <td><button class = "fire">Fire</button></td>
+          <td class = "staff_salary">{{ cook.salary }}</td>
+          <form method="POST" action="{% url "manager-staff" %}">
+            <input class="user_id" type="hidden" value="{{ cook.user.id }}"></input>
+            <td><input class = "salary" name="salary" min="0" type="number"></input></td>
+            <td><button class="edit_salary" type="submit">Edit Salary</button></td>
+            <td class = "view-details">
+              <a href="{% url 'manager-staffdetails' cook.user.id %}" class="button" target="_blank">View Details</a>
+            </td>
+            <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
+            <td><button class = "fire" type="submit">Fire</button></td>
+          </form>
           
         </tr>
       </div>
@@ -53,33 +54,33 @@
 
   <h3>Salespeople</h3>
   <table id = "salesperson-table">
-
       <!--Table header-->
       <tr>
         <th>Last Name:</th>
         <th>First Name:</th>
-        <th>Rating:</th>
-        <th># Complaints:</th>
         <th>Warnings:</th>
       </tr>
 
-      <!--Loop following 2 rows for all staff of restaurant-->
-      <div id = "staff-data">
+      {% for salesperson in salespeople %}
+      <div id = "salesperson-data">
         <tr>
-          <td class = "last-n">Smith</td>
-          <td class = "first-n">John</td>
-          <td class = "rating">3.5</td>
-          <td class = "num-complaints">2</td>
-          <td class = "warnings">1</td>
+          <td class = "last-n">{{ salesperson.user.last_name }}</td>
+          <td class = "first-n">{{ salesperson.user.first_name }}</td>
+          <td class = "warnings">{{ salesperson.warnings }}</td>
         </tr>
         <tr>
           <th>Salary:</th>
-          <td class = "salary">500</td>
-          <td><input class = "input-salary"></td>
-          <td><button class = "edit">Edit Salary</button></td>
-          <td><button class = "order-hist">View order history</button></td> 
-          <td><button class = "remove-warning">Remove warning</button></td>
-          <td><button class = "fire">Fire</button></td>
+          <td class = "staff_salary">{{ salesperson.salary }}</td>
+          <form method="POST" action="{% url "manager-staff" %}">
+            <input class="user_id" type="hidden" value="{{ salesperson.user.id }}"></input>
+            <td><input class = "salary" name="salary" min="0" type="number"></input></td>
+            <td><button class="edit_salary" type="submit">Edit Salary</button></td>
+            <td class = "view-details">
+              <a href="{% url 'manager-staffdetails' salesperson.user.id %}" class="button" target="_blank">View Details</a>
+            </td>
+            <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
+            <td><button class = "fire" type="submit">Fire</button></td>
+          </form>
           
         </tr>
       </div>
@@ -87,33 +88,33 @@
 
     <h3>Deliverers</h3>
     <table id = "deliverer-table">
-
       <!--Table header-->
       <tr>
-        <th>Last:</th>
-        <th>First:</th>
-        <th>Rating:</th>
-        <th># Complaints:</th>
+        <th>Last Name:</th>
+        <th>First Name:</th>
         <th>Warnings:</th>
       </tr>
 
-      <!--Loop following 2 rows for all staff of restaurant-->
-      <div id = "staff-data">
+      {% for deliverer in deliverers %}
+      <div id = "deliverer-data">
         <tr>
-          <td class = "last-n">Smith</td>
-          <td class = "first-n">John</td>
-          <td class = "rating">3.5</td>
-          <td class = "num-complaints">2</td>
-          <td class = "warnings">1</td>
+          <td class = "last-n">{{ deliverer.user.last_name }}</td>
+          <td class = "first-n">{{ deliverer.user.first_name }}</td>
+          <td class = "warnings">{{ deliverer.warnings }}</td>
         </tr>
         <tr>
           <th>Salary:</th>
-          <td class = "salary">500</td>
-          <td><input class = "input-salary"></td>
-          <td><button class = "edit">Edit Salary</button></td>
-          <td><button class = "order-hist">View order history</button></td> 
-          <td><button class = "remove-warning">Remove warning</button></td>
-          <td><button class = "fire">Fire</button></td>
+          <td class = "staff_salary">{{ deliverer.salary }}</td>
+          <form method="POST" action="{% url "manager-staff" %}">
+            <input class="user_id" type="hidden" value="{{ deliverer.user.id }}"></input>
+            <td><input class = "salary" name="salary" min="0" type="number"></input></td>
+            <td><button class="edit_salary" type="submit">Edit Salary</button></td>
+            <td class = "view-details">
+              <a href="{% url 'manager-staffdetails' deliverer.user.id %}" class="button" target="_blank">View Details</a>
+            </td>
+            <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
+            <td><button class = "fire" type="submit">Fire</button></td>
+          </form>
           
         </tr>
       </div>
