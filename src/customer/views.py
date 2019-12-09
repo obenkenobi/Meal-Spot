@@ -5,10 +5,10 @@ import django.views
 
 # helper functions
 def order_rate(my_customer, body):
-    order_id = body['orderId']
-    delivery_rating = body['ratedel']
+    order_id = int(body['orderId'])
+    delivery_rating = body['ratedel'] if body['ratedel'] != None else 3
     delivery_complaint = body.get('delcomp', '')
-    food_rating = body['ratefood']
+    food_rating = body['ratefood'] if body['ratefood'] != None else 3
     food_complaint = body.get('foodcomp', '')
 
     myorder = restaurant.Order.objects.get(id=order_id)
@@ -159,8 +159,15 @@ def orders(request):
         order_rate(my_customer, body)
 
     myorders = restaurant.Order.objects.filter(customer=my_customer)
+    myorderdata = []
+    for order in myorders:
+        data_entry = {
+            'order': order,
+            'description': order.food_description,
+        }
+        myorderdata.append(data_entry)
     
     context = {
-        'myorders': myorders
+        'myorderdata': myorderdata
     }
     return render(request, "customer/order.html", context=context) #html file will change

@@ -131,15 +131,17 @@ button:hover {
       <th>Order ID</th>
       <th>Price</th>
       <th>Status</th>
-      <th>View Orders</th>
+      <th>Description</th>
     </tr>
     <!-- for loop to enter oder data-->
+    {% for data_entry in myorderdata %}
     <tr valign='center'>
-      <td>DATA</td>
-      <td>DATA2</td>
-      <td>Data3</td>
-      <td><button id='view'>View</button></td>
+      <td>{{ data_entry.order.id }}</td>
+      <td>{{ data_entry.order.total_price }}</td>
+      <td>{{ data_entry.order.status }}</td>
+      <td class="overflow-auto">{{ data_entry.description }}</td>
     </tr>
+    {% endfor %}
   </table>
   <div id='a'><!-- div for view button-->
   <table class=smallT>
@@ -158,7 +160,23 @@ button:hover {
     <div id='btn'><button id='rt'>Rate Order</button></div><br>
   </div>
   <div id='b'><!-- div for rate order button if status != pending-->
-    <form method="POST" style="border:1px solid #ccc; width:80%; margin:auto;">
+    {% for data_entry in myorderdata %}
+    {% if data_entry.order.delivery_rating == None %}
+    <table>
+      <tr>
+        <th> OrderID</th>
+        <th> Restaurant</td>
+        <th> Description</td>
+      </tr>
+      <tr>
+        <td> {{ data_entry.order.id }} </td>
+        <td> {{ data_entry.order.restaurant.name }} </td>
+        <td class="overflow-auto">{{ data_entry.description }}</td>
+      </tr>
+    </table>
+    <form method="POST" action="{% url "customer-orders" %}" style="border:1px solid #ccc; width:80%; margin:auto;">
+      {% csrf_token %}
+      <input type="hidden" name="orderId" value="{{ data_entry.order.id }}" />
       <div class="container">
         <label for="ratedel"><b>Rate Deliverer: </b></label>
         <input id="ratedel" type="number" placeholder="Enter Rating (0-5)" name="ratedel" min=0 max=5 required onchange="showDivc()"/><br>
@@ -178,5 +196,7 @@ button:hover {
         </div>
       </div>
     </form>
+    {% endif %}
+    {% endfor %}
   </div>
 {% endblock %}
