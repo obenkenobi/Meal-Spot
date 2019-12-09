@@ -40,6 +40,20 @@ class Order(models.Model):
     total_price = models.FloatField(default=0)
     chose_bid = models.BooleanField(default=False)
 
+    @property
+    def orderfoods(self):
+        return Order_Food.objects.filter(order=self)
+    
+    @property
+    def food_description(self):
+        food_orders = self.orderfoods
+        desc = ''
+        for food_order in food_orders:
+            desc += str(food_order.food.name) + ' x ' + str(food_order.quantity) + ','
+        desc = desc[:len(desc) -1]
+        return desc
+
+
 # when customer adds food to order, create. if remove, delete
 class Order_Food(models.Model):
     quantity = models.IntegerField(default=1)
@@ -112,7 +126,8 @@ class Food(models.Model):
     name = models.CharField(max_length=50)
     description = models.TextField(blank = True)
     vip_free = models.BooleanField(default = False)
-    avg_rating = models.FloatField(null=True)
+    avg_rating = models.FloatField(default=0)
+    num_ratings = models.IntegerField(default=0)
     cook = models.ForeignKey(Cook, on_delete=models.CASCADE)
     def __str__(self):
         return str(self.name)

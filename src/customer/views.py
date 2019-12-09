@@ -3,6 +3,39 @@ from database.models import user, restaurant, address
 from helper import parse_req_body, userTypeChecker
 import django.views
 
+# helper functions
+def order_rate(my_customer, body):
+    order_id = body['orderId']
+    delivery_rating = body['ratedel']
+    delivery_complaint = body.get('delcomp', '')
+    food_rating = body['ratefood']
+    food_complaint = body.get('foodcomp', '')
+
+    myorder = restaurant.Order.objects.get(id=order_id)
+    myorder.delivery_rating = delivery_rating
+    myorder.delivery_complaint = delivery_complaint
+    mydeliverer = None
+    for bid in restaurant.DeliveryBid.objects.filter(order=myorder).filter(win = True):
+        mydeliverer = bid.deliverer
+        mydeliverer.add_rating(delivery_rating)
+        mydeliverer.save()
+
+    orderfoods = myorder.orderfoods
+    for orderfood in orderfoods:
+        # give it a rating
+        orderfood.food_rating = food_rating
+        orderfood.food_complaint = food_complaint
+
+        # do cook food drops stuff
+        food = orderfood.food
+        food.avg_rating = (food.avg_rating*food.num_ratings + food_rating)/(food.num_ratings + 1)
+        food.num_ratings = food.num_ratings + 1
+        food.save()
+        cook = food.cook
+        if food.avg_rating < 2:
+            food.delete()
+            cook.add_food_drops()
+
 # Create your views here.
 def home(request):
     userIs = userTypeChecker(request.user)
@@ -103,5 +136,31 @@ def resturant_order(request, pk):
     return render(request, "customer/restaurant_order.html", context=context)
 
 def orders(request):
-    context = {}
+    userIs = userTypeChecker(request.user)
+    my_restaurant = restaurant.Restaurant.objects.get(id=pk)
+    my_customer = None
+    customer_status_info = None
+    status = 'N'
+    my_restaurant = restaurant.Restaurant.objects.get(id=pk)
+    if request.user.is_authenticated:
+        if userIs(user.Customer) != True:
+            return redirect('home-nexus')
+        else:
+            my_customer = user.Customer.objects.get(user=request.user)
+            customer_status_info = restaurant.CustomerStatus.objects.filter(customer=my_customer).filter(restaurant=my_restaurant)
+            if len(customer_status_info) > 0:
+                customer_status_info = customer_status_info[0]
+                status = customer_status_info.status
+    else:
+        return redirect('home-nexus')
+
+    if request.method == "POST":
+        body = parse_req_body(request.body)
+        order_rate(my_customer, body)
+
+    myorders = restaurant.Order.objects.filter(customer=my_customer)
+    
+    context = {
+        'myorders': myorders
+    }
     return render(request, "customer/order.html", context=context) #html file will change
