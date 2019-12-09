@@ -1,5 +1,5 @@
 from django.db import models
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from database.models.restaurant import *
 from database.models.user import *
 from helper import parse_req_body, userTypeChecker
@@ -50,26 +50,28 @@ def deliverybids(request):
         if userIs(user.Manager) == True:
             # at event that manager selects bid
             if request.method == 'POST':
-                body = parse_req_body(request.body)
-                chosen_bid = body['deliverybid']
-                win_bid = DeliveryBid.objects.get(id=chosen_bid.id)
-                win_bid.win = True
-                win_bid.save()
-                bid_order = win_bid.order
-                order = Order.objects.get(id=bid_order.id)
-                order.chose_bid = True
+                if request.POST.get("choose_bid"):
+                    body = parse_req_body(request.body)
+                    bid_id = int(body['bid_id'])
+                    win_bid = DeliveryBid.objects.get(id=bid_id)
+                    bid_order = win_bid.order
+                    if bid_order.chose_bid == False:
+                        win_bid.win = True
+                        win_bid.save()
+                        bid_order.chose_bid = True
+                        bid_order.save()
             
-            deliverybids=[]
+            deliverybids_info = []
             orders = Orders.objects.filter(restaurant=restaurant_id, status='PR', chose_bid=False) #.order_by(order)
             for order in orders:
-                order_bids={}
+                info_entry = {}
                 bids = DeliveryBid.objects.filter(order=order).filter(won=False).order_by('price')
-                order_bids[order] = bids
-                deliverybid.append(order_bids)
+                info_entry['order'] = order
+                info_entry['bids'] = bids
+                deliverybids_info.append(info_entry)
 
             context = {
-                'orders': orders,
-                'deliverybids': deliverybids,
+                'deliverybids_info': deliverybids_info,
             }
             return render(request, 'manager/deliverybids.html', context=context)
         else:
@@ -88,15 +90,16 @@ def staff(request):
 
             if request.method == 'POST':
                 body = parse_req_body(request.body)
-                staff = body['staff'] #this is a user object, COULD CAUSE ERRORS
-                update_staff = Staff.objects.get(user=staff) 
-                staffIs = userTypeChecker(staff)
+                staff_id = body['staff_id'] #this is a user object, COULD CAUSE ERRORS
+                staff_user = User.objects.get(pk=staff_id)
+                update_staff = Staff.objects.get(user=staff_user) 
+                staffIs = userTypeChecker(staff_user)
 
-                if body['function'] == 'remove_warning':
+                if request.POST.get('remove_warning'):
                     if update_staff.warnings > 1:
                         update_staff.warnings -= 1
                 
-                elif body['function'] == 'fire':
+                elif request.POST.get('fire'):
                     if staffIs(Cook): # check if there is enough cooks
                         if len(Cook.objects.filter(restaurant=restaurant)) > 2:
                             update_staff.status = 'N'
@@ -114,27 +117,30 @@ def staff(request):
                         update_staff.restaurant = None
                         update_staff.warnings = 0
                         update_staff.salary = 0
-                
-                elif body['function'] == 'edit_salary':
+
+                elif request.POST.get('edit_salary'):
                     salary = body['salary']
                     update_staff.salary = salary
-
-                elif body['function'] == 'hire':
-                    update_staff.status = 'H'
-                    update_staff.salary = 600
-                
-                elif body['function'] == 'reject':
-                    update_staff.status = 'N'
-                    update_staff.restaurant = None                    
 
                 update_staff.save()        
             
             staff = Staff.objects.filter(restaurant=restaurant, status='H')
-            pending_staff = Staff.objects.filter(restaurant=restaurant, status='N')
-            
+            cooks = []
+            salespeople = []
+            deliverers = []
+            for member in staff:
+                member_user = member.user
+                staffIs = userTypeChecker(member_user)
+                if staffIs(Cook):
+                    cooks.append(member)
+                elif staffIs(Salesperson):
+                    salespeople.append(member)            
+                if staffIs(Deliverer):
+                    deliverers.append(member)            
             context = { 
-                'staff': staff,
-                'pending_staff': pending_staff
+                'cooks': cooks,
+                'salespeople': salespeople,
+                'deliverers': deliverers,
             }
             return render(request, 'manager/staff.html', context=context)
         else:
@@ -174,15 +180,16 @@ def customers(request):
                  
             if request.method == 'POST':
                 body = parse_req_body(request.body) 
-                customer = body['customer']    
+                customer_id = int(body['customer_id'])  
+                customer = User.objects.get(pk=customer_id)
                 update_customer = CustomerStatus.objects.filter(restaurant=restaurant).filter(customer=customer)
-                if body['function'] == 'promote':
+                if request.POST.get("promote"):
                     update_customer.status = 'V'
-                elif body['function'] == 'demote':
+                elif request.POST.get("demote"):
                     update_customer.status = 'R'                    
-                elif body['function'] == 'remove':
+                elif request.POST.get("remove"):
                     update_customer.status = 'N' 
-                elif body['function'] == 'blacklist':
+                elif request.POST.get("blacklist"):
                     update_customer.status = 'B'                     
                 update_customer.save()
             
@@ -210,7 +217,7 @@ def customer_details(request, pk): #must send customerid
         userIs = userTypeChecker(user)
         if userIs(user.Manager) == True:
             restaurant = Restaurant.objects.get(manager=user) 
-            customer = Customer.objects.get(pk=pk)
+            customer = get_object_or_404(User, pk=pk)
             if request.method == 'POST':
                 body = parse_req_body(request.body)    
                 update_customer = CustomerStatus.objects.filter(restaurant=restaurant).filter(customer=customer)
@@ -224,17 +231,35 @@ def customer_details(request, pk): #must send customerid
                     update_customer.status = 'B'                     
                 update_customer.save()
 
-            orders = Order.objects.filter(restaurant=restaurant).filter(customer=customer)
-            complaints_from = []
-            for order in orders:
-                complaints_from.append(Order_Food.objects.filter(customer=customer).filter(order=order).filter(food_complaint__isnull=False))
-            complaints_received = Order.objects.filter(restaurant=restaurant).filter(customer=pk).filter(customerrating__lte='2')
+    # info_entry['registered_customer'] = registered_customer
+    # complaintcount = len(Order.objects.filter(restaurant=restaurant).filter(customer=customer).filter(customerrating__lte='2'))
+    # info_entry['complaintcount'] = complaintcount
+    # customer_info.append(info_entry) 
 
+
+            order_info = []
+            orders = Order.objects.filter(restaurant=restaurant).filter(customer=customer)
+            for order in orders:
+                info_entry = {}
+                info_entry['order'] = order
+                total_items = sum(order.order_Food.quantity)
+                info_entry['total_items'] = total_items
+                order_info.append(info_entry) 
+            
+        
+            food_complaints = Order_Food.objects.filter(customer=pk).filter(food_complaint__isnull=False))
+            
+            delivery_complaints = Order.objects.filter(restaurant=restaurant).filter(customer=pk).filter(delivery_rating__lte='2')
+
+            complaints_received = Order.objects.filter(restaurant=restaurant).filter(customer=pk).filter(customer_rating__lte='2')
+            num_complaints = len(complaints_received)
             context = { 
                 'customer': customer,
+                'num_complaints': num_complaints,
                 'complaints_received': complaints_received, 
-                'complaints_from': complaints_from,
-                'orders': orders,
+                'food_complaints': food_complaints,
+                'delivery_complaints': delivery_complaints,
+                'orders': orders_info,
             }
             return render(request, 'customer_details.html', context=context)
         else:
@@ -250,21 +275,50 @@ def pendingregistrations(request): #if post, request must have customer user obj
             restaurant = Restaurant.objects.get(manager=user)
             if request.method == 'POST':
                 body = parse_req_body(request.body)
-                customer = body['customer']  #this is a user object, COULD CAUSE ERRORS
-                if body['function'] == 'accept':
-                    update_customer = CustomerStatus.objects.get(customer=customer)
+                user_id = int(body['user_id'])  #this is a user object, COULD CAUSE ERRORS
+                update_user = User.objects.get(pk=user_id)
+                if request.POST.get('approve_customer'):
+                    update_customer = CustomerStatus.objects.get(customer=update_user)
                     update_customer.approve_status()
                     update_customer.save()
-                elif body['function'] == 'reject':
-                    update_customer = CustomerStatus.objects.get(customer=customer)
+                elif request.POST.get('reject_customer'):
+                    update_customer = CustomerStatus.objects.get(customer=update_user)
                     update_customer.approve_status()  
                     update_customer.save()  
-                elif body['function '] == 'remove':
-                    update_customer.delete()
+                elif request.POST.get('approve_staff'):
+                    update_staff = Staff.objects.get(user=update_user) 
+                    update_staff.status = 'H'
+                    update_staff.salary = 600
+                    update_staff.save()
+                elif request.POST.get('reject_staff'):
+                    update_staff = Staff.objects.get(user=update_user) 
+                    update_staff.status = 'N'
+                    update_staff.restaurant = None     
+                    update_staff.save()
+            
+            pending_customers = CustomerStatus.objects.filter(restaurant = restaurant, status='P')
+            
+            pending_staff = Staff.objects.filter(restaurant=restaurant, status='N')
 
-                customers = CustomerStatus.objects.filter(restaurant = restaurant, status='P')
-                context = { 'customers': customers }
-                return render(request, 'pendingregistrations.html', context=context)
+            pending_staff_info = []
+            
+            for staff in pending_staff:
+                info_entry = {}
+                staffIs = userTypeChecker(staff)
+                info_entry['staff'] = staff
+                if staffIs(Cook):
+                    info_entry['staff_type'] = "Cook"
+                elif staffIs(Deliverer):
+                    info_entry['staff_type'] = "Deliverer"                    
+                elif staffIs(Salesperson):
+                    info_entry['staff_type'] = "Salesperson"
+                pending_staff_info.append(info_entry)
+                
+            context = { 
+                'pending_customers': pending_customers,
+                'pending_staff_info': pending_staff_info
+            }
+            return render(request, 'pendingregistrations.html', context=context)
         else:
             return redirect('home-nexus')
     except:

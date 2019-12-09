@@ -17,37 +17,42 @@
         <h2 id = "title">All Customers:</h2>
   
   
-      <!--Get list of all customers from restaurant-->
+        <!--Get list of all customers from restaurant-->
 
-      <table id = "cust-name">
-        <tr>
-          <th>Last Name:</th>
-          <th>First Name:</th>
-          <th>Status:</th>
-          <th>Rating:</th>
-          <th># Complaints received:</th>
-        </tr>
-        {% for info_entry in customer_info %}
-        <tr>
-        {% registered_customer = info_entry.get('registered_customer') %}
-          <td class = "last-n">{{ registered_customer.customer.last_name }}</td>
-          <td class = "first-n">{{ registered_customer.customer.first_name }}</td>
-          <td class = "status">{{ registered_customer.status }}</td>
-          <td class = "rating">{{ egistered_customer.status }}</td>
-          <td class = "num-complaints">{{ info_entry.get(complaintcount) }}</td>
-          <td class = "more-info">
-            <a href="{% url 'manager-customerdetails' customer.id %}" class="button">More info</a>
-          </td>
-        </tr>
-        {% endfor %}
+        <table id = "cust-name">
+            <tr>
+                <th>Last Name:</th>
+                <th>First Name:</th>
+                <th>Status:</th>
+                <th>Rating:</th>
+                <th># Complaints received:</th>
+            </tr>
+
+            {% for info in customer_info %}
+                <tr>
+                    {% comment %} {% customer_id = registered_customer.customer.user.id %} {% endcomment %}
+                    <td class = "last-n">{{ info.registered_customer.customer.last_name }}</td>
+                    <td class = "first-n">{{ info.registered_customer.customer.first_name }}</td>
+                    <td class = "status">{{ info.registered_customer.status }}</td>
+                    <td class = "rating">{{ info.registered_customer.status }}</td>
+                    <td class = "num-complaints">{{ info.complaintcount }}</td>
+                    <td class = "more-info">
+                        <a href="{% url 'manager-customerdetails' info.registered_customer.customer.user.id %}" class="button" target="_blank">More info</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            
+        
+            <form method="POST" action="{% url "manager-customers" %}">
+                <input class="customer_id" type="hidden" value="{{ info.registered_customer.customer.user.id }}"></input>
+                <div id = "status-change">
+                    <input class="promote" type="button" value="promote">Promote to VIP</input>
+                    <input class="demote" type="button" value="demote">Demote to Regular</input>
+                    <input class="blacklist" type="button" value="blacklist">Blacklist</input>
+                    <input class="remove" type="button" value="blacklist">Remove Registration</input>
+                </div>
+            </form>
+            {% endfor %}
       </table>
-
-      <div id = "status-change">
-        <button id = "promote-vip">Promote to VIP</button>
-        <button id = "demote">Demote to regular</button>
-        <button id = "blacklist">Blacklist</button>
-        <button id = "remove">Remove</button>
-      </div>
-
     </div>
 {% endblock %}

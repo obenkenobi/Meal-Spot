@@ -16,57 +16,62 @@
 
 <div id = "pending_registrations">
 
-  <div id = "customer-registrations:">
-    <h2> Customer Registrations:</h2>
+    <div id = "customer-registrations:">
+        <h2> Customer Registrations:</h2>
 
-    <table id = "cust_table">
-      <tr class = "table_header">
-        <th>Last:</th>
-        <th>First:</th>
-        <th>Total orders:</th>
-        <th>Rating:</th>
-        <th>Date Joined:</th>
-        <th>Address:</th>
-      </tr>
-      
-      <!--Loop customer table below for all pending customer-->
-      <tr>
-        <td class = "last">Adams</td>
-        <td class = "first">Bill</td>
-        <td class = "orders">8</td>
-        <td class = "rating">4.2</td>
-        <td class = "date">02-01-18</td>
-        <td class = "address">123 Adams St NY 11111</td>
-        <td class = "approval_button"><button>Approve</button></td>  
-        <td class = "reject_button"><button>Reject</button></td>  
-      </tr>
+        <table id = "cust_table">
+        <tr class = "table_header">
+            <th>Last:</th>
+            <th>First:</th>
+            <th>Total orders:</th>
+            <th>Rating:</th>
+        </tr>
+    
+        {% for pending_customer in pending_customers %}
+        <tr>
+            <td class = "last">{{ pending_customer.customer.user.last_name }}</td>
+            <td class = "first">{{ pending_customer.customer.user.first_name }}</td>
+            <td class = "orders">{{ pending_customer.customer.order_count }}</td>
+            <td class = "rating">{{ pending_customer.customer.avg_rating }}</td>
+                <form method="POST" action="{% url "manager-pendingregistrations" %}">
+                    <input class="user_id" type="hidden" value="{{ pending_customer.customer.user.id }}"></input>
+                    <div id = "update-customer-registration">
+                        <input class = "approve_button" type="button" value="approve_customer">Approve</input>
+                        <input class = "reject_button" type="button" value="reject_customer">Reject</input>
+                    </div>
+                </form>
+        </tr>
+        {% endfor %}
+        </table>
+    </div>
 
-    </table>
-  </div>
+    <div id = "staff-registrations:">
+        <h2>Staff Registrations:</h2>
 
-  <div id = "staff-registrations:">
-    <h2>Staff Registrations:</h2>
+        <table id = "staff-table">
+        <tr class = "table_header">
+            <th>Last:</th>
+            <th>First:</th>
+            <th>Staff Type:</th>
+        </tr>
+        
+        {% for pending_staff in pending_staff_info %}
+            <tr>
+                <td class = "staff-last">{{ pending_staff.staff.user.last_name }}</td>
+                <td class = "staff-first">{{ pending_staff.staff.user.first_name }}</td>
+                <td class = "staff-type">{{ pending_staff.staff_type }}</td>
+                <form method="POST" action="{% url "manager-pendingregistrations" %}">
+                    <input class="user_id" type="hidden" value="{{ pending_staff.staff.user.id }}"></input>
+                    <div id = "update-staff-registration">
+                        <input class = "approve_button" type="button" value="approve_staff">Approve</input>
+                        <input class = "reject_button" type="button" value="reject_staff">Reject</input>
+                    </div>
+                </form>
+            </tr>
+        {% endfor %}
 
-    <table id = "staff-table">
-      <tr class = "table_header">
-        <th>Last:</th>
-        <th>First:</th>
-        <th>Date Requested:</th>
-        <th>Address:</th>
-      </tr>
-      
-      <!--Loop staff table below for all pending staff-->
-      <tr>
-        <td class = "staff-last">Adams</td>
-        <td class = "staff-first">Bill</td>
-        <td class = "staff-date">02-01-18</td>
-        <td class = "staff-address">123 Adams St NY 11111</td>
-        <td class = "staff-approval-button"><button>Approve</button></td>
-        <td class = "reject_button"><button>Reject</button></td>   
-      </tr>
-
-    </table>
-  </div>
+        </table>
+    </div>
 </div>
 
 {% endblock %}
