@@ -70,10 +70,12 @@ def home(request):
 
     cookfood = restaurant.Food.objects.filter(cook=my_cook)
     supplyorders = restaurant.SupplyOrder.objects.filter(cook=my_cook)
+    warnings = my_cook.warnings
 
     context = {
         'cookfood': cookfood,
         'supplyorders': supplyorders,
+        'warnings': warnings,
     }
 
     return render(request, 'cook/home.html', context=context)

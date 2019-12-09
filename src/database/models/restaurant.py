@@ -2,6 +2,7 @@ from django.db import models
 from database.models.user import Customer, Manager, Cook, Salesperson, Deliverer
 from database.models.address import Address, CustomerAddress
 from django.core.validators import RegexValidator
+from functools import cmp_to_key
 
 # Non user type datamodels get dumped here
 
@@ -47,6 +48,64 @@ class Order_Food(models.Model):
     food_complaint = models.TextField(null=True)
     order = models.ForeignKey('Order', on_delete=models.SET_NULL, null=True)
     food = models.ForeignKey('Food', on_delete=models.SET_NULL, null=True)
+    
+    @classmethod
+    def recomended(customer, restaurant):
+        def cmp_food(item1, item2):
+            if item1['qty'] < item2['qty']:
+                return -1
+            elif item1['qty'] > item2['qty']:
+                return 1
+            else:
+                return 0
+        my_orders = Order.objects.filter(customer=customer).filter(restaurant=restaurant)
+        my_order_foods = Order_Food.objects.filter(order__in=my_orders)
+        order_freq = {}
+        for my_order_food in my_order_foods:
+            food_id = my_order_food.food.id
+            if order_freq.get(food_id, 0) == 0:
+                order_freq[food_id] = my_order_food.quantity
+            else:
+                 order_freq[food_id] += my_order_food.quantity
+        food_freq_list = []
+        for food_id in order_freq:
+            curr_food = Food.objects.get(id=food_id)
+            food_freq_list.append({'food': curr_food, 'qty': order_freq[food_id]})
+        food_freq_list = sorted(food_freq_list, key=cmp_to_key(cmp_food))
+        if len(food_freq_list) > 3:
+            food_freq_list = food_freq_list[len(food_freq_list)-3: len(food_freq_list)]
+        rec_foods = [item['food'] for item in food_freq_list]
+        return rec_foods
+   
+    @classmethod
+    def popular(customer, restaurant):
+        def cmp_food(item1, item2):
+            if item1['qty'] < item2['qty']:
+                return -1
+            elif item1['qty'] > item2['qty']:
+                return 1
+            else:
+                return 0
+        my_orders = Order.objects.filter(restaurant=restaurant)
+        order_foods = Order_Food.objects.filter(order__in=my_orders)
+        order_freq = {}
+        for order_food in order_foods:
+            food_id = order_food.food.id
+            if order_freq.get(food_id, 0) == 0:
+                order_freq[food_id] = order_food.quantity
+            else:
+                 order_freq[food_id] += order_food.quantity
+        food_freq_list = []
+        for food_id in order_freq:
+            curr_food = Food.objects.get(id=food_id)
+            food_freq_list.append({'food': curr_food, 'qty': order_freq[food_id]})
+        food_freq_list = sorted(food_freq_list, key=cmp_to_key(cmp_food))
+        if len(food_freq_list) > 3:
+            food_freq_list = food_freq_list[len(food_freq_list)-3: len(food_freq_list)]
+        pop_foods = [item['food'] for item in food_freq_list]
+        return pop_foods
+
+        
 
 class Food(models.Model):
     price = models.FloatField(default=0)
@@ -89,7 +148,7 @@ class CustomerStatus(models.Model):
         default="N"
     )
     order_count = models.IntegerField(default=0)
-    avg_rating = models.FloatField(default=0)
+    avg_rating = models.FloatField(null=True)
     restaurant = models.ForeignKey('Restaurant', on_delete=models.SET_NULL, null=True)
     customer = models.ForeignKey('Customer', on_delete=models.SET_NULL, null=True)
 

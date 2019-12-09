@@ -9,27 +9,39 @@
 {% endblock %}
 
 {% block page_js %}
-
-<script>
-function itemDescription()
-{
-  alert("This is a description of the item");
-}
-</script>
-
-
 {% endblock %}
 
 {% block page_content %}
 
     <div class = "restaurant"></div>
-      <h2 id = "title">Shelby's Cafe</h2>
+      <h2 id = "title">{{ restaurant.name }}</h2>
 
-      <p id = "description">Shelby's cafe is a casual restaurant serving Italian.</p>
+      <p id = "description">{{ restaurant.description}}</p>
 
     </div>
-    <button id = "register">Register</button>
+  
+    {% comment %} Customer status info {% endcomment %}
+    {% if user.is_authenticated %}
+      {% if status == 'N'%}
+      <form method="POST" action="customer/restaurant/{{restaurant.id}}"> {% comment %} Rehister restaurant form {% endcomment %}
+        {% csrf_token %}
+        <input type="hidden" name="task" value="register" />
+        <input type="submit" id="register" value="Register">
+      </form>
+      {% elif status = 'P'%}
+      <div>Registration pending ... </div>
+      {% elif status = 'R'%}
+      <div>You are Registered</div>
+      {% elif status = 'V'%}
+      <div>You are VIP</div>
+      {% else %}
+      <div>You are blacklisted</div>
+      {% endif %}
+    {% else %}
+    <div>You are a visitor</div>
+    {% endif %}
 
+    {% if user.is_authenticated %}
     <div class = "recommendations">
 
       <div class = "history">
@@ -40,15 +52,18 @@ function itemDescription()
             <th>Price</th>
             <th>Rating</th>
           </tr>
+          {% for food in orderRecFood %}
           <tr>
             <td>
-              <button class = "rec-item" onclick="itemDescription()">Chicken </button>
+              <span class = "rec-item">{{ food.name }}</span>
             </td>
-            <td class = "rec-price">5.99</td>
-            <td class = "rec-rating">4.5/5</td>
+            <td class = "rec-price">{{ food.price }}</td>
+            <td class = "rec-rating">{{ food.avg_rating }}/5</td>
           </tr>
+          {% endfor %}
         <table>
       </div>
+      {% endif %}
 
       <div class = "popular">
         <h4>Most popular visitor items:</h4>
@@ -58,20 +73,26 @@ function itemDescription()
             <th>Price</th>
             <th>Rating</th>
           </tr>
+          {% for food in popularRecFood %}
           <tr>
             <td>
-              <button class = "rec-item" onclick="itemDescription()">Chicken </button>
+              <span class = "rec-item">{{ food.name }} </span>
             </td>
-            <td class = "rec-price">5.99</td>
-            <td class = "rec-rating">4.5/5</td>
+            <td class = "rec-price">{{ food.price }}</td>
+            <td class = "rec-rating">{{ food.avg_rating }}/5</td>
           </tr>
+          {% endfor %}
         <table>
       </div>
 
     </div>
     
+    {% if status == 'B'%}
     <br>
-    <button id = "order">Make an order</button>
+    <a>
+      <button id = "order">Make an order</button>
+    </a>
+    {% endif %}
     
     <div class="Menu">
 
@@ -81,21 +102,28 @@ function itemDescription()
             <th>Item</th>
             <th>Price</th>
             <th>Rating</th>
+            <th>Description</th>
           </tr>
 
-          <!--Loop through menu items-->
-
+          {% comment %} Loop through menu items {% endcomment %}
+          {% for food in popularRecFood %}
           <tr>
             <td>
-              <button class = "item-name" onclick="itemDescription()">Chicken </button>
+              <b>{{ food.name }}</b>
             </td>
-            <td class = "price">5.99</td>
-            <td class = "rating">4.5/5</td>
+            <td class = "price">{{ food.price }}</td>
+            <td class = "rating">{{ food.avg_rating }}/5</td>
+            <td class = "description">{{ food.description }}/5</td>
           </tr>
+          {% endfor %}
       </table>
     </div>
 
+    {% if status == 'B'%}
     <br>
-    <button id = "order">Make an order</button>
+    <a>
+      <button id = "order">Make an order</button>
+    </a>
+    {% endif %}
 
 {% endblock %}
