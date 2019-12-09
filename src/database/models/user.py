@@ -101,6 +101,7 @@ class Deliverer(Staff):
     #         self.restaurant = None            
 
 class Salesperson(Staff):
+    pass
     # prob add to Cook view during rating
     # def update_commission(self, r1, r2, r3):
     #     sum_rating = r1 + r2 + r3

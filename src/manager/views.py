@@ -247,7 +247,7 @@ def customerdetails(request, pk): #must send customerid
                 order_info.append(info_entry) 
             
         
-            food_complaints = Order_Food.objects.filter(customer=pk).filter(food_complaint__isnull=False))
+            food_complaints = Order_Food.objects.filter(customer=pk).filter(food_complaint__isnull=False)
             
             delivery_complaints = Order.objects.filter(restaurant=restaurant).filter(customer=pk).filter(delivery_rating__lte='2')
 
