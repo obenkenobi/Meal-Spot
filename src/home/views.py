@@ -47,9 +47,21 @@ def signup(request):
         body = parse_req_body(request.body)
         new_user = User.objects.create_user(body['usrname'], body['email'].replace('%', '@'), body['psw'])
 
-        addr_acceptable = '' in [ body['city'], body['state'], body['zipcode'] ]
+        addr_str_accept = []
+        for string in [ body['city'], body['state'], body['zipcode'] ]:
+            word_acceptable = False
+            for char in string:
+                if char != ' ':
+                   word_acceptable = True 
+                   break
+            addr_str_accept.append(word_acceptable)
+        addr_acceptable = False in addr_str_accept
         addr_acceptable = not addr_acceptable
-        rest_acceptable = body['restname'] != ''
+        rest_acceptable = False
+        for char in body['restname']:
+            if char != ' ':
+                rest_acceptable = True 
+                break
 
         if(body['usertype']=='cust'):
             if addr_acceptable:
