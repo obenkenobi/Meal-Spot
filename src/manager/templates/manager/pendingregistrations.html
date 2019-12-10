@@ -36,8 +36,8 @@
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
                     <input class="user_id" type="hidden" value="{{ pending_customer.customer.user.id }}"></input>
                     <div id = "update-customer-registration">
-                        <input class = "approve_button" type="button" value="approve_customer">Approve</input>
-                        <input class = "reject_button" type="button" value="reject_customer">Reject</input>
+                        <input class = "approve_button" name = "approve_customer" type="button" value="Approve Customer"></input>
+                        <input class = "reject_button" name = "reject_customer" type="button" value="Reject Customer"></input>
                     </div>
                 </form>
         </tr>
@@ -63,8 +63,8 @@
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
                     <input class="user_id" type="hidden" value="{{ pending_staff.staff.user.id }}"></input>
                     <div id = "update-staff-registration">
-                        <input class = "approve_button" type="button" value="approve_staff">Approve</input>
-                        <input class = "reject_button" type="button" value="reject_staff">Reject</input>
+                        <input class = "approve_button" name = "approve_staff" type="button" value="Approve Staff"></input>
+                        <input class = "reject_button" name = "reject_staff" type="button" value="Reject Staff"></input>
                     </div>
                 </form>
             </tr>
