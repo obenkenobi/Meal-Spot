@@ -64,10 +64,13 @@ def resturant_page(request, pk):
             return redirect('home-nexus')
         else:
             my_customer = user.Customer.objects.get(user=request.user)
-            customer_status_info = restaurant.CustomerStatus.objects.filter(customer=my_customer).filter(restaurant=my_restaurant)
-            if len(customer_status_info) > 0:
-                customer_status_info = customer_status_info[0]
+            try:
+                customer_status_info = restaurant.CustomerStatus.objects.filter(customer=my_customer).get(restaurant=my_restaurant)
                 status = customer_status_info.status
+            except:
+                customer_status_info = restaurant.CustomerStatus(customer=my_customer, restaurant=my_restaurant)
+                customer_status_info.status = status
+                customer_status_info.save()
         recfood_order = restaurant.Order_Food.recomended(my_customer, my_restaurant) 
     recfood_popular = restaurant.Order_Food.popular(my_restaurant)
     foods = restaurant.Food.objects.filter(cook__restaurant=my_restaurant)

@@ -12,7 +12,9 @@ def home(request):
         userIs = userTypeChecker(user)
         if userIs(Manager) == True: # returns true if user is manager, else false
             print('rendering to manager-home')
-            return render(request, 'manager/home.html')
+            restaurant=Restaurant.objects.get(manager__user=user)
+            context = {'restaurant':restaurant}
+            return render(request, 'manager/home.html', context=context)
         else:
             print('redirecting to home')
             return redirect('home-nexus')
@@ -32,14 +34,12 @@ def restaurant(request):
         if userIs(Manager) == True: # returns true if user is manager, else false
             restaurant = Restaurant.objects.get(manager__user=user)
             if request.method == 'POST':
-                if request.get("name"):
-                    body = parse_req_body(request.body)
+                body = parse_req_body(request.body)
+                if request.get("edit_name"):
                     name = body['name']
                     restaurant.name = name
 
-
-                elif request.get("description"):
-                    body = parse_req_body(request.body)
+                elif request.get("edit_description"):
                     description = body['description']
                     restaurant.description = description
                 
@@ -331,60 +331,96 @@ def customerdetails(request, pk): #must send customerid
         return redirect('home-nexus')
 
 def pendingregistrations(request): #if post, request must have customer user obj
-    try:
-        user = request.user
-        userIs = userTypeChecker(user)
-        if userIs(Manager) == True:
-            restaurant = Restaurant.objects.get(manager__user=user)
-            if request.method == 'POST':
-                body = parse_req_body(request.body)
-                user_id = int(body['user_id'])  #this is a user object, COULD CAUSE ERRORS
-                update_user = User.objects.get(pk=user_id)
-                if request.POST.get('approve_customer'):
-                    update_customer = CustomerStatus.objects.get(customer__user=update_user)
-                    update_customer.approve_status()
-                    update_customer.save()
-                elif request.POST.get('reject_customer'):
-                    update_customer = CustomerStatus.objects.get(customer__user=update_user)
-                    update_customer.approve_status()  
-                    update_customer.save()  
-                elif request.POST.get('approve_staff'):
-                    update_staff = Staff.objects.get(user=update_user) 
-                    update_staff.status = 'H'
-                    update_staff.salary = 600
-                    update_staff.save()
-                elif request.POST.get('reject_staff'):
-                    update_staff = Staff.objects.get(user=update_user) 
-                    update_staff.status = 'N'
-                    update_staff.restaurant = None     
-                    update_staff.save()
-            
-            pending_customers = CustomerStatus.objects.filter(restaurant = restaurant, status='P')
-            
-            pending_staff = Staff.objects.filter(restaurant=restaurant, status='N')
+# try:
+#     user = request.user
+#     userIs = userTypeChecker(user)
+#     if userIs(Manager) == True:
+    if request.method == 'POST':
+        body = parse_req_body(request.body)
+        user_id = int(body['user_id'])  #this is a user object, COULD CAUSE ERRORS
+        update_user = User.objects.get(pk=user_id)
 
-            pending_staff_info = []
-            
-            for staff in pending_staff:
-                info_entry = {}
-                staffIs = userTypeChecker(staff)
-                info_entry['staff'] = staff
-                if staffIs(Cook):
-                    info_entry['staff_type'] = "Cook"
-                elif staffIs(Deliverer):
-                    info_entry['staff_type'] = "Deliverer"                    
-                elif staffIs(Salesperson):
-                    info_entry['staff_type'] = "Salesperson"
-                pending_staff_info.append(info_entry)
-                
-            context = { 
-                'pending_customers': pending_customers,
-                'pending_staff_info': pending_staff_info
-            }
-            return render(request, 'pendingregistrations.html', context=context)
-        else:
-            return redirect('home-nexus')
-    except:
-        import traceback
-        traceback.print_exc()
-        return redirect('home-nexus')
+        if request.POST.get('approve_customer'):
+            update_customer = CustomerStatus.objects.get(customer__user=update_user)
+            update_customer.approve_status()
+            update_customer.save()
+        elif request.POST.get('reject_customer'):
+            update_customer = CustomerStatus.objects.get(customer__user=update_user)
+            update_customer.approve_status()  
+            update_customer.save()  
+
+        # change cook
+        elif request.POST.get('approve_cook'):
+            update_staff = Cook.objects.get(user=update_user) 
+            update_staff.status = 'H'
+            update_staff.salary = 600
+            update_staff.save()
+        elif request.POST.get('reject_cook'):
+            update_staff = Cook.objects.get(user=update_user) 
+            update_staff.status = 'N'
+            update_staff.restaurant = None     
+            update_staff.save()
+
+        # change salesperson
+        elif request.POST.get('approve_salesperson'):
+            update_staff = Salesperson.objects.get(user=update_user) 
+            update_staff.status = 'H'
+            update_staff.salary = 600
+            update_staff.save()
+        elif request.POST.get('reject_salesperson'):
+            update_staff = Salesperson.objects.get(user=update_user) 
+            update_staff.status = 'N'
+            update_staff.restaurant = None     
+            update_staff.save()
+
+        # change deliverer
+        elif request.POST.get('approve_deliverer'):
+            update_staff = Deliverer.objects.get(user=update_user) 
+            update_staff.status = 'H'
+            update_staff.salary = 600
+            update_staff.save()
+        elif request.POST.get('reject_deliverer'):
+            update_staff = Deliverer.objects.get(user=update_user) 
+            update_staff.status = 'N'
+            update_staff.restaurant = None     
+            update_staff.save()
+
+
+        pending_customers = list(CustomerStatus.objects.filter(restaurant=restaurant).filter(status='P'))
+        
+        pending_cooks= list(Cook.objects.filter(restaurant=restaurant).filter(status='N'))
+        pending_salespeople = list(Salesperson.objects.filter(restaurant=restaurant).filter(status='N'))
+        pending_deliverers = list(Deliverer.objects.filter(restaurant=restaurant).filter(status='N'))
+        
+        context = { 
+            'pending_customers': pending_customers,
+            'pending_cooks':pending_cooks,
+            'pending_salespeople':pending_salespeople,
+            'pending_deliverers':pending_deliverers
+        }
+        return render(request, 'manager/pendingregistrations.html', context=context)            
+
+    elif request.method == 'GET':
+        user = request.user
+        restaurant = Restaurant.objects.get(manager__user=user)
+    
+        pending_customers = list(CustomerStatus.objects.filter(restaurant=restaurant).filter(status='P'))
+        
+        pending_cooks= list(Cook.objects.filter(restaurant=restaurant).filter(status='N'))
+        pending_salespeople = list(Salesperson.objects.filter(restaurant=restaurant).filter(status='N'))
+        pending_deliverers = list(Deliverer.objects.filter(restaurant=restaurant).filter(status='N'))
+        
+        context = { 
+            'pending_customers': pending_customers,
+            'pending_cooks':pending_cooks,
+            'pending_salespeople':pending_salespeople,
+            'pending_deliverers':pending_deliverers
+        }
+        return render(request, 'manager/pendingregistrations.html', context=context)
+    #     else:
+    #         print('not manager')
+    #         return redirect('home-nexus')
+    # except:
+    #     import traceback
+    #     traceback.print_exc()
+    #     return redirect('home-nexus')

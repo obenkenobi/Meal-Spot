@@ -19,28 +19,30 @@
     <div id = "customer-registrations:">
         <h2> Customer Registrations:</h2>
 
-        <table id = "cust_table">
+        <table id = "cust_table" class="table table-condensed table-hover table-striped ng-table">
         <tr class = "table_header">
-            <th>Last:</th>
-            <th>First:</th>
-            <th>Total orders:</th>
-            <th>Rating:</th>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Total orders</th>
+            <th>Rating</th>
+            <th>Approve or Reject</th>
         </tr>
     
         {% for pending_customer in pending_customers %}
         <tr>
-            <td class = "last">{{ pending_customer.customer.user.last_name }}</td>
-            <td class = "first">{{ pending_customer.customer.user.first_name }}</td>
-            <td class = "orders">{{ pending_customer.customer.order_count }}</td>
-            <td class = "rating">{{ pending_customer.customer.avg_rating }}</td>
+            <td class = "last">{{ pending_customer.customer.user.id }}</td>
+            <td class = "first">{{ pending_customer.customer.user.username }}</td>
+            <td class = "orders">{{ pending_customer.order_count }}</td>
+            <td class = "rating">{{ pending_customer.avg_rating }}</td>
+            <td> 
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
-                    <input class="user_id" type="hidden" value="{{ pending_customer.customer.user.id }}"></input>
-                    <div id = "update-customer-registration">
-                        <input class = "approve_button" name = "approve_customer" type="button" value="Approve Customer"></input>
-                        <input class = "reject_button" name = "reject_customer" type="button" value="Reject Customer"></input>
-                    </div>
+                <input class="user_id" name="user_id" type="hidden" value="{{ pending_customer.customer.user.id }}"></input>
+                <input class = "approve_button" name = "approve_customer" type="button" value="Approve"></input>
+                <input class = "reject_button" name = "reject_customer" type="button" value="Reject"></input> 
                 </form>
+            </td>
         </tr>
+
         {% endfor %}
         </table>
     </div>
@@ -48,29 +50,86 @@
     <div id = "staff-registrations:">
         <h2>Staff Registrations:</h2>
 
-        <table id = "staff-table">
+        <table id = "cook_table" class="table table-condensed table-hover table-striped ng-table">
+        <h3>Cooks:</h3>
         <tr class = "table_header">
-            <th>Last:</th>
-            <th>First:</th>
-            <th>Staff Type:</th>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Accept or Reject</th>
         </tr>
         
-        {% for pending_staff in pending_staff_info %}
-            <tr>
-                <td class = "staff-last">{{ pending_staff.staff.user.last_name }}</td>
-                <td class = "staff-first">{{ pending_staff.staff.user.first_name }}</td>
-                <td class = "staff-type">{{ pending_staff.staff_type }}</td>
+        {% for pending_staff in pending_cooks %}
+        <tr>
+            <td class = "staff-id">{{ pending_staff.user.id }}</td>
+            <td class = "staff-user">{{ pending_staff.user.username }}</td>
+            <td class = "staff-name">{{ pending_staff.user.first_name }} {{ pending_staff.user.last_name }}</td>
+            <td> 
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
-                    <input class="user_id" type="hidden" value="{{ pending_staff.staff.user.id }}"></input>
-                    <div id = "update-staff-registration">
-                        <input class = "approve_button" name = "approve_staff" type="button" value="Approve Staff"></input>
-                        <input class = "reject_button" name = "reject_staff" type="button" value="Reject Staff"></input>
-                    </div>
+                <input class="user_id" name="user_id" type="hidden" value="{{ pending_staff.user.id }}"></input>
+                <input class = "approve_button" name = "approve_cook" type="button" value="Approve"></input>
+                <input class = "reject_button" name = "reject_cook" type="button" value="Reject"></input> 
                 </form>
-            </tr>
+            </td>  
+        </tr>
         {% endfor %}
 
         </table>
+
+        <table id = "salesperson-table" class="table table-condensed table-hover table-striped ng-table">
+        <h3>Salespeople:</h3>
+        <tr class = "table_header">
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Accept or Reject</th>
+        </tr>
+        
+        {% for pending_staff in pending_salespeople %}
+        <tr>
+            <td class = "staff-id">{{ pending_staff.user.id }}</td>
+            <td class = "staff-user">{{ pending_staff.user.username }}</td>
+            <td class = "staff-name">{{ pending_staff.user.first_name }} {{ pending_staff.user.last_name }}</td>
+            <td> 
+                <form method="POST" action="{% url "manager-pendingregistrations" %}">
+                <input class="user_id" name="user_id" type="hidden" value="{{ pending_staff.user.id }}"></input>
+                <input class = "approve_button" task = "approve_cook" type="button" value="Approve"></input>
+                <input class = "reject_button" task = "reject_cook" type="button" value="Reject"></input> 
+                </form>
+            </td>  
+        </tr>
+        {% endfor %}
+
+        </table>
+
+        </table>
+
+        <table id = "deliverer-table" class="table table-condensed table-hover table-striped ng-table">
+        <h3>Deliverers:</h3>
+             <tr class = "table_header">
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Accept or Reject</th>
+        </tr>
+        
+        {% for pending_staff in pending_deliverers %}
+        <tr>
+            <td class = "staff-id">{{ pending_staff.user.id }}</td>
+            <td class = "staff-user">{{ pending_staff.user.username }}</td>
+            <td class = "staff-name">{{ pending_staff.user.first_name }} {{ pending_staff.user.last_name }}</td>
+            <td> 
+                <form method="POST" action="{% url "manager-pendingregistrations" %}">
+                <input class="user_id" name="user_id" type="hidden" value="{{ pending_staff.user.id }}"></input>
+                <input class = "approve_button" name = "approve_cook" type="button" value="Approve"></input>
+                <input class = "reject_button" name = "reject_cook" type="button" value="Reject"></input> 
+                </form>
+            </td>  
+        </tr>
+        {% endfor %}
+
+        </table>
+
     </div>
 </div>
 

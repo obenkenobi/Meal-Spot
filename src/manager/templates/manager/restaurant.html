@@ -5,6 +5,7 @@
 
 {% block page_css %}
 <!-- page css -->
+<style>
 body {font-family: Arial, Helvetica, sans-serif;}
 * {box-sizing: border-box}
 
@@ -16,6 +17,7 @@ input, #state {
   border: none;
   background: #f1f1f1;
 }
+</style>
 {% endblock %}
 
 {% block page_js %}
@@ -29,6 +31,7 @@ input, #state {
     <form method="POST" action="{% url 'manager-restaurant' %}">
     {% csrf_token %}
         <input type="text" placeholder="Edit Name" name="name">
+        <button type="submit" name="edit_name">Submit</button>
     </form>
     <hr>
     <h1>Description</h1>
@@ -36,6 +39,7 @@ input, #state {
     <form method="POST" action="{% url 'manager-restaurant' %}">
     {% csrf_token %}
         <input type="text" placeholder="Edit Description" name="description">
+        <button type="submit" name="edit_description">Submit</button>
     </form>
 </div>
 

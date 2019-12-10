@@ -23,7 +23,7 @@
     {% comment %} Customer status info {% endcomment %}
     {% if user.is_authenticated %}
       {% if status == "N" %}
-      <form method="POST" action="customer/restaurant/{{restaurant.id}}"> {% comment %} Rehister restaurant form {% endcomment %}
+      <form method="POST" action="{% url 'customer-restaurant' pk=restaurant.id %}"> {% comment %} Rehister restaurant form {% endcomment %}
         {% csrf_token %}
         <input type="hidden" name="task" value="register" />
         <input type="submit" id="register" value="Register">
