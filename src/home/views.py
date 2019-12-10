@@ -32,6 +32,7 @@ def nexus(request):
             print('redirecting to customer-home')
             response = redirect('customer-home')
     except:
+        print('anon user')
         print('redirecting to customer-home')
         response = redirect('customer-home')
     return response
@@ -112,6 +113,9 @@ def signup(request):
             new_user.save()
             new_staff = Deliverer(user=new_user)
             new_staff.save()
+        else:
+            error = 'must pick a user type'
+            return render(request, 'home/signup.html', {'states': states, 'error': error})
         response = redirect('home-nexus')
         return response
     else:
