@@ -48,16 +48,17 @@ def register(request):
     registered = len(user.Salesperson.objects.filter(user=my_user).exclude(restaurant__isnull=True)) > 0 and mysalesperson.status == 'H'
     if registered:
         return redirect('salesperson-home')
-    registering = len(user.Salesperson.objects.filter(user=my_user).exclude(restaurant__isnull=False)) > 0 and mysalesperson.status != 'H'
+    registering = mysalesperson.restaurant == None and mysalesperson.status != 'H'
 
     restaurants = restaurant.Restaurant.objects.all()
     context={'restaurants': restaurants, 'registering': registering}
 
-    if registering != True and request.method == "POST":
+    if request.method == "POST":
         body = parse_req_body(request.body)
         resturant_id = int(body['id'])
         reg_resturant = restaurant.Restaurant.objects.get(id=resturant_id)
-        mysalesperson.update(restaurant = reg_resturant)
-        context['registering'] = True
+        mysalesperson.restaurant = reg_resturant
+        mysalesperson.save()
+        context['registering'] = False
     return render(request, 'salesperson/register.html', context=context)
 

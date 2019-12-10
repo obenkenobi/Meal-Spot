@@ -17,7 +17,7 @@
     <h3>Pending registration</h3>
 {% else %}
     <h1>Resturants to register</h1>
-    {% for resturant in some_resturant %}
+    {% for resturant in restaurants %}
     <form method="POST" action="{% url "cook-register" %}">
         {% csrf_token %}
         <div>

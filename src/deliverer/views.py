@@ -71,17 +71,18 @@ def register(request):
     registered = len(user.Deliverer.objects.filter(user=my_user).exclude(restaurant__isnull=True)) > 0 and my_deliverer.status == 'H'
     if registered:
         return redirect('deliverer-home')
-    registering = len(user.Deliverer.objects.filter(user=my_user).exclude(restaurant__isnull=False)) > 0 and my_deliverer.status != 'H'
+    registering = my_deliverer.restaurant == None and my_deliverer.status != 'H'
 
     restaurants = restaurant.Restaurant.objects.all()
     context={'restaurants': restaurants, 'registering': registering}
 
-    if registering != True and request.method == "POST":
+    if request.method == "POST":
         body = parse_req_body(request.body)
         resturant_id = int(body['id'])
         reg_resturant = restaurant.Restaurant.objects.get(id=resturant_id)
-        my_deliverer.update(restaurant = reg_resturant)
-        context['registering'] = True
+        my_deliverer.restaurant = reg_resturant
+        my_deliverer.save()
+        context['registering'] = False
     return render(request, 'deliverer/register.html', context=context)
 
 def order(request, pk):

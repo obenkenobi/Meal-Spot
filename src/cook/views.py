@@ -132,16 +132,17 @@ def register(request):
     if registered:
         print('cook registered')
         return redirect('cook-home')
-    registering = len(user.Cook.objects.filter(user=my_user).exclude(restaurant__isnull=False)) > 0 and my_cook.status != 'H'
+    registering = my_cook.restaurant == None and my_cook.status != 'H'
     print('registering:',registering)
 
     restaurants = restaurant.Restaurant.objects.all()
     context={'restaurants': restaurants, 'registering': registering}
 
-    if registering != True and request.method == "POST":
+    if request.method == "POST":
         body = parse_req_body(request.body)
         resturant_id = int(body['id'])
         reg_resturant = restaurant.Restaurant.objects.get(id=resturant_id)
-        my_cook.update(restaurant = reg_resturant)
-        context['registering'] = True
-    return render(request, 'cook/register.html', context={})
+        my_cook.restaurant = reg_resturant
+        my_cook.save()
+        context['registering'] = False
+    return render(request, 'cook/register.html', context=context)
