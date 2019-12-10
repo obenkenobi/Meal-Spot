@@ -39,10 +39,10 @@
             {% csrf_token %}
                 <input class="customer_id" type="hidden" value="{{ customer_id }}"></input>
                 <div id = "status-change">
-                    <input class="promote" type="button" value="promote">Promote to VIP</input>
-                    <input class="demote" type="button" value="demote">Demote to Regular</input>
-                    <input class="blacklist" type="button" value="blacklist">Blacklist</input>
-                    <input class="remove" type="button" value="blacklist">Remove Registration</input>
+                    <input class="promote" name="promote" type="button" value="Promote">Promote to VIP</input>
+                    <input class="demote" name="demote" type="button" value="Demote">Demote to Regular</input>
+                    <input class="blacklist" name="blacklist" type="button" value="Blacklist">Blacklist</input>
+                    <input class="remove" name="remove" type="button" value="Remove">Remove Registration</input>
                 </div>
             </form>
         </tr>

@@ -37,7 +37,7 @@
           <td class = "bid-deliverer-name">{{ bid.deliverer.user.id }}</td>
           <form method="POST" action="{% url "manager-customers" %}">
             <input class="bid_id" type="hidden" value="{{ bid.id }}"></input>
-            <input class="choose_bid" type="button" value="choose_bid">Choose Bid</input>
+            <input class="choose_bid" name="choose_bid" type="button" value="Choose Bid"></input>
           </form>
         </tr>
       </div>

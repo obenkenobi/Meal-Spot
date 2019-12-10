@@ -41,9 +41,9 @@
         {% csrf_token %}
         <input class="user_id" type="hidden" value="{{ staff.user.id }}"></input>
         <td><input class = "salary" name="salary" min="0" type="number"></input></td>
-        <td><button class="edit_salary" type="submit">Edit Salary</button></td>
-        <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
-        <td><button class = "fire" type="submit">Fire</button></td>
+        <td><button class="edit_salary" name="edit_salary" type="submit">Edit Salary</button></td>
+        <td><button class = "remove_warning" name = "remove_warning" type="submit">Remove 1 Warning</button></td>
+        <td><button class = "fire"  name = "fire"type="submit">Fire</button></td>
       </form>
     </tr>
 
