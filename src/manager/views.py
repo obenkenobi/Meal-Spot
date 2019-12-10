@@ -20,38 +20,44 @@ def home(request):
         print(e)
         return redirect('home-nexus')
     except:
-        print('redirecting to home')
+        import traceback
+        traceback.print_exc()
         return redirect('home-nexus')
 
 def restaurant(request):
+    print('manager-restaurant')
     try:
         user = request.user
         userIs = userTypeChecker(user)
         if userIs(Manager) == True: # returns true if user is manager, else false
+            user_manager = Manager.objects.get(user=user)
             if request.method == 'POST':
                 body = parse_req_body(request.body)
                 name = body['name']
                 description = body['description']
-                current_user = request.user
-                update_restaurant = Restaurant.objects.get(manager=current_user)
+                update_restaurant = Restaurant.objects.get(manager=user_manager)
                 update_restaurant.name = name
                 update_restaurant.description = description
                 update_restaurant.save()
 
-            current_user = request.user
-            restaurant = Restaurant.objects.get(manager=current_user)
+            restaurant = Restaurant.objects.get(manager=user_manager)
             context = {'restaurant': restaurant}
             return render(request, 'manager/restaurant.html', context=context)
         else:
+            print('user not manager')
             return redirect('home-nexus')
     except:
+        import traceback
+        traceback.print_exc()
         return redirect('home-nexus')
 
 def deliverybids(request):
+    print('manager-deliverybids')
     try:
         user = request.user
         userIs = userTypeChecker(user)
         if userIs(Manager) == True:
+            user_manager = Manager.objects.get(user=user)
             # at event that manager selects bid
             if request.method == 'POST':
                 if request.POST.get("choose_bid"):
@@ -66,7 +72,7 @@ def deliverybids(request):
                         bid_order.save()
             
             deliverybids_info = []
-            orders = Orders.objects.filter(restaurant=restaurant_id, status='PR', chose_bid=False).order_by('created') 
+            orders = Order.objects.filter(restaurant=user_manager.restaurant, status='PR', chose_bid=False).order_by('created') 
             for order in orders:
                 info_entry = {}
                 bids = DeliveryBid.objects.filter(order=order).filter(won=False).order_by('price')
@@ -81,6 +87,8 @@ def deliverybids(request):
         else:
             return redirect('home-nexus')
     except:
+        import traceback
+        traceback.print_exc()
         return redirect('home-nexus')
 
 def staff(request):
@@ -150,6 +158,8 @@ def staff(request):
         else:
             return redirect('home-nexus')
     except:
+        import traceback
+        traceback.print_exc()
         return redirect('home-nexus')
 
 def staffdetails(request, pk):
@@ -218,6 +228,8 @@ def staffdetails(request, pk):
         else:
             return redirect('home-nexus')
     except:
+        import traceback
+        traceback.print_exc()
         return redirect('home-nexus')
 
 def customers(request):
@@ -258,6 +270,8 @@ def customers(request):
         else:
             return redirect('home-nexus')
     except:
+        import traceback
+        traceback.print_exc()
         return redirect('home-nexus')
 
 def customerdetails(request, pk): #must send customerid
@@ -308,6 +322,8 @@ def customerdetails(request, pk): #must send customerid
         else:
             return redirect('home-nexus')
     except:
+        import traceback
+        traceback.print_exc()
         return redirect('home-nexus')
 
 def pendingregistrations(request): #if post, request must have customer user obj
@@ -315,17 +331,17 @@ def pendingregistrations(request): #if post, request must have customer user obj
         user = request.user
         userIs = userTypeChecker(user)
         if userIs(Manager) == True:
-            restaurant = Restaurant.objects.get(manager=user)
+            restaurant = Restaurant.objects.get(manager__user=user)
             if request.method == 'POST':
                 body = parse_req_body(request.body)
                 user_id = int(body['user_id'])  #this is a user object, COULD CAUSE ERRORS
                 update_user = User.objects.get(pk=user_id)
                 if request.POST.get('approve_customer'):
-                    update_customer = CustomerStatus.objects.get(customer=update_user)
+                    update_customer = CustomerStatus.objects.get(customer__user=update_user)
                     update_customer.approve_status()
                     update_customer.save()
                 elif request.POST.get('reject_customer'):
-                    update_customer = CustomerStatus.objects.get(customer=update_user)
+                    update_customer = CustomerStatus.objects.get(customer__user=update_user)
                     update_customer.approve_status()  
                     update_customer.save()  
                 elif request.POST.get('approve_staff'):
@@ -365,4 +381,6 @@ def pendingregistrations(request): #if post, request must have customer user obj
         else:
             return redirect('home-nexus')
     except:
+        import traceback
+        traceback.print_exc()
         return redirect('home-nexus')
