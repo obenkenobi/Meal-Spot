@@ -37,7 +37,15 @@ body {font-family: Arial, Helvetica, sans-serif;}
 {% endblock %}
 
 {% block page_content %}
-<h1 style = "text-align:center">Restaurant</h1>
+
+<div class="restaurant_details">
+  <h1>Restaurant</h1>
+  <p>{{ restaurant.name }}</p>
+  <hr>
+  <h1>Description</h1>
+  <p>{{ restaurant.description }}</p>
+  <a id="text" class="marg" href="{% url 'manager-restaurant' %}">Edit Restaurant</a>
+</div>
 <div class="menu">
   <a id="text" class="marg" href="{% url 'manager-deliverybids' %}">Delivery Bids</a>
   <a id="text" href="{% url 'manager-pendingregistrations' %}">Pending Registrations</a>
@@ -46,7 +54,4 @@ body {font-family: Arial, Helvetica, sans-serif;}
  <a id="text" class="marg" href="{% url 'manager-staff' %}">Staff</a>
  <a id="text" href="{% url 'manager-customers' %}">Customers</a>
 </div>
-<div class="menu">
-  <a id="text" href="{% url 'manager-restaurant' %}">Edit Restaurant</a>
- </div>
 {% endblock %}
