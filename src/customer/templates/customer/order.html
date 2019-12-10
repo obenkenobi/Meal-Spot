@@ -96,7 +96,6 @@ button:hover {
 {% block page_js %}
 <script>
   $(document).ready(function(){
-  $("#a").hide()
   $("#b").hide()
   $("#c").hide()
   $("#d").hide()
@@ -132,6 +131,8 @@ button:hover {
       <th>Price</th>
       <th>Status</th>
       <th>Description</th>
+      <th>Delivery Rating</th>
+      <th>Food Rating</th>
     </tr>
     <!-- for loop to enter oder data-->
     {% for data_entry in myorderdata %}
@@ -140,24 +141,13 @@ button:hover {
       <td>{{ data_entry.order.total_price }}</td>
       <td>{{ data_entry.order.status }}</td>
       <td class="overflow-auto">{{ data_entry.description }}</td>
+      <td>{{ data_entry.order.delivery_rating }}</td>
+      <td>{{ data_entry.foodRating }}</td>
     </tr>
     {% endfor %}
   </table>
   <div id='a'><!-- div for view button-->
-  <table class=smallT>
-    <tr>
-      <th>Item</th>
-      <th>Price</th>
-      <th>Quantity</th>
-    </tr>
-    <!-- for loop to enter items data-->
-    <tr valign='center'>
-      <td>DATA</td>
-      <td>DATA2</td>
-      <td>Data3</td>
-    </tr>
-  </table>
-    <div id='btn'><button id='rt'>Rate Order</button></div><br>
+    <div id='btn'><button id='rt'>Rate Orders</button></div><br>
   </div>
   <div id='b'><!-- div for rate order button if status != pending-->
     {% for data_entry in myorderdata %}

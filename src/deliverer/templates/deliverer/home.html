@@ -22,12 +22,12 @@
     <th>Amount to bid</th>
     <th></th>
   </tr>
-  {% for bid in open_bids %}
+  {% for order in openOrders %}
   <form method="POST" action="{% url "deliverer-home" %}">
     {% csrf_token %}
-    <input type="hidden" name="orderId" value="{{ bid.order.id }}" />
+    <input type="hidden" name="orderId" value="{{ order.id }}" />
     <tr>
-      <td>{{ bid.order.id }}</td>
+      <td>{{ order.id }}</td>
       <td><input type="number" name="amount" min="1"></td>
       <td><input type="submit" value="Bid!"/></td>
     </tr>
@@ -41,7 +41,7 @@
     <th>Order ID</th>
     <th>Bidded amount</th>
   </tr>
-  {% for bid in pending_bids %}
+  {% for bid in pendingBids %}
   <tr>
     <td>{{ bid.order.id }}</td>
     <td>{{ bid.price }}</td>

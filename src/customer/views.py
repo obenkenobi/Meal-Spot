@@ -6,14 +6,15 @@ import django.views
 # helper functions
 def order_rate(my_customer, body):
     order_id = int(body['orderId'])
-    delivery_rating = body['ratedel'] if body['ratedel'] != None else 3
+    delivery_rating = int(body['ratedel'] if body['ratedel'] != None else 3)
     delivery_complaint = body.get('delcomp', '')
-    food_rating = body['ratefood'] if body['ratefood'] != None else 3
+    food_rating = int(body['ratefood'] if body['ratefood'] != None else 3)
     food_complaint = body.get('foodcomp', '')
 
     myorder = restaurant.Order.objects.get(id=order_id)
     myorder.delivery_rating = delivery_rating
     myorder.delivery_complaint = delivery_complaint
+    myorder.save()
     mydeliverer = None
     for bid in restaurant.DeliveryBid.objects.filter(order=myorder).filter(win = True):
         mydeliverer = bid.deliverer
@@ -25,6 +26,7 @@ def order_rate(my_customer, body):
         # give it a rating
         orderfood.food_rating = food_rating
         orderfood.food_complaint = food_complaint
+        orderfood.save()
 
         # do cook food drops stuff
         food = orderfood.food
@@ -35,6 +37,7 @@ def order_rate(my_customer, body):
         if food.avg_rating < 2:
             food.delete()
             cook.add_food_drops()
+        cook.save()
 
 # Create your views here.
 def home(request):
@@ -143,20 +146,12 @@ def resturant_order(request, pk):
 
 def orders(request):
     userIs = userTypeChecker(request.user)
-    my_restaurant = restaurant.Restaurant.objects.get(id=pk)
     my_customer = None
-    customer_status_info = None
-    status = 'N'
-    my_restaurant = restaurant.Restaurant.objects.get(id=pk)
     if request.user.is_authenticated:
         if userIs(user.Customer) != True:
             return redirect('home-nexus')
         else:
             my_customer = user.Customer.objects.get(user=request.user)
-            customer_status_info = restaurant.CustomerStatus.objects.filter(customer=my_customer).filter(restaurant=my_restaurant)
-            if len(customer_status_info) > 0:
-                customer_status_info = customer_status_info[0]
-                status = customer_status_info.status
     else:
         return redirect('home-nexus')
 
@@ -167,9 +162,11 @@ def orders(request):
     myorders = restaurant.Order.objects.filter(customer=my_customer)
     myorderdata = []
     for order in myorders:
+        food_rating = restaurant.Order_Food.objects.filter(order=order)[0].food_rating
         data_entry = {
             'order': order,
             'description': order.food_description,
+            'foodRating': food_rating,
         }
         myorderdata.append(data_entry)
     

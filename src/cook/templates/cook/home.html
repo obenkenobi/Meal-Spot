@@ -283,7 +283,7 @@ function myFunction() {
                 {% csrf_token %}
                 <input type="hidden" name="task" value="finishorder" />
                 <input type="hidden" name="orderId" value="{{ data_entry.order.id }}" />
-                <input type="submit" value="Rate">
+                <input type="submit" value="Finish!!">
               </form>
               {% else %}
               You finished your job

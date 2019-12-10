@@ -50,8 +50,8 @@ class Order(models.Model):
         food_orders = self.orderfoods
         desc = ''
         for food_order in food_orders:
-            desc += str(food_order.food.name) + ' x ' + str(food_order.quantity) + ','
-        desc = desc[:len(desc) -1]
+            desc += str(food_order.food.name) + '*' + str(food_order.quantity) + ', '
+        desc = desc[:len(desc) -2]
         return desc
 
 
@@ -165,7 +165,7 @@ class CustomerStatus(models.Model):
         default="N"
     )
     order_count = models.IntegerField(default=0)
-    avg_rating = models.FloatField(null=True)
+    avg_rating = models.FloatField(default=0)
     restaurant = models.ForeignKey('Restaurant', on_delete=models.SET_NULL, null=True)
     customer = models.ForeignKey('Customer', on_delete=models.SET_NULL, null=True)
 

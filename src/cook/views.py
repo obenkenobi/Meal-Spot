@@ -30,19 +30,20 @@ def supply_request(my_cook, body):
     supplyreq.save()
 
 def finishorder(my_cook, body):
+    print("finishing order", int(body['orderId']))
     orderid = int(body['orderId']) # hidden input field
     order = restaurant.Order.objects.get(id=orderid)
+    print(order)
     order_foods = restaurant.Order_Food.objects.filter(order=order)
     for orderfood in order_foods:
         if orderfood.food.cook == my_cook:
-            orderfood.isFinished == True
+            orderfood.isFinished = True
             orderfood.save()
     fin_order_foods = restaurant.Order_Food.objects.filter(order=order).filter(isFinished=True)
     if len(fin_order_foods) == len(order_foods):
         order.status = 'PR'
         order.save()
-    
-    pass
+        print("order", orderid, " status: ", order.status)
 
 # Create your views here.
 
@@ -100,7 +101,7 @@ def home(request):
             'finished': len(restaurant.Order_Food.objects.filter(order=order).filter(food__cook=my_cook).filter(isFinished=True)) > 0
         }
         order_data.append(data_entry)
-    print(supplyorders)
+    # print(supplyorders)
     context = {
         'cookfood': cookfood,
         'supplyorders': supplyorders,

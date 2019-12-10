@@ -52,8 +52,8 @@ function calculateRoute(from, to) {
   );
 }
   $(document).ready(function(){
-    var origin_address = "{{ customerAddress.street_address }},{{ customerAddress.city }},{{ customerAddress.state }},{{ customerAddress.zip_code }}";
-    var dest_address = "{{ {{ customerAddress.street_address }},{{ customerAddress.city }},{{ customerAddress.state }},{{ customerAddress.zip_code }} }}";
+    var origin_address = "{{ restaurantAddress.street_address }},{{ restaurantAddress.city }},{{ restaurantAddress.state }},{{ restaurantAddress.zip_code }}";
+    var dest_address = "{{ customerAddress.street_address }},{{ customerAddress.city }},{{ customerAddress.state }},{{ customerAddress.zip_code }}";
     console.log('origin: ', origin_address);
     console.log('destination: ', dest_address);
     $('#startaddr').html(origin_address)
