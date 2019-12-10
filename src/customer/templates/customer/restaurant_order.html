@@ -34,58 +34,85 @@ function itemDescription()
 }
 
 
-function speechTranscript() {
-  window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-      let finalTranscript = '';
-      let recognition = new window.SpeechRecognition();
-      var fullTranscript;
-      recognition.interimResults = true;
-      recognition.maxAlternatives = 10;
-      recognition.continuous = true;
-      recognition.onresult = (event) => {
-        let interimTranscript = '';
-        for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
-          let transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) {
-            finalTranscript += transcript;
-          } else {
-            interimTranscript += transcript;
-          }
-        }
-        ullTranscript = finalTranscript + interimTranscript;
-        
-      }
-      recognition.start();
-      return fullTranscript;
-}
+function speechTranscript(_callback) {
 
-function speechToItems(fullTranscript){
-    var foodQuant;
-    for (let i = 0; i < fullTranscript.length; i++){
-        var quantity = fullTranscript[i]
-        i += 2;
-        let j = i;
-        var itemName;
-        while(fullTranscript[j] != " ") {
-            itemName += fullTranscript[j];
-            j++;
-            i++;
-        }
-        foodQuant.push({name: itemName, qty: quantity});
-    }
+    console.log('working');
 
-    var itemNames = document.getElementsByClassName("item-name").innerHTML;
-
-    for(let i = 0; i < foodQuant.length; i ++) {
-        for (let j = 0; j < itemNames.length; j ++){
-            if(foodQuant[i].itemName == itemNames[j]){
-                document.getElementsByClassName("quantity")[j].value = foodQuant[j].qty;
-                break;
+    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+        let finalTranscript = '';
+        let fullTranscript = '';
+        let recognition = new window.SpeechRecognition();
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 10;
+        recognition.continuous = true;
+        recognition.onresult = (event) => {
+          let interimTranscript = '';
+          for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+            let transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              finalTranscript += transcript;
+            } else {
+              interimTranscript += transcript;
             }
+          }
+          fullTranscript = finalTranscript + interimTranscript;
+          //document.querySelector('body').innerHTML = finalTranscript + '<i style="color:#ddd;">' + interimTranscript + '</>';
+          
         }
-    }
+        recognition.start();
+        recognition.onspeechend = function() {
+            console.log('Speech has stopped being detected');
+            recognition.stop();
+            _callback(fullTranscript);
+          }
+        
+  }
+  
 
-}
+  function speechToItems(fullTranscript){
+    //var fullTranscript = "3 Chicken 2 Fish 8 Salad";
+    //console.log(Number(fullTranscript.charAt(0)));
+
+    console.log(fullTranscript);
+
+      var foodQuant = [];
+      var quantity = [];
+      for (let i = 0; i < fullTranscript.length; i++){
+          quantity.push(Number(fullTranscript.charAt(i)));
+          i += 2;
+          //let j = i;
+          var itemName = '';
+          for (let j = i; j < fullTranscript.length; j ++) {
+            if (fullTranscript.charAt(j) == ' ') {
+              break;
+            }
+            itemName += fullTranscript.charAt(j);
+            i++;
+          }
+          foodQuant.push(itemName);
+
+      }
+      //console.log('qty: ' + quantity[0] + ' ' + foodQuant[0]);
+      //console.log('qty: ' + quantity[1] + ' ' + foodQuant[1]);
+      //console.log('qty: ' + quantity[2] + ' ' + foodQuant[2]);
+      
+  
+      var itemNames = document.getElementsByClassName("item-name");
+  
+      for(let i = 0; i < foodQuant.length; i ++) {
+
+        //document.getElementsByClassName("quantity")[i].value = 3;
+
+          for (let j = 0; j < itemNames.length; j ++){
+              if(foodQuant[i] == itemNames[j].innerHTML.toLowerCase()){
+                  document.getElementsByClassName("quantity")[j].value = quantity[j];
+                  break;
+              }
+          }
+      }
+      calculateTotal();
+  
+  }
 </script>
 
 
@@ -100,7 +127,7 @@ function speechToItems(fullTranscript){
         </a>
         <h2>Order:</h2>
   
-        <button id="speech-order" onclick="speechToItems(speechTranscript())">Order by voice</button>
+        <button id="speech-order" onclick="speechTranscript(speechToItems)">Order by voice</button>
   
         <form id = "order-form" method="POST" action="{% url "customer-restaurant-order" pk=restaurant.id %}">
           {% csrf_token %}
