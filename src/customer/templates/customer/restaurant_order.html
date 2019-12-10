@@ -11,108 +11,162 @@
 {% block page_js %}
 
 <script>
-function calculateTotal()
-{
+/*
+Speech must be inputed in format: quantity, name
+ex. "3 chicken 4 salad 5 fish"
+*/
+
+function speechTranscript(_callback) {
+
+  console.log('Listening...');
+  speechSynthesis.speak(new SpeechSynthesisUtterance('listening'));
+
+  window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+  let finalTranscript = '';
+  let fullTranscript = '';
+  let recognition = new window.SpeechRecognition();
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 10;
+  recognition.continuous = true;
+  recognition.onresult = (event) => {
+      let interimTranscript = '';
+      for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+          let transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+              finalTranscript += transcript;
+          } else {
+              interimTranscript += transcript;
+          }
+      }
+      fullTranscript = finalTranscript + interimTranscript;
+      //document.querySelector('body').innerHTML = finalTranscript + '<i style="color:#ddd;">' + interimTranscript + '</>';
+
+  }
+  recognition.start();
+  recognition.onspeechend = function() {
+      console.log('Speech has stopped being detected');
+      recognition.stop();
+      _callback(fullTranscript);
+
+      /*
+      speechSynthesis.speak(new SpeechSynthesisUtterance('Your order is ' + fullTranscript + ' say yes to confirm your order or' +
+      ' no to repeat your order'));
+
+      const wait=ms=>new Promise(resolve => setTimeout(resolve, ms));
+      wait(4*1000).then(() => { 
+        if(confirmOrder()){
+          _callback(fullTranscript);
+        }
+        else {
+          speechSynthesis.speak(new SpeechSynthesisUtterance('repeat your order'));
+          speechTranscript(speechToItems);
+        }
+      })
+      */
+  }
+
+}
+
+function confirmOrder(){
+  window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+  
+  let word = '';
+  let recognition = new window.SpeechRecognition();
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+  recognition.continuous = true;
+  recognition.onresult = (event) => {
+    word = event.results[0][0].transcript;
+  }
+  recognition.start();
+  recognition.onspeechend = function() {
+    if(word == 'yes') return true;
+    else return false;
+  }
+
+}
+
+
+function speechToItems(fullTranscript) {
+  //var fullTranscript = "one Chicken 2 Fish 8 Salad";
+
+  console.log(fullTranscript);
+
+  var foodQuant = [];
+  var quantity = [];
+
+  var tranArray = fullTranscript.split(" ");
+  console.log(tranArray);
+  var digit = {
+      'zero': 0,
+      'one': 1,
+      'two': 2,
+      'three': 3,
+      'four': 4,
+      'five': 5,
+      'six': 6,
+      'seven': 7,
+      'eight': 8,
+      'nine': 9,
+      'ten': 10,
+      'eleven': 11,
+      'twelve': 12,
+      'thirteen': 13,
+      'fourteen': 14,
+      'fifteen': 15,
+      'sixteen': 16,
+      'seventeen': 17,
+      'eighteen': 18,
+      'nineteen': 19,
+      'twenty': 20,
+  }
+
+  for (let i = 0; i < tranArray.length; i++) {
+
+      if (tranArray[i].length > 2) {
+          quantity.push(digit[tranArray[i]]);
+          i++;
+      } else {
+          quantity.push(Number(tranArray[i]));
+          i++;
+      }
+      foodQuant.push(tranArray[i]);
+  }
+  console.log(foodQuant);
+  console.log(quantity);
+
+
+  var itemNames = document.getElementsByClassName("item-name");
+
+  for (let i = 0; i < foodQuant.length; i++) {
+
+      for (let j = 0; j < itemNames.length; j++) {
+          if (foodQuant[i].toLowerCase() == itemNames[j].innerHTML.toLowerCase()) {
+              document.getElementsByClassName("quantity")[j].value = quantity[j];
+              break;
+          }
+      }
+  }
+  calculateTotal();
+
+}
+
+function calculateTotal() {
   var total = 0;
   var discount = Number(document.getElementById("discount").innerText);
-  
+
   var items = document.getElementsByClassName("item");
-  for(var i = 0; i < items.length; i ++){
-    var item = items[i];
-    var price = Number(item.getElementsByClassName("price")[0].innerHTML);
-    var qty = Number(item.getElementsByClassName("quantity")[0].value);
-    total += price * qty;
+  for (var i = 0; i < items.length; i++) {
+      var item = items[i];
+      var price = Number(item.getElementsByClassName("price")[0].innerHTML);
+      var qty = Number(item.getElementsByClassName("quantity")[0].value);
+      total += price * qty;
   }
   total = total - total * discount;
   var subTotal = total.toFixed(2);
   document.getElementById("total").innerHTML = subTotal;
 }
 
-function itemDescription()
-{
-  alert("This is a description of the item");
-}
-
-
-function speechTranscript(_callback) {
-
-    console.log('working');
-
-    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-        let finalTranscript = '';
-        let fullTranscript = '';
-        let recognition = new window.SpeechRecognition();
-        recognition.interimResults = true;
-        recognition.maxAlternatives = 10;
-        recognition.continuous = true;
-        recognition.onresult = (event) => {
-          let interimTranscript = '';
-          for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
-            let transcript = event.results[i][0].transcript;
-            if (event.results[i].isFinal) {
-              finalTranscript += transcript;
-            } else {
-              interimTranscript += transcript;
-            }
-          }
-          fullTranscript = finalTranscript + interimTranscript;
-          //document.querySelector('body').innerHTML = finalTranscript + '<i style="color:#ddd;">' + interimTranscript + '</>';
-          
-        }
-        recognition.start();
-        recognition.onspeechend = function() {
-            console.log('Speech has stopped being detected');
-            recognition.stop();
-            _callback(fullTranscript);
-          }
-        
-  }
-  
-
-  function speechToItems(fullTranscript){
-    //var fullTranscript = "3 Chicken 2 Fish 8 Salad";
-    //console.log(Number(fullTranscript.charAt(0)));
-
-    console.log(fullTranscript);
-
-      var foodQuant = [];
-      var quantity = [];
-      for (let i = 0; i < fullTranscript.length; i++){
-          quantity.push(Number(fullTranscript.charAt(i)));
-          i += 2;
-          //let j = i;
-          var itemName = '';
-          for (let j = i; j < fullTranscript.length; j ++) {
-            if (fullTranscript.charAt(j) == ' ') {
-              break;
-            }
-            itemName += fullTranscript.charAt(j);
-            i++;
-          }
-          foodQuant.push(itemName);
-
-      }
-      //console.log('qty: ' + quantity[0] + ' ' + foodQuant[0]);
-      //console.log('qty: ' + quantity[1] + ' ' + foodQuant[1]);
-      //console.log('qty: ' + quantity[2] + ' ' + foodQuant[2]);
-      
-  
-      var itemNames = document.getElementsByClassName("item-name");
-  
-      for(let i = 0; i < foodQuant.length; i ++) {
-
-        //document.getElementsByClassName("quantity")[i].value = 3;
-
-          for (let j = 0; j < itemNames.length; j ++){
-              if(foodQuant[i] == itemNames[j].innerHTML.toLowerCase()){
-                  document.getElementsByClassName("quantity")[j].value = quantity[j];
-                  break;
-              }
-          }
-      }
-      calculateTotal();
-  
-  }
 </script>
 
 
