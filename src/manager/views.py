@@ -35,11 +35,12 @@ def restaurant(request):
             restaurant = Restaurant.objects.get(manager__user=user)
             if request.method == 'POST':
                 body = parse_req_body(request.body)
-                if request.get("edit_name"):
+                task = body['task']
+                if task = "edit_name":
                     name = body['name']
                     restaurant.name = name
 
-                elif request.get("edit_description"):
+                elif task = "edit_description":
                     description = body['description']
                     restaurant.description = description
                 
@@ -64,8 +65,9 @@ def deliverybids(request):
             user_manager = Manager.objects.get(user=user)
             # at event that manager selects bid
             if request.method == 'POST':
-                if request.POST.get("choose_bid"):
-                    body = parse_req_body(request.body)
+                body = parse_req_body(request.body)
+                task = body['task']
+                if task = "choose_bid":
                     bid_id = int(body['bid_id'])
                     win_bid = DeliveryBid.objects.get(id=bid_id)
                     bid_order = win_bid.order
@@ -110,12 +112,12 @@ def staff(request):
                 staff_user = User.objects.get(pk=staff_id)
                 update_staff = Staff.objects.get(user=staff_user) 
                 staffIs = userTypeChecker(staff_user)
-
-                if request.POST.get('remove_warning'):
+                task = body['task']
+                if task = 'remove_warning':
                     if update_staff.warnings > 1:
                         update_staff.warnings -= 1
                 
-                elif request.POST.get('fire'):
+                elif task = 'fire':
                     if staffIs(Cook): # check if there is enough cooks
                         if len(Cook.objects.filter(restaurant=restaurant)) > 2:
                             update_staff.status = 'N'
@@ -134,7 +136,7 @@ def staff(request):
                         update_staff.warnings = 0
                         update_staff.salary = 0
 
-                elif request.POST.get('edit_salary'):
+                elif task = 'edit_salary':
                     salary = body['salary']
                     update_staff.salary = salary
 
@@ -177,12 +179,12 @@ def staffdetails(request, pk):
 
             if request.method == 'POST':
                 body = parse_req_body(request.body)
-
-                if request.POST.get('remove_warning'):
+                task = body['task']
+                if task = 'remove_warning':
                     if staff.warnings > 1:
                         staff.warnings -= 1
                 
-                elif request.POST.get('fire'):
+                elif task = 'fire':
                     if staffIs(Cook): # check if there is enough cooks
                         if len(Cook.objects.filter(restaurant=restaurant)) > 2:
                             staff.status = 'N'
@@ -201,7 +203,7 @@ def staffdetails(request, pk):
                         staff.warnings = 0
                         staff.salary = 0
 
-                elif request.POST.get('edit_salary'):
+                elif task = 'edit_salary':
                     salary = body['salary']
                     staff.salary = salary
 
@@ -248,13 +250,14 @@ def customers(request):
                 customer_id = int(body['customer_id'])  
                 customer = User.objects.get(pk=customer_id)
                 update_customer = CustomerStatus.objects.filter(restaurant=restaurant).filter(customer=customer)
-                if request.POST.get("promote"):
+                task = body['task']
+                if task = "promote":
                     update_customer.status = 'V'
-                elif request.POST.get("demote"):
+                elif task = "demote":
                     update_customer.status = 'R'                    
-                elif request.POST.get("remove"):
+                elif task = "remove":
                     update_customer.status = 'N' 
-                elif request.POST.get("blacklist"):
+                elif task = "blacklist":
                     update_customer.status = 'B'                     
                 update_customer.save()
             
@@ -339,47 +342,48 @@ def pendingregistrations(request): #if post, request must have customer user obj
         body = parse_req_body(request.body)
         user_id = int(body['user_id'])  #this is a user object, COULD CAUSE ERRORS
         update_user = User.objects.get(pk=user_id)
+        task = body['task']
 
-        if request.POST.get('approve_customer'):
+        if task = 'approve_customer':
             update_customer = CustomerStatus.objects.get(customer__user=update_user)
             update_customer.approve_status()
             update_customer.save()
-        elif request.POST.get('reject_customer'):
+        elif task = 'reject_customer':
             update_customer = CustomerStatus.objects.get(customer__user=update_user)
             update_customer.approve_status()  
             update_customer.save()  
 
         # change cook
-        elif request.POST.get('approve_cook'):
+        elif task = 'approve_cook':
             update_staff = Cook.objects.get(user=update_user) 
             update_staff.status = 'H'
             update_staff.salary = 600
             update_staff.save()
-        elif request.POST.get('reject_cook'):
+        elif task = 'reject_cook':
             update_staff = Cook.objects.get(user=update_user) 
             update_staff.status = 'N'
             update_staff.restaurant = None     
             update_staff.save()
 
         # change salesperson
-        elif request.POST.get('approve_salesperson'):
+        elif task = 'approve_salesperson':
             update_staff = Salesperson.objects.get(user=update_user) 
             update_staff.status = 'H'
             update_staff.salary = 600
             update_staff.save()
-        elif request.POST.get('reject_salesperson'):
+        elif task = 'reject_salesperson':
             update_staff = Salesperson.objects.get(user=update_user) 
             update_staff.status = 'N'
             update_staff.restaurant = None     
             update_staff.save()
 
         # change deliverer
-        elif request.POST.get('approve_deliverer'):
+        elif task = 'approve_deliverer':
             update_staff = Deliverer.objects.get(user=update_user) 
             update_staff.status = 'H'
             update_staff.salary = 600
             update_staff.save()
-        elif request.POST.get('reject_deliverer'):
+        elif task = 'reject_deliverer':
             update_staff = Deliverer.objects.get(user=update_user) 
             update_staff.status = 'N'
             update_staff.restaurant = None     

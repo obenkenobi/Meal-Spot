@@ -37,8 +37,8 @@
             <td> 
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
                 <input class="user_id" name="user_id" type="hidden" value="{{ pending_customer.customer.user.id }}"></input>
-                <input class = "approve_button" name = "approve_customer" type="button" value="Approve"></input>
-                <input class = "reject_button" name = "reject_customer" type="button" value="Reject"></input> 
+                <input class = "approve_button" task = "approve_customer" type="button" value="Approve"></input>
+                <input class = "reject_button" task = "reject_customer" type="button" value="Reject"></input> 
                 </form>
             </td>
         </tr>
@@ -67,8 +67,8 @@
             <td> 
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
                 <input class="user_id" name="user_id" type="hidden" value="{{ pending_staff.user.id }}"></input>
-                <input class = "approve_button" name = "approve_cook" type="button" value="Approve"></input>
-                <input class = "reject_button" name = "reject_cook" type="button" value="Reject"></input> 
+                <input class = "approve_button" task = "approve_cook" type="button" value="Approve"></input>
+                <input class = "reject_button" task = "reject_cook" type="button" value="Reject"></input> 
                 </form>
             </td>  
         </tr>
@@ -121,8 +121,8 @@
             <td> 
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
                 <input class="user_id" name="user_id" type="hidden" value="{{ pending_staff.user.id }}"></input>
-                <input class = "approve_button" name = "approve_cook" type="button" value="Approve"></input>
-                <input class = "reject_button" name = "reject_cook" type="button" value="Reject"></input> 
+                <input class = "approve_button" task = "approve_cook" type="button" value="Approve"></input>
+                <input class = "reject_button" task = "reject_cook" type="button" value="Reject"></input> 
                 </form>
             </td>  
         </tr>
