@@ -36,9 +36,11 @@
             <td class = "rating">{{ pending_customer.avg_rating }}</td>
             <td> 
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
+                {% csrf_token %}
+                <input class="user_id" name="task" type="hidden" value="approve_customer"></input>
                 <input class="user_id" name="user_id" type="hidden" value="{{ pending_customer.customer.user.id }}"></input>
-                <input class = "approve_button" task = "approve_customer" type="button" value="Approve"></input>
-                <input class = "reject_button" task = "reject_customer" type="button" value="Reject"></input> 
+                <input class = "approve_button" name = "action" type="submit" value="Approve"></input>
+                <input class = "reject_button" name = "action" type="submit" value="Reject"></input> 
                 </form>
             </td>
         </tr>
