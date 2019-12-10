@@ -20,105 +20,112 @@
   
   <h3>Cooks</h3>
   <table id = "cook-table">
-      <!--Table header-->
-      <tr>
-        <th>Last Name:</th>
-        <th>First Name:</th>
-        <th>Warnings:</th>
-      </tr>
+    <!--Table header-->
+    <tr>
+      <th>Last Name:</th>
+      <th>First Name:</th>
+      <th>Warnings:</th>
+    </tr>
 
-      {% for cook in cooks %}
-      <div id = "cook-data">
-        <tr>
-          <td class = "last-n">{{ cook.user.last_name }}</td>
-          <td class = "first-n">{{ cook.user.first_name }}</td>
-          <td class = "warnings">{{ cook.warnings }}</td>
-        </tr>
-        <tr>
-          <th>Salary:</th>
-          <td class = "staff_salary">{{ cook.salary }}</td>
-          <form method="POST" action="{% url "manager-staff" %}">
-            <input class="user_id" type="hidden" value="{{ cook.user.id }}"></input>
-            <td><input class = "salary" name="salary" min="0" type="number"></input></td>
-            <td><button class="edit_salary" type="submit">Edit Salary</button></td>
-            <td class = "view-details">
-              <a href="{% url 'manager-staffdetails' cook.user.id %}" class="button" target="_blank">View Details</a>
-            </td>
-            <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
-            <td><button class = "fire" type="submit">Fire</button></td>
-          </form>
-          
-        </tr>
-      </div>
-    </table>
+    <div id = "cook-data">
+    {% for cook in cooks %}
+      <tr>
+        <td class = "last-n">{{ cook.user.last_name }}</td>
+        <td class = "first-n">{{ cook.user.first_name }}</td>
+        <td class = "warnings">{{ cook.warnings }}</td>
+      </tr>
+      <tr>
+        <th>Salary:</th>
+        <td class = "staff_salary">{{ cook.salary }}</td>
+        <form method="POST" action="{% url "manager-staff" %}">
+          {% csrf_token %}
+          <input class="user_id" type="hidden" value="{{ cook.user.id }}"></input>
+          <td><input class = "salary" name="salary" min="0" type="number"></input></td>
+          <td><button class="edit_salary" type="submit">Edit Salary</button></td>
+          <td class = "view-details">
+            <a href="{% url 'manager-staffdetails' cook.user.id %}" class="button" target="_blank">View Details</a>
+          </td>
+          <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
+          <td><button class = "fire" type="submit">Fire</button></td>
+        </form>
+        
+      </tr>
+    {% endfor %}
+    </div>
+  </table>
 
   <h3>Salespeople</h3>
   <table id = "salesperson-table">
-      <!--Table header-->
+    <!--Table header-->
+    <tr>
+      <th>Last Name:</th>
+      <th>First Name:</th>
+      <th>Warnings:</th>
+    </tr>
+
+    
+    <div id = "salesperson-data">
+    {% for salesperson in salespeople %}
       <tr>
-        <th>Last Name:</th>
-        <th>First Name:</th>
-        <th>Warnings:</th>
+        <td class = "last-n">{{ salesperson.user.last_name }}</td>
+        <td class = "first-n">{{ salesperson.user.first_name }}</td>
+        <td class = "warnings">{{ salesperson.warnings }}</td>
       </tr>
-
-      {% for salesperson in salespeople %}
-      <div id = "salesperson-data">
-        <tr>
-          <td class = "last-n">{{ salesperson.user.last_name }}</td>
-          <td class = "first-n">{{ salesperson.user.first_name }}</td>
-          <td class = "warnings">{{ salesperson.warnings }}</td>
-        </tr>
-        <tr>
-          <th>Salary:</th>
-          <td class = "staff_salary">{{ salesperson.salary }}</td>
-          <form method="POST" action="{% url "manager-staff" %}">
-            <input class="user_id" type="hidden" value="{{ salesperson.user.id }}"></input>
-            <td><input class = "salary" name="salary" min="0" type="number"></input></td>
-            <td><button class="edit_salary" type="submit">Edit Salary</button></td>
-            <td class = "view-details">
-              <a href="{% url 'manager-staffdetails' salesperson.user.id %}" class="button" target="_blank">View Details</a>
-            </td>
-            <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
-            <td><button class = "fire" type="submit">Fire</button></td>
-          </form>
-          
-        </tr>
-      </div>
-    </table>
-
-    <h3>Deliverers</h3>
-    <table id = "deliverer-table">
-      <!--Table header-->
       <tr>
-        <th>Last Name:</th>
-        <th>First Name:</th>
-        <th>Warnings:</th>
+        <th>Salary:</th>
+        <td class = "staff_salary">{{ salesperson.salary }}</td>
+        <form method="POST" action="{% url "manager-staff" %}">
+        {% csrf_token %}
+          <input class="user_id" type="hidden" value="{{ salesperson.user.id }}"></input>
+          <td><input class = "salary" name="salary" min="0" type="number"></input></td>
+          <td><button class="edit_salary" type="submit">Edit Salary</button></td>
+          <td class = "view-details">
+            <a href="{% url 'manager-staffdetails' salesperson.user.id %}" class="button" target="_blank">View Details</a>
+          </td>
+          <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
+          <td><button class = "fire" type="submit">Fire</button></td>
+        </form>
+        
       </tr>
+      {% endfor %}
+    </div>
+  </table>
 
-      {% for deliverer in deliverers %}
-      <div id = "deliverer-data">
-        <tr>
-          <td class = "last-n">{{ deliverer.user.last_name }}</td>
-          <td class = "first-n">{{ deliverer.user.first_name }}</td>
-          <td class = "warnings">{{ deliverer.warnings }}</td>
-        </tr>
-        <tr>
-          <th>Salary:</th>
-          <td class = "staff_salary">{{ deliverer.salary }}</td>
-          <form method="POST" action="{% url "manager-staff" %}">
-            <input class="user_id" type="hidden" value="{{ deliverer.user.id }}"></input>
-            <td><input class = "salary" name="salary" min="0" type="number"></input></td>
-            <td><button class="edit_salary" type="submit">Edit Salary</button></td>
-            <td class = "view-details">
-              <a href="{% url 'manager-staffdetails' deliverer.user.id %}" class="button" target="_blank">View Details</a>
-            </td>
-            <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
-            <td><button class = "fire" type="submit">Fire</button></td>
-          </form>
+  <h3>Deliverers</h3>
+  <table id = "deliverer-table">
+    <!--Table header-->
+    <tr>
+      <th>Last Name:</th>
+      <th>First Name:</th>
+      <th>Warnings:</th>
+    </tr>
+
+    <div id = "deliverer-data">
+    {% for deliverer in deliverers %}
+      <tr>
+        <td class = "last-n">{{ deliverer.user.last_name }}</td>
+        <td class = "first-n">{{ deliverer.user.first_name }}</td>
+        <td class = "warnings">{{ deliverer.warnings }}</td>
+      </tr>
+      <tr>
+        <th>Salary:</th>
+        <td class = "staff_salary">{{ deliverer.salary }}</td>
+        <form method="POST" action="{% url "manager-staff" %}">
+        {% csrf_token %}
+          <input class="user_id" type="hidden" value="{{ deliverer.user.id }}"></input>
+          <td><input class = "salary" name="salary" min="0" type="number"></input></td>
+          <td><button class="edit_salary" type="submit">Edit Salary</button></td>
+          <td class = "view-details">
+            <a href="{% url 'manager-staffdetails' deliverer.user.id %}" class="button" target="_blank">View Details</a>
+          </td>
+          <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
+          <td><button class = "fire" type="submit">Fire</button></td>
+        </form>
           
-        </tr>
-      </div>
-    </table>
+      </tr>
+    {% endfor %}
+    </div>
+  </table>
 
 </div>
 

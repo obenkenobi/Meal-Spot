@@ -16,41 +16,175 @@
 
 <div id = "staff_orders">
 
+  <a class="button" id="back" href="{% url 'manager-staff' %}">Back to all staff</a>
   
-  <button id = "back">Back to all staff</button>
-  <h1 id = "title">Staff Order History</h1>
-
-  <table id = "order_history">
-
-   <tr class = "table_header">
-      <th>Last:</th>
-      <th>First:</th>
-      <th>Job:</th>
+  <h1 id = "staff_details">Staff Details:</h1>
+  <table id = "staff_details">
+    <tr class = "table_header">
+      <th>Last Name:</th>
+      <th>First Name:</th>
+      <th>Staff Type:</th>
+      <th># Warnings:</th>
     </tr>
 
     <tr>
-      <td id = "last">Wilkins</td>
-      <td id = "first">Wilbur</td>
-      <td id = "job_title">Deliverer</td>
+      <td id = "last">{{ staff.user.last_name }}</td>
+      <td id = "first">{{ staff.user.first_name }}</td>
+      <td id = "job_title">{{ staff_type }}</td>
+      <td id = "num_warnings">{{ staff.warnings }}</td>
     </tr>
-
-    <tr class = "table_header">
-      <th>Order ID:</th>
-      <th>Customer:</th>
-      <th>Date:</th>
-      <th>Total:<th>
-      <th>Quantity:</th>
-    </tr>
-
-    <!--Loop row below for all orders-->
-    <tr id = "order_details">
-      <td class = "order_id">00042</td>
-      <td class = "customer_name">Missy A<td>
-      <td class = "date">02-03-20</td>
-      <td class = "total">23.45</td>
-      <td class = "quantity">6</td>
+    
+    <tr>
+      <th>Salary:</th>
+      <td class = "staff_salary">{{ staff.salary }}</td>
+      <form method="POST" action="{% url "manager-staffdetails" %}">
+        {% csrf_token %}
+        <input class="user_id" type="hidden" value="{{ staff.user.id }}"></input>
+        <td><input class = "salary" name="salary" min="0" type="number"></input></td>
+        <td><button class="edit_salary" type="submit">Edit Salary</button></td>
+        <td><button class = "remove_warning" type="submit">Remove 1 Warning</button></td>
+        <td><button class = "fire" type="submit">Fire</button></td>
+      </form>
     </tr>
 
   </table>
+
+  {% if user_type == "cook" %}
+
+  <h1 id = "complaints_title">Food Complaints</h1>
+  <table id = "complaints">
+    
+    <tr class = "table_header">
+      <th>Order ID:</th>
+      <th>Date:</th>
+      <th>Customer:</th>
+      <th>Food:</th>
+      <th>Rating:</th>
+      <th>Complaint:</th>
+    </tr>
+    
+    {% for complaint in complaints %}
+    <tr class = "complaint_details">
+      <td class = "order_id">{{ complaint.order.id }}</td>
+      <td class = "date">{{ complaint.order.created|date:"n/j/y" }}</td>
+      <td class = "customer_name">{{ complaint.order.customer.user.first_name }} {{ complaint.customer.user.last_name }}<td>
+      <td class = "food">{{ complaint.food }}</td>
+      <td class = "rating">{{ complaint.food_rating }}/5</td>
+      <td class = "complaint">{{ complaint.food_complaint }}</td>
+    </tr>
+    {% endfor %}
+
+  </table>
+
+  <h1 id = "orders_title">Order History</h1>
+  <table id = "orders">
+    
+    <tr class = "table_header">
+      <th>Order ID:</th>
+      <th>Date:</th>
+      <th>Customer:</th>
+      <th>Food:</th>
+      <th>Rating:</th>
+    </tr>
+
+    {% for order_food in orders %}
+    <tr id = "order_details">
+      <td class = "order_id">{{ order_food.order.id }}</td>
+      <td class = "date">{{ order_food.order.created|date:"n/j/y" }}</td>
+      <td class = "customer_name">{{ order_food.order.customer.user.first_name }} {{ order_food.order.customer.user.last_name }}<td>
+      <td class = "food">{{ order_food.name }}<td>
+      <td class = "rating">{{ order_food.food_rating }}/5</td>
+    </tr>
+    {% endfor %}
+
+  </table>
+
+  {% elif user_type == "deliverer" %}
+    <h1 id = "complaints_title">Delivery Complaints</h1>
+    <table id = "complaints">
+      <tr class = "table_header">
+        <th>Order ID:</th>
+        <th>Date:</th>
+        <th>Customer:</th>
+        <th>Rating:</th>
+        <th>Complaint:</th>
+      </tr>
+
+      {% for complaint in complaints %}
+      <tr class = "complaint_details">
+        <td class = "complaint_id">{{ complaint.id }}</td>
+        <td class = "date">{{ complaint.created|date:"n/j/y" }}</td>
+        <td class = "customer_name">{{ complaint.customer.user.first_name }} {{ complaint.customer.user.last_name }}<td>
+        <td class = "complaint">{{ complaint.delivery_rating }}/5</td>
+        <td class = "complaint">{{ complaint.delivery_complaint }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+    <h1 id = "orders_title">Order History</h1>
+    <table id = "orders">
+      
+      <tr class = "table_header">
+        <th>Order ID:</th>
+        <th>Date:</th>
+        <th>Customer:</th>
+        <th>Rating:</th>
+      </tr>
+
+      {% for order in orders %}
+      <tr id = "order_details">
+        <td class = "order_id">{{ order.id }}</td>
+        <td class = "date">{{ order.created|date:"n/j/y" }}</td>
+        <td class = "customer_name">{{ order.customer.user.first_name }} {{ order_food.order.customer.user.last_name }}<td>
+        <td class = "rating">{{ order.delivery_rating }}/5</td>
+      </tr>
+      {% endfor %}
+
+    </table>
+
+  {% elif user_type == "salesperson" %}
+    <h1 id = "complaints_title">Supply Complaints</h1>
+    <table id = "complaints">
+    <tr class = "table_header">
+      <th>Order ID:</th>
+      <th>Date:</th>
+      <th>Cook:</th>
+      <th>Rating:</th>
+      <th>Complaint:</th>
+    </tr> 
+
+    {% for complaint in complaints %}
+    <tr class = "complaint_details">
+      <td class = "complaint_id">{{ complaint.id }}</td>
+      <td class = "date">{{ complaint.created|date:"n/j/y" }}</td>
+      <td class = "cook_name">{{ complaint.cook.user.first_name }} {{ complaint.cook.user.last_name }}<td>
+      <td class = "rating">{{ complaint.supply_rating }}/5</td>
+      <td class = "complaint">{{ complaint.supply_complaint }}</td>
+    </tr>
+    {% endfor %}
+
+    <h1 id = "orders_title">Order History</h1>
+    <table id = "orders">
+      
+      <tr class = "table_header">
+        <th>Order ID:</th>
+        <th>Date:</th>
+        <th>Cook:</th>
+        <th>Rating:</th>
+      </tr>
+
+      {% for order in orders %}
+      <tr id = "order_details">
+        <td class = "order_id">{{ order.id }}</td>
+        <td class = "date">{{ order.created|date:"n/j/y" }}</td>
+        <td class = "cook_name">{{ order.cook.user.first_name }} {{ order_food.order.cook.user.last_name }}<td>
+        <td class = "rating">{{ order.supply_rating }}/5</td>
+      </tr>
+      {% endfor %}
+
+    </table>
+
+  {% endif %}
+
 </div>
 {% endblock %}

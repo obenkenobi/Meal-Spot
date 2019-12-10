@@ -39,6 +39,7 @@ class Order(models.Model):
     customer_complaint = models.TextField(null=True) 
     total_price = models.FloatField(default=0)
     chose_bid = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
 
     @property
     def orderfoods(self):
@@ -140,6 +141,7 @@ class SupplyOrder(models.Model):
     salesperson = models.ForeignKey('Salesperson', on_delete=models.SET_NULL, null = True)
     cook = models.ForeignKey('Cook', on_delete=models.SET_NULL, null = True)
     finished = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
 
 class DeliveryBid(models.Model):
     deliverer = models.ForeignKey('Deliverer', on_delete=models.CASCADE)

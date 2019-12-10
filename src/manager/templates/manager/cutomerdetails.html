@@ -34,15 +34,18 @@
             <td class = "rating">{{ customer.avg_rating }}</td>
             <td class = "num-complaints">{{ num_complaints }}</td>
         </tr>
-        <form method="POST" action="{% url "manager-customers" %}">
-            <input class="customer_id" type="hidden" value="{{ customer_id }}"></input>
-            <div id = "status-change">
-                <input class="promote" type="button" value="promote">Promote to VIP</input>
-                <input class="demote" type="button" value="demote">Demote to Regular</input>
-                <input class="blacklist" type="button" value="blacklist">Blacklist</input>
-                <input class="remove" type="button" value="blacklist">Remove Registration</input>
-            </div>
-        </form>
+        <tr>
+            <form method="POST" action="{% url "manager-customerdetails" %}">
+            {% csrf_token %}
+                <input class="customer_id" type="hidden" value="{{ customer_id }}"></input>
+                <div id = "status-change">
+                    <input class="promote" type="button" value="promote">Promote to VIP</input>
+                    <input class="demote" type="button" value="demote">Demote to Regular</input>
+                    <input class="blacklist" type="button" value="blacklist">Blacklist</input>
+                    <input class="remove" type="button" value="blacklist">Remove Registration</input>
+                </div>
+            </form>
+        </tr>
     </table>
 
         
@@ -101,6 +104,8 @@
         <tr>
             <th>Order ID:</th>
             <td class="order-id">{{ info.order.id }}</td>
+            <th>Date:</th>
+            <td class="order-date">{{ info.order.created|date:"n/j/y" }}</td>
             <th>Total Price:</th>
             <td class="total">{{ info.order.total_price }}</td>
             <th>Total Items:</th>
