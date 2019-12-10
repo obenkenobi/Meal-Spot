@@ -30,17 +30,21 @@ def restaurant(request):
         user = request.user
         userIs = userTypeChecker(user)
         if userIs(Manager) == True: # returns true if user is manager, else false
-            user_manager = Manager.objects.get(user=user)
+            restaurant = Restaurant.objects.get(manager__user=user)
             if request.method == 'POST':
-                body = parse_req_body(request.body)
-                name = body['name']
-                description = body['description']
-                update_restaurant = Restaurant.objects.get(manager=user_manager)
-                update_restaurant.name = name
-                update_restaurant.description = description
-                update_restaurant.save()
+                if request.get("name"):
+                    body = parse_req_body(request.body)
+                    name = body['name']
+                    restaurant.name = name
 
-            restaurant = Restaurant.objects.get(manager=user_manager)
+
+                elif request.get("description"):
+                    body = parse_req_body(request.body)
+                    description = body['description']
+                    restaurant.description = description
+                
+                restaurant.save()
+                
             context = {'restaurant': restaurant}
             return render(request, 'manager/restaurant.html', context=context)
         else:
