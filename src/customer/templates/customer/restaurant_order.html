@@ -18,8 +18,9 @@ ex. "3 chicken 4 salad 5 fish"
 
 function speechTranscript(_callback) {
 
-  console.log('Listening...');
-  speechSynthesis.speak(new SpeechSynthesisUtterance('listening'));
+  console.log('Listening for your order...');
+  
+  speechSynthesis.speak(new SpeechSynthesisUtterance('listening for your order'));
 
   window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
   let finalTranscript = '';
@@ -46,28 +47,31 @@ function speechTranscript(_callback) {
   recognition.onspeechend = function() {
       console.log('Speech has stopped being detected');
       recognition.stop();
-      _callback(fullTranscript);
+      //_callback(fullTranscript);
 
-      /*
-      speechSynthesis.speak(new SpeechSynthesisUtterance('Your order is ' + fullTranscript + ' say yes to confirm your order or' +
-      ' no to repeat your order'));
+      
+      speechSynthesis.speak(new SpeechSynthesisUtterance('Your order is ' + fullTranscript));
 
       const wait=ms=>new Promise(resolve => setTimeout(resolve, ms));
-      wait(4*1000).then(() => { 
-        if(confirmOrder()){
+      wait(3*1000).then(() => { 
+        _callback(fullTranscript)
+        /*
+        let confirmation = confirmOrder();
+        if(confirmation){
           _callback(fullTranscript);
         }
         else {
-          speechSynthesis.speak(new SpeechSynthesisUtterance('repeat your order'));
+          speechSynthesis.speak(new SpeechSynthesisUtterance('say your order again'));
           speechTranscript(speechToItems);
         }
+        */
       })
-      */
+      
   }
 
 }
 
-function confirmOrder(){
+async function confirmOrder(){
   window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
   
   let word = '';
@@ -80,6 +84,7 @@ function confirmOrder(){
   }
   recognition.start();
   recognition.onspeechend = function() {
+    console.log('confirm order working');
     if(word == 'yes') return true;
     else return false;
   }
@@ -101,12 +106,16 @@ function speechToItems(fullTranscript) {
       'zero': 0,
       'one': 1,
       'two': 2,
+      'to': 2,
+      'too': 2,
       'three': 3,
       'four': 4,
+      'for': 4,
       'five': 5,
       'six': 6,
       'seven': 7,
       'eight': 8,
+      'ate': 8,
       'nine': 9,
       'ten': 10,
       'eleven': 11,
@@ -123,7 +132,7 @@ function speechToItems(fullTranscript) {
 
   for (let i = 0; i < tranArray.length; i++) {
 
-      if (tranArray[i].length > 2) {
+      if (tranArray[i].length > 2 | tranArray[i] == 'to') {
           quantity.push(digit[tranArray[i]]);
           i++;
       } else {
