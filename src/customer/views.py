@@ -131,7 +131,7 @@ def resturant_order(request, pk):
                 my_foodorder = restaurant.Order_Food(quantity=qty, order=my_order, food=myfood)
                 my_foodorder.save()
                 price = myfood.price 
-                if status == 'V' and food.vip_free: 
+                if status == 'V' and myfood.vip_free: 
                     price = 0
                 total += price*qty
         discount = 0
