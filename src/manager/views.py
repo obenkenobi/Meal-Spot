@@ -82,7 +82,7 @@ def deliverybids(request):
             orders = Order.objects.filter(restaurant=user_manager.restaurant, status='PR', chose_bid=False).order_by('created') 
             for order in orders:
                 info_entry = {}
-                bids = DeliveryBid.objects.filter(order=order).filter(won=False).order_by('price')
+                bids = DeliveryBid.objects.filter(order=order).filter(win=False).order_by('price')
                 info_entry['order'] = order
                 info_entry['bids'] = bids
                 deliverybids_info.append(info_entry)

@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator
 
 class Address(models.Model):
     STATE_CHOICES = [
+        ('--', 'State'),
         ('AL', 'Alabama'),
         ('AK', 'Alaska'),
         ('AZ', 'Arizona'),
@@ -60,6 +61,7 @@ class Address(models.Model):
     state = models.CharField(
         max_length=2,
         choices=STATE_CHOICES,
+        default='--',
     )
     zip_code = models.IntegerField(validators=[MaxValueValidator(99999)]) 
 
