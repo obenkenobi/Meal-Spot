@@ -19,31 +19,40 @@
   <a class="button" id="back" href="{% url 'manager-staff' %}">Back to all staff</a>
   
   <h1 id = "staff_details">Staff Details:</h1>
-  <table id = "staff_details">
+  <table id = "staff_details" class="table table-condensed table-hover table-striped ng-table">
     <tr class = "table_header">
-      <th>Last Name:</th>
-      <th>First Name:</th>
-      <th>Staff Type:</th>
-      <th># Warnings:</th>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Staff Type</th>
+      <th>Number of Warnings</th>
+      <th>Salary
     </tr>
 
     <tr>
-      <td id = "last">{{ staff.user.last_name }}</td>
-      <td id = "first">{{ staff.user.first_name }}</td>
+      <td id = "id">{{ staff.user.id }}</td>
+      <td id = "username">{{ staff.user.username }}</td>
+      <td id = "name">{{ staff.user.first_name }} {{ staff.user.last_name }}</td>
       <td id = "job_title">{{ staff_type }}</td>
       <td id = "num_warnings">{{ staff.warnings }}</td>
+      <td class = "staff_salary">{{ staff.salary }}</td>
     </tr>
     
     <tr>
-      <th>Salary:</th>
-      <td class = "staff_salary">{{ staff.salary }}</td>
+      <td>Cannot Change</td>
+      <td>Cannot Change</td>
+      <td>Cannot Change</td>
+
       <form method="POST" action="{% url "manager-staffdetails" %}">
-        {% csrf_token %}
-        <input class="user_id" type="hidden" value="{{ staff.user.id }}"></input>
-        <td><input class = "salary" name="salary" min="0" type="number"></input></td>
-        <td><button class="edit_salary" task="edit_salary" type="submit">Edit Salary</button></td>
-        <td><button class = "remove_warning" task = "remove_warning" type="submit">Remove 1 Warning</button></td>
-        <td><button class = "fire" task = "fire" type="submit">Fire</button></td>
+      {% csrf_token %}
+      <input class="user_id" name="task" type="hidden" value="status_change"></input>
+      <input class="user_id" type="hidden" value="{{ staff.user.id }}"></input>
+      <td><button class = "fire" name = "action" value="fire" type="submit">Fire</button></td>
+      <td><button class = "remove_warning" name = "action" value="remove_warning" type="submit">Remove 1 Warning</button></td>
+      <td>
+        <input class = "salary" name="salary" min="0" type="number" placeholder="Edit Salary"></input>
+        <button class="edit_salary" name = "action" value="edit_salary" type="submit">Edit Salary</button>
+      </td> 
       </form>
     </tr>
 
@@ -167,10 +176,10 @@
     <table id = "orders">
       
       <tr class = "table_header">
-        <th>Order ID:</th>
-        <th>Date:</th>
-        <th>Cook:</th>
-        <th>Rating:</th>
+        <th>Order ID</th>
+        <th>Date</th>
+        <th>Cook</th>
+        <th>Rating</th>
       </tr>
 
       {% for order in orders %}

@@ -21,36 +21,38 @@
 
         <table id = "cust-name">
             <tr>
-                <th>Last Name:</th>
-                <th>First Name:</th>
-                <th>Status:</th>
-                <th>Rating:</th>
-                <th># Complaints received:</th>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Rating</th>
+                <th>Number of Complaints</th>
+                <th>Change Status</th>
+
             </tr>
 
             {% for info in customer_info %}
-                <tr>
-                    {% comment %} {% customer_id = registered_customer.customer.user.id %} {% endcomment %}
-                    <td class = "last-n">{{ info.registered_customer.customer.last_name }}</td>
-                    <td class = "first-n">{{ info.registered_customer.customer.first_name }}</td>
-                    <td class = "status">{{ info.registered_customer.status }}</td>
-                    <td class = "rating">{{ info.registered_customer.status }}</td>
-                    <td class = "num-complaints">{{ info.complaintcount }}</td>
-                    <td class = "more-info">
-                        <a href="{% url 'manager-customerdetails' info.registered_customer.customer.user.id %}" class="button" target="_blank">More info</a>
-                    </td>
-                </tr>
-            
-                <tr>
-                    <form method="POST" action="{% url "manager-customers" %}">
-                        <input class="customer_id" type="hidden" value="{{ info.registered_customer.customer.user.id }}"></input>
-                        
-                        <input class="promote" task="promote" type="button" value="Promote">Promote to VIP</input>
-                        <input class="demote" task="demote" type="button" value="Demote">Demote to Regular</input>
-                        <input class="blacklist" task="blacklist" type="button" value="Blacklist">Blacklist</input>
-                        <input class="remove" task="remove" type="button" value="Remove">Remove Registration</input>
-                    </form>
-                </tr>
+            <tr>
+                <td class = "cust-id">{{ customer.user.id }}</td>
+                <td class = "cust-username">{{ customer.user.username }}</td>
+                <td class = "cust-name">{{ customer.user.first_name }} {{ customer.user.last_name }}</td>
+                <td class = "status">{{ customer.status }}</td>
+                <td class = "rating">{{ customer.avg_rating }}</td>
+                <td class = "num-complaints">{{ num_complaints }}</td>
+                <td>
+                <form method="POST" action="{% url "manager-customerdetails" %}">
+                {% csrf_token %}
+                    <input class="user_id" name="task" type="hidden" value="status_change"></input>
+                    <input class="customer_id" type="hidden" value="{{ customer_id }}"></input>
+                    <div id = "status-change">
+                        <input class="promote" name="action" type="submit" value="promote">Promote to VIP</input>
+                        <input class="demote" name="action" type="submit" value="demote">Demote to Regular</input>
+                        <input class="blacklist" name="action" type="submit" value="blacklist">Blacklist</input>
+                        <input class="remove" name="action" type="submit" value="remove">Remove Registration</input>
+                    </div>
+                </form>
+                </td>
+            </tr>
             {% endfor %}
       </table>
     </div>

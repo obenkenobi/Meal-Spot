@@ -58,7 +58,7 @@
             <th>ID</th>
             <th>Username</th>
             <th>Name</th>
-            <th>Accept or Reject</th>
+            <th>Approve or Reject</th>
         </tr>
         
         {% for pending_staff in pending_cooks %}
@@ -68,9 +68,11 @@
             <td class = "staff-name">{{ pending_staff.user.first_name }} {{ pending_staff.user.last_name }}</td>
             <td> 
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
+                {% csrf_token %}
+                <input class="user_id" name="task" type="hidden" value="approve_cook"></input>
                 <input class="user_id" name="user_id" type="hidden" value="{{ pending_staff.user.id }}"></input>
-                <input class = "approve_button" task = "approve_cook" type="button" value="Approve"></input>
-                <input class = "reject_button" task = "reject_cook" type="button" value="Reject"></input> 
+                <input class = "approve_button" name = "action" type="submit" value="Approve"></input>
+                <input class = "reject_button" name = "action" type="submit" value="Reject"></input> 
                 </form>
             </td>  
         </tr>
@@ -84,7 +86,7 @@
             <th>ID</th>
             <th>Username</th>
             <th>Name</th>
-            <th>Accept or Reject</th>
+            <th>Approve or Reject</th>
         </tr>
         
         {% for pending_staff in pending_salespeople %}
@@ -94,9 +96,11 @@
             <td class = "staff-name">{{ pending_staff.user.first_name }} {{ pending_staff.user.last_name }}</td>
             <td> 
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
+                {% csrf_token %}
+                <input class="user_id" name="task" type="hidden" value="approve_salesperson"></input>
                 <input class="user_id" name="user_id" type="hidden" value="{{ pending_staff.user.id }}"></input>
-                <input class = "approve_button" task = "approve_cook" type="button" value="Approve"></input>
-                <input class = "reject_button" task = "reject_cook" type="button" value="Reject"></input> 
+                <input class = "approve_button" name = "action" type="submit" value="Approve"></input>
+                <input class = "reject_button" name = "action" type="submit" value="Reject"></input> 
                 </form>
             </td>  
         </tr>
@@ -112,7 +116,7 @@
             <th>ID</th>
             <th>Username</th>
             <th>Name</th>
-            <th>Accept or Reject</th>
+            <th>Approve or Reject</th>
         </tr>
         
         {% for pending_staff in pending_deliverers %}
@@ -122,9 +126,11 @@
             <td class = "staff-name">{{ pending_staff.user.first_name }} {{ pending_staff.user.last_name }}</td>
             <td> 
                 <form method="POST" action="{% url "manager-pendingregistrations" %}">
+                {% csrf_token %}
+                <input class="user_id" name="task" type="hidden" value="approve_deliverer"></input>
                 <input class="user_id" name="user_id" type="hidden" value="{{ pending_staff.user.id }}"></input>
-                <input class = "approve_button" task = "approve_cook" type="button" value="Approve"></input>
-                <input class = "reject_button" task = "reject_cook" type="button" value="Reject"></input> 
+                <input class = "approve_button" name = "action" type="submit" value="Approve"></input>
+                <input class = "reject_button" name = "action" type="submit" value="Reject"></input> 
                 </form>
             </td>  
         </tr>

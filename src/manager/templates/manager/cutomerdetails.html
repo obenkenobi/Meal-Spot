@@ -19,32 +19,37 @@
 
     <h2 id = "title">Customer Info:</h2>
     
-    <table id = "cust-name">
+    <table id = "cust-info" class="table table-condensed table-hover table-striped ng-table">
         <tr>
-            <th>Last Name:</th>
-            <th>First Name:</th>
-            <th>Status:</th>
-            <th>Rating:</th>
-            <th># Complaints:</th>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Rating</th>
+            <th>Number of Complaints</th>
+            <th>Change Status</th>
+
         </tr>
         <tr>
-            <td class = "last-n">{{ customer.last_name }}</td>
-            <td class = "first-n">{{ customer.first_name }}</td>
+            <td class = "cust-id">{{ customer.user.id }}</td>
+            <td class = "cust-username">{{ customer.user.username }}</td>
+            <td class = "cust-name">{{ customer.user.first_name }} {{ customer.user.last_name }}</td>
             <td class = "status">{{ customer.status }}</td>
             <td class = "rating">{{ customer.avg_rating }}</td>
             <td class = "num-complaints">{{ num_complaints }}</td>
-        </tr>
-        <tr>
+            <td>
             <form method="POST" action="{% url "manager-customerdetails" %}">
             {% csrf_token %}
+                <input class="user_id" name="task" type="hidden" value="status_change"></input>
                 <input class="customer_id" type="hidden" value="{{ customer_id }}"></input>
                 <div id = "status-change">
-                    <input class="promote" name="promote" type="button" value="Promote">Promote to VIP</input>
-                    <input class="demote" name="demote" type="button" value="Demote">Demote to Regular</input>
-                    <input class="blacklist" name="blacklist" type="button" value="Blacklist">Blacklist</input>
-                    <input class="remove" name="remove" type="button" value="Remove">Remove Registration</input>
+                    <input class="promote" name="action" type="submit" value="promote">Promote to VIP</input>
+                    <input class="demote" name="action" type="submit" value="demote">Demote to Regular</input>
+                    <input class="blacklist" name="action" type="submit" value="blacklist">Blacklist</input>
+                    <input class="remove" name="action" type="submit" value="remove">Remove Registration</input>
                 </div>
             </form>
+            </td>
         </tr>
     </table>
 
@@ -54,7 +59,7 @@
         <h3>Staff complaints for customer:</h3>
 
         <h3 id = "food-complaints">Food Complaints:</h3>
-        <table id="complaint-list">
+        <table id="complaint-list" class="table table-condensed table-hover table-striped ng-table">
             <tr>
                 <th>Order ID:</th>
                 <th>Item Name:</th>
@@ -76,7 +81,7 @@
 
         <div id = "delivery-complaints">
             <h3>Delivery Complaints:</h3>
-            <table id = "delivery-comp-table">
+            <table id = "delivery-comp-table" class="table table-condensed table-hover table-striped ng-table">
                 <tr>
                     <th>Order ID:</th>
                     <th>Deliverer:</th>
@@ -98,7 +103,7 @@
 
 
     <h3 id = "history-title">Order History:</h3>
-    <table id = "order-history">
+    <table id = "order-history" class="table table-condensed table-hover table-striped ng-table">
     {% for info in orders_info %}
     
         <tr>
