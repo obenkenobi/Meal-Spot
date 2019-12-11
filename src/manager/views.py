@@ -5,8 +5,15 @@ from database.models.user import *
 from helper import parse_req_body, userTypeChecker
 # Create your views here.
 
+def test(restaurant):
+    staff = Cook.objects.get(user__id=2)
+
+    orders = Order.objects.filter(restaurant=restaurant).filter(order__deliveryBid__win=True).filter(order__deliveryBid__deliverer=staff)
+    print(complaints)
+
 def home(request):
     print('manager-home')
+    
     try:
         user = request.user
         userIs = userTypeChecker(user)
@@ -46,7 +53,7 @@ def restaurant(request):
                     restaurant.description = description
                 
                 restaurant.save()
-                
+            
             context = {'restaurant': restaurant}
             return render(request, 'manager/restaurant.html', context=context)
         else:
@@ -198,7 +205,10 @@ def staffdetails(request, pk):
     try:
         user = request.user
         userIs = userTypeChecker(user)
+        print(pk)
+        pk_int = int(pk)
         if userIs(Manager) == True:
+<<<<<<< Updated upstream
             staff_user = User.objects.get(id=pk)
             staffIs = userTypeChecker(staff_user)
             if staffIs(Cook):
@@ -207,16 +217,37 @@ def staffdetails(request, pk):
                 staff = Salesperson.objects.get(user__id=pk)
             elif staffIs(Deliverer):
                 staff = Deliverer.objects.get(user__id=pk)
+=======
+            restaurant = Restaurant.objects.get(manager__user=user)
+            staff_user = User.objects.get(pk=pk_int)
+            staffIs = userTypeChecker(staff_user)
+            print(staff_user)
+            # if staffIs(Cook):
+            staff = Cook.objects.get(user__id=pk_int)
+            print(staff)
+            # elif staffIs(Salesperson):
+            #     staff = Salesperson.objects.get(user__id=pk_int)
+            # elif staffIs(Deliverer):
+            #     staff = Deliverer.objects.get(user__id=pk_int)
+>>>>>>> Stashed changes
             
             if request.method == 'POST':
                 body = parse_req_body(request.body)
                 task = body['task']
                 action = body['action']
+<<<<<<< Updated upstream
 
                 if task == 'status_change': 
                     if action == 'remove_warning':
                         if staff.warnings > 1:
                             staff.warnings -= 1
+=======
+                print(body)
+             
+                if task == 'status_change' and action == 'remove_warning':
+                    if staff.warnings > 1:
+                        staff.warnings -= 1
+>>>>>>> Stashed changes
                 
                     elif action == 'fire':
                         if staffIs(Cook): # check if there is enough cooks
@@ -243,6 +274,7 @@ def staffdetails(request, pk):
 
                 staff.save()  
 
+<<<<<<< Updated upstream
                 if staffIs(Cook): 
                     staff_type = "cook"
                     orders = Order.objects.filter(restaurant=restaurant).filter(order_food__food__cook=staff) 
@@ -287,6 +319,30 @@ def staffdetails(request, pk):
                     'orders': orders,
                 }
                 return render(request, 'manager/staffdetails.html', context=context)
+=======
+            # if staffIs(Cook): 
+            staff_type = "cook"
+            # complaints = Order_Food.objects.filter(order__restaurant=restaurant).filter(food__cook=staff).filter(food_complaint__isnull=False)
+            orders = Order_Food.objects.filter(order__restaurant=restaurant).filter(food__cook=staff).order_by('-order__created') #not sure if order_by allows this
+
+            # elif staffIs(Deliverer):
+            #     staff_type = "deliverer"
+            #     complaints = Order.objects.filter(restaurant=restaurant).filter(order__deliveryBid__win=True).filter(order__deliveryBid__deliverer=staff).filter(delivery_complaint__isnull=False)
+            #     orders = Order.objects.filter(restaurant=restaurant).filter(order__deliveryBid__win=True).filter(order__deliveryBid__deliverer=staff).order_by('-created')
+
+            # elif staffIs(Salesperson):
+            #     staff_type = "salesperson"
+            #     complaints = SupplyOrder.objects.filter(restaurant=restaurant).filter(salesperson=staff).filter(supply_complaint__isnull=False)
+            #     orders = SupplyOrder.objects.filter(restaurant=restaurant).filter(salesperson=staff).order_by('-created')
+
+            context = { 
+                'staff': staff,
+                'staff_type': staff_type,
+                # 'complaints': complaints,
+                'orders': orders,
+            }
+            return render(request, 'manager/staffdetails.html', context=context)
+>>>>>>> Stashed changes
         else:
             return redirect('home-nexus')
     except:
