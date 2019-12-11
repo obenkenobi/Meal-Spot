@@ -264,62 +264,66 @@ def staffdetails(request, pk):
         return redirect('home-nexus')
 
 def customers(request):
-    # try:
-    user = request.user
-        # userIs = userTypeChecker(user)
-        # if userIs(Manager) == True:
-    restaurant = Restaurant.objects.get(manager__user=user)  
-            
-    if request.method == 'POST':
-        body = parse_req_body(request.body) 
-        customer_id = int(body['customer_id'])  
-        customer = User.objects.get(pk=customer_id)
-        update_customer = CustomerStatus.objects.filter(restaurant=restaurant).filter(customer=customer)
-        task = body['task']
-        action = body['action']
-        if task == 'status_change' and action == 'promote':
-            update_customer.status = 'V'
-        elif task == 'status_change' and action == 'demote':
-            update_customer.status = 'R'                    
-        elif task == 'status_change' and action == 'remove':
-            update_customer.status = 'N' 
-        elif task == 'status_change' and action == 'blacklist':
-            update_customer.status = 'B'                      
-        update_customer.save()
-        registered_customers = CustomerStatus.objects.filter(restaurant=restaurant).order_by('avg_rating')
-        customer_info = []
-        for registered_customer in registered_customers:
-            info_entry = {}
-            info_entry['registered_customer'] = registered_customer
-            complaintcount = len(Order.objects.filter(restaurant=restaurant).filter(customer=customer).filter(customerrating__lte='2'))
-            info_entry['complaintcount'] = complaintcount
-            customer_info.append(info_entry) 
+    try:
+        user = request.user
+        userIs = userTypeChecker(user)
+        if userIs(Manager) == True:
+            restaurant = Restaurant.objects.get(manager__user=user)  
+                
+            if request.method == 'POST':
+                body = parse_req_body(request.body) 
+                print(body)
+                customer_id = int(body['customer_id'])  
+                print(customer_id)
+                update_customer = CustomerStatus.objects.filter(restaurant=restaurant).get(customer__user__id=customer_id)
+                print(update_customer)
+                task = body['task']
+                action = body['action']
+                if task == 'status_change' and action == 'Promote to VIP':
+                    update_customer.status = 'V'
+                elif task == 'status_change' and action == 'Demote to Regular':
+                    update_customer.status = 'R'                    
+                elif task == 'status_change' and action == 'Remove Registration':
+                    update_customer.status = 'N' 
+                elif task == 'status_change' and action == 'Blacklist':
+                    update_customer.status = 'B'                      
+                update_customer.save()
 
-        context = { 
-            'customer_info': customer_info
-        }
-        return render(request, 'manager/customers.html', context=context)
-    
-    elif request.method == 'GET':
-        registered_customers = list(CustomerStatus.objects.filter(restaurant=restaurant).order_by('avg_rating'))
-        customer_info = []
-        for registered_customer in registered_customers:
-            info_entry = {}
-            info_entry['registered_customer'] = registered_customer
-            complaintcount = len(Order.objects.filter(restaurant=restaurant).filter(customer=customer).filter(customerrating__lte='2'))
-            info_entry['complaintcount'] = complaintcount
-            customer_info.append(info_entry) 
+                registered_customers = list(CustomerStatus.objects.filter(restaurant=restaurant).filter(customer__user__id__isnull=False).order_by('avg_rating'))
+                # customer_info = []
+                # for registered_customer in registered_customers:
+                #     info_entry = {}
+                #     info_entry['registered_customer'] = registered_customer
+                #     complaintcount = len(Order.objects.filter(restaurant=restaurant).filter(customer=customer).filter(customerrating__lte='2'))
+                #     info_entry['complaintcount'] = complaintcount
+                #     customer_info.append(info_entry) 
 
-        context = { 
-            'customer_info': customer_info
-        }
-        return render(request, 'manager/customers.html', context=context)
-    #     else:
-    #         return redirect('home-nexus')
-    # except:
-    #     import traceback
-    #     traceback.print_exc()
-    #     return redirect('home-nexus')
+                context = { 
+                    'registered_customers': registered_customers,
+                }
+                return render(request, 'manager/customers.html', context=context)
+        
+            elif request.method == 'GET':
+                registered_customers = list(CustomerStatus.objects.filter(restaurant=restaurant).filter(customer__user__id__isnull=False).order_by('avg_rating'))
+                # customer_info = []
+                # for registered_customer in registered_customers:
+                #     info_entry = {}
+                #     info_entry['registered_customer'] = registered_customer
+                #     complaintcount = len(Order.objects.filter(restaurant=restaurant).filter(customer=customer).filter(customerrating__lte='2'))
+                #     info_entry['complaintcount'] = complaintcount
+                #     customer_info.append(info_entry) 
+
+                context = { 
+                    'registered_customers': registered_customers,
+                    # 'customer_info': customer_info
+                }
+                return render(request, 'manager/customers.html', context=context)
+        else:
+            return redirect('home-nexus')
+    except:
+        import traceback
+        traceback.print_exc()
+        return redirect('home-nexus')
 
 def customerdetails(request, pk): #must send customerid
     try:
