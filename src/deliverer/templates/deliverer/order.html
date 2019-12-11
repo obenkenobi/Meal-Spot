@@ -52,8 +52,8 @@ function calculateRoute(from, to) {
   );
 }
   $(document).ready(function(){
-    var origin_address = "{{ restaurantAddress.street_address }},{{ restaurantAddress.city }},{{ restaurantAddress.state }},{{ restaurantAddress.zip_code }}";
-    var dest_address = "{{ customerAddress.street_address }},{{ customerAddress.city }},{{ customerAddress.state }},{{ customerAddress.zip_code }}";
+    var origin_address = "{{ restaurantAddress.street_address }}, {{ restaurantAddress.city }}, {{ restaurantAddress.state }} {{ restaurantAddress.zip_code }}";
+    var dest_address = "{{ customerAddress.street_address }}, {{ customerAddress.city }}, {{ customerAddress.state }} {{ customerAddress.zip_code }}";
     console.log('origin: ', origin_address);
     console.log('destination: ', dest_address);
     $('#startaddr').html(origin_address)
@@ -67,6 +67,7 @@ function calculateRoute(from, to) {
 {% block page_content %}
 <!-- page html -->
 <h1>Order {{ order.id }}</h1>
+<h3>Price: <b>${{ order.total_price }}</b></h3>
 
 {% if order.delivery_rating != None %}
 <h2> Your Rating: {{ order.delivery_rating }}</h2>
@@ -85,10 +86,10 @@ function calculateRoute(from, to) {
 
 <section id="directions">
 {% comment %} Use Google Maps API here {% endcomment %}
-  <h1>Directions</h1>
-  <h2>Start Address:</h2>
+  <h2><u>Directions</u></h2>
+  <h4>Start Address:</h4>
   <p id="startaddr"></p>
-  <h2>End Address:</h2>
+  <h4>End Address:</h4>
   <p id="endaddr"></p>
   <div id="map"></div>
   <p id="error"></p>

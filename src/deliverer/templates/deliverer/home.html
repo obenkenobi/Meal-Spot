@@ -20,7 +20,8 @@
   <tr>
     <th>Order ID</th>
     <th>Amount to bid</th>
-    <th></th>
+    <th>Order Price</th>
+    <th>Bid</th>
   </tr>
   {% for order in openOrders %}
   <form method="POST" action="{% url "deliverer-home" %}">
@@ -29,6 +30,7 @@
     <tr>
       <td>{{ order.id }}</td>
       <td><input type="number" name="amount" min="1"></td>
+      <td>{{ order.total_price }}</td>
       <td><input type="submit" value="Bid!"/></td>
     </tr>
   </form>
@@ -40,11 +42,13 @@
   <tr>
     <th>Order ID</th>
     <th>Bidded amount</th>
+    <th>Order Price</th>
   </tr>
   {% for bid in pendingBids %}
   <tr>
     <td>{{ bid.order.id }}</td>
     <td>{{ bid.price }}</td>
+    <td>{{ bid.order.total_price }}</td>
   </tr>
   {% endfor %}
 </table>
@@ -54,12 +58,14 @@
   <tr>
     <th>Order ID</th>
     <th>Status</th>
+    <th>Order Price</th>
     <th>Order Link</th>
   </tr>
   {% for bid in winningBids %}
   <tr>
     <td>{{ bid.order.id }}</td>
     <td>{{ bid.order.status }}</td>
+    <td>{{ bid.order.total_price }}</td>
     <td>
       <a href="{% url "deliverer-order" bid.order.id %}">
         <button>Click to see order</button>
