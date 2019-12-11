@@ -41,13 +41,13 @@ body {font-family: Arial, Helvetica, sans-serif;}
 {% block page_content %}
 
 <div class="restaurant_details">
-  <h1>Restaurant</h1>
-  <p>{{ restaurant.name }}</p>
+  <h2 style = "text-align:center">{{ restaurant.name }}</h2>
   <hr>
-  <h1>Description</h1>
+  <h4>Description</h4>
   <p>{{ restaurant.description }}</p>
-  <a id="text" class="marg" href="{% url 'manager-restaurant' %}">Edit Restaurant</a>
+  <a id="edit" class="marg" href="{% url 'manager-restaurant' %}">Edit Restaurant</a>
 </div>
+<hr>
 <div class="menu">
   <a id="text" class="marg" href="{% url 'manager-deliverybids' %}">Delivery Bids</a>
   <a id="text" href="{% url 'manager-pendingregistrations' %}">Pending Registrations</a>

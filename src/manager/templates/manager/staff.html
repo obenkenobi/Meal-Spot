@@ -5,6 +5,19 @@
 
 {% block page_css %}
 <!-- page css -->
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box}
+
+input, #state {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+</style>
 {% endblock %}
 
 {% block page_js %}
@@ -16,22 +29,24 @@
 
 <div class = "staff">
   
-  <h2>All Staff:</h2>
+  <h2>All Staff</h2>
   
-  <h3>Cooks</h3>
-  <table id = "cook-table">
+  <h4>Cooks</h4>
+  <table id = "cook-table" class="table table-condensed table-hover table-striped ng-table">
     <!--Table header-->
     <tr>
-      <th>Last Name:</th>
-      <th>First Name:</th>
-      <th>Warnings:</th>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Number of Warnings</th>
     </tr>
 
     <div id = "cook-data">
     {% for cook in cooks %}
       <tr>
-        <td class = "last-n">{{ cook.user.last_name }}</td>
-        <td class = "first-n">{{ cook.user.first_name }}</td>
+        <td class = "last-n">{{ cook.user.id }}</td>
+        <td class = "last-n">{{ cook.user.username }}</td>
+        <td class = "first-n">{{ cook.user.first_name }} {{ cook.user.last_name }} </td>
         <td class = "warnings">{{ cook.warnings }}</td>
       </tr>
       <tr>
@@ -54,21 +69,23 @@
     </div>
   </table>
 
-  <h3>Salespeople</h3>
-  <table id = "salesperson-table">
+  <h4>Salespeople</h4>
+  <table id = "salesperson-table" class="table table-condensed table-hover table-striped ng-table">
     <!--Table header-->
     <tr>
-      <th>Last Name:</th>
-      <th>First Name:</th>
-      <th>Warnings:</th>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Number of Warnings</th>
     </tr>
 
     
     <div id = "salesperson-data">
     {% for salesperson in salespeople %}
       <tr>
-        <td class = "last-n">{{ salesperson.user.last_name }}</td>
-        <td class = "first-n">{{ salesperson.user.first_name }}</td>
+        <td class = "last-n">{{ salesperson.user.id }}</td>
+        <td class = "last-n">{{ salesperson.user.username }}</td>
+        <td class = "first-n">{{ salesperson.user.first_name }} {{ salesperson.user.last_name }} </td>
         <td class = "warnings">{{ salesperson.warnings }}</td>
       </tr>
       <tr>
@@ -91,20 +108,22 @@
     </div>
   </table>
 
-  <h3>Deliverers</h3>
-  <table id = "deliverer-table">
+  <h4>Deliverers</h4>
+  <table id = "deliverer-table" class="table table-condensed table-hover table-striped ng-table">
     <!--Table header-->
     <tr>
-      <th>Last Name:</th>
-      <th>First Name:</th>
-      <th>Warnings:</th>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Number of Warnings</th>
     </tr>
 
     <div id = "deliverer-data">
     {% for deliverer in deliverers %}
       <tr>
-        <td class = "last-n">{{ deliverer.user.last_name }}</td>
-        <td class = "first-n">{{ deliverer.user.first_name }}</td>
+        <td class = "last-n">{{ deliverer.user.id }}</td>
+        <td class = "last-n">{{ deliverer.user.username }}</td>
+        <td class = "first-n">{{ deliverer.user.first_name }} {{ salesperson.user.last_name }} </td>
         <td class = "warnings">{{ deliverer.warnings }}</td>
       </tr>
       <tr>

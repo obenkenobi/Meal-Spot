@@ -26,20 +26,18 @@ input, #state {
 
 {% block page_content %}
 <div class="restaurant_details">
-    <h1>Restaurant</h1>
+    <h2>Restaurant</h2>
     <p>{{ restaurant.name }}</p>
     <form method="POST" action="{% url 'manager-restaurant' %}">
     {% csrf_token %}
+        <input type="hidden" name="task" value="edit"></input> 
         <input type="text" placeholder="Edit Name" name="name">
-        <button type="submit" task="edit_name">Submit</button>
-    </form>
+        <button type="submit" name="action" value="edit_name">Submit</button>
     <hr>
-    <h1>Description</h1>
+    <h2>Description</h2>
     <p>{{ restaurant.description }}</p>
-    <form method="POST" action="{% url 'manager-restaurant' %}">
-    {% csrf_token %}
         <input type="text" placeholder="Edit Description" name="description">
-        <button type="submit" task="edit_description">Submit</button>
+        <button type="submit" name="action" value="edit_description">Submit</button>
     </form>
 </div>
 
