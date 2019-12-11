@@ -5,7 +5,11 @@
 
 {% block page_css %}
 <!-- page css -->
-
+<style>
+#order {
+  margin: 2%;
+}
+</style>
 {% endblock %}
 
 {% block page_js %}
@@ -115,7 +119,7 @@
     {% if status != "B" %}
     <br>
     <a href="{% url "customer-restaurant-order" pk=restaurant.id %}">
-      <button id = "order">Make an order</button>
+      <button id = "order" class="btn btn-primary">Make an order</button>
     </a>
     {% endif %}
 
