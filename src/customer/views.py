@@ -124,7 +124,7 @@ def resturant_order(request, pk):
             try:
                 qty = int(body[food_id_str])
             except:
-                print('csr_token:', csr_token )
+                qty = 0
             if food_id_str != csr_token and qty > 0:
                 food_id = int(food_id_str)
                 myfood = restaurant.Food.objects.get(id=food_id)
@@ -135,7 +135,7 @@ def resturant_order(request, pk):
                     price = 0
                 total += price*qty
         discount = 0
-        if status in ['V', 'R']:
+        if status == 'V' or status == 'R':
             discount = 0.05
         total = total*(1-discount)
         my_order.total_price = total
