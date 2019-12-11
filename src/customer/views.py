@@ -138,7 +138,7 @@ def resturant_order(request, pk):
         if status == 'V' or status == 'R':
             discount = 0.05
         total = total*(1-discount)
-        my_order.total_price = total
+        my_order.total_price = round(total, 2)
         my_order.save()
     context = {
         'foods': foods,
