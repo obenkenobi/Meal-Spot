@@ -7,7 +7,7 @@ Google Chrome or Chromium is recommended if you want to try the voice order feat
 An internet connection is needed for jQuery, bootstrap, and our Google Maps API to work.
 You may also want to use a python virtual environment to run this app to avoid dependency issues.
 
-## Starting your project
+## Starting and running your project
 1. Clone this repository
 2. In the /src directory add a file called db.sqlite3 to have your database initialized, we are using sqlite3
 3. Now in your terminal, move to the src directory, type ls or dir (depending on your OS) and if manage.py shows up in your
