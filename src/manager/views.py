@@ -67,8 +67,8 @@ def deliverybids(request):
             # at event that manager selects bid
             if request.method == 'POST':
                 body = parse_req_body(request.body)
-                task = body['task']
-                if task == "choose_bid":
+                button = body['choose_bid']
+                if button == "Choose Bid":
                     bid_id = int(body['bid_id'])
                     win_bid = DeliveryBid.objects.get(id=bid_id)
                     bid_order = win_bid.order
@@ -77,20 +77,34 @@ def deliverybids(request):
                         win_bid.save()
                         bid_order.chose_bid = True
                         bid_order.save()
-            
-            deliverybids_info = []
-            orders = Order.objects.filter(restaurant=user_manager.restaurant, status='PR', chose_bid=False).order_by('created') 
-            for order in orders:
-                info_entry = {}
-                bids = DeliveryBid.objects.filter(order=order).filter(win=False).order_by('price')
-                info_entry['order'] = order
-                info_entry['bids'] = bids
-                deliverybids_info.append(info_entry)
+                deliverybids_info = []
+                orders = Order.objects.filter(restaurant=user_manager.restaurant, status='PR', chose_bid=False).order_by('created') 
+                for order in orders:
+                    info_entry = {}
+                    bids = DeliveryBid.objects.filter(order=order).filter(win=False).order_by('price')
+                    info_entry['order'] = order
+                    info_entry['bids'] = bids
+                    deliverybids_info.append(info_entry)
 
-            context = {
-                'deliverybids_info': deliverybids_info,
-            }
-            return render(request, 'manager/deliverybids.html', context=context)
+                context = {
+                    'deliverybids_info': deliverybids_info,
+                }
+                return render(request, 'manager/deliverybids.html', context=context)            
+
+            elif request.method == "GET":
+                deliverybids_info = []
+                orders = Order.objects.filter(restaurant=user_manager.restaurant, status='PR', chose_bid=False).order_by('created') 
+                for order in orders:
+                    info_entry = {}
+                    bids = DeliveryBid.objects.filter(order=order).filter(win=False).order_by('price')
+                    info_entry['order'] = order
+                    info_entry['bids'] = bids
+                    deliverybids_info.append(info_entry)
+
+                context = {
+                    'deliverybids_info': deliverybids_info,
+                }
+                return render(request, 'manager/deliverybids.html', context=context)
         else:
             return redirect('home-nexus')
     except:

@@ -15,15 +15,16 @@
 <!-- page html -->
 <div id = "order">
   <h2>All Delivery Bids</h2>
-  <table id = "order_table" class="table table-condensed table-hover table-striped ng-table">
   {% for info in deliverybids_info %}
+  <table id = "order_table" class="table table-condensed table-hover table-striped ng-table">
+  
       <tr>
-        <th id = "order_title"><h4>Order ID: {{ info.order.id }} </h4></th>
+        <th class = "order_title"><h4>Order ID: {{ info.order.id }} </h4></th>
       </tr>
 
       <div id = "deliver_bids">
         <tr>
-          <th id = "bid_title">Delivery Bids</th>
+          <th class = "bid_title">Delivery Bids</th>
         </tr>
         <tr>
             <th>ID</th>
@@ -38,10 +39,14 @@
           <td class = "bid-price">{{ bid.price }}</td>
           <td class = "bid-deliverer-id">{{ bid.deliverer.user.id }}</td>
           <td class = "bid-deliverer-username">{{ bid.deliverer.user.username }}</td>
-          <form method="POST" action="{% url "manager-customers" %}">
-            <input class="bid_id" type="hidden" value="{{ bid.id }}"></input>
-            <input class="choose_bid" task="choose_bid" type="button" value="Choose Bid"></input>
-          </form>
+          <td>
+            <form method="POST" action="{% url "manager-deliverybids" %}">
+            {% csrf_token %}
+            {% comment %} <input class="task" name="task" type="hidden" value="choose_bid"></input> {% endcomment %}
+            <input class="bid_id" name="bid_id" type="hidden" value="{{ bid.id }}"></input>
+            <input class="choose_bid" name="choose_bid" type="submit" value="Choose Bid"></input>
+            </form>
+          </td>
         </tr>
         {% endfor %}
       </div>
