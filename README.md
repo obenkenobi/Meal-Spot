@@ -28,10 +28,9 @@ result, you are good to go.
 5. To run the app, type;
 
 		python manage.py runserver
-You will need to type on your browser url bar
+You will need to type on your browser url bar to access our site:
 
 	localhost:8000
-to access our site.
 
 You are free to sign in as a superuser that you created before. You will be the site administrator.
 You could also sign up as any account you wish. 
