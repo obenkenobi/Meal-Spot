@@ -36,8 +36,7 @@ to access our site.
 You are free to sign in as a superuser that you created before. You will be the site administrator.
 You could also sign up as any account you wish. 
 
-In addition the label "Meal Spot" in your top left corner of your navigation bar will be a link to your home page, it
-is different for each usertype.
+In addition the label "Meal Spot" in your top left corner of your navigation bar will be a link to your home page, your homepage is different for each usertype.
 
 ## Bugs
 - There is possibly a bug regarding usernames where if you sign up and you get an error then you can't use that username again, (it still needs to be tested to what extent this bug exists as it has been fixed for customer and manager usertypes). 
