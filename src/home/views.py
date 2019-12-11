@@ -53,10 +53,9 @@ def signup(request):
 
     if(request.method == "POST"):
         body = parse_req_body(request.body)
-        new_user = User.objects.create_user(body['usrname'], body['email'].replace('%', '@'), body['psw'])
 
         addr_str_accept = []
-        for string in [ body['city'], body['state'], body['zipcode'] ]:
+        for string in [ body['staddr'], body['city'], body['state'], body['zipcode'] ]:
             word_acceptable = False
             for char in string:
                 if char != ' ':
@@ -73,7 +72,7 @@ def signup(request):
 
         if(body['usertype']=='cust'):
             if addr_acceptable:
-                new_user.save()
+                new_user = User.objects.create_user(body['usrname'], body['email'].replace('%', '@'), body['psw'])
                 new_customer = Customer(user=new_user)
                 new_customer.save()
                 new_customer_address = CustomerAddress(
@@ -90,7 +89,7 @@ def signup(request):
                 return render(request, 'home/signup.html', {'states': states, 'error': error})
         elif(body['usertype']=='mang'):
             if addr_acceptable and rest_acceptable:
-                new_user.save()
+                new_user = User.objects.create_user(body['usrname'], body['email'].replace('%', '@'), body['psw'])
                 new_manager = Manager(user=new_user)
                 new_manager.save()
                 new_resturant = Restaurant(name=body['restname'], manager=new_manager)
@@ -109,15 +108,15 @@ def signup(request):
                 error = 'must enter address and restaurant name'
                 return render(request, 'home/signup.html', {'states': states, 'error': error})
         elif(body['usertype']=='cook'):
-            new_user.save()
+            new_user = User.objects.create_user(body['usrname'], body['email'].replace('%', '@'), body['psw'])
             new_staff = Cook(user=new_user)
             new_staff.save()
         elif(body['usertype']=='salespers'):
-            new_user.save()
+            new_user = User.objects.create_user(body['usrname'], body['email'].replace('%', '@'), body['psw'])
             new_staff = Salesperson(user=new_user)
             new_staff.save()
         elif(body['usertype']=='deliverer'):
-            new_user.save()
+            new_user = User.objects.create_user(body['usrname'], body['email'].replace('%', '@'), body['psw'])
             new_staff = Deliverer(user=new_user)
             new_staff.save()
         else:
