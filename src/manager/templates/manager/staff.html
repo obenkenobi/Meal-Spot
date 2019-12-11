@@ -52,15 +52,18 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 
       <tr>
-        <td class = "view-details">
+        {% comment %} <td class = "view-details">
           <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
-        </td>
-        <td></td>
-        <td></td>
+        </td> {% endcomment %}
+
         <form method="POST" action="{% url "manager-staff" %}">
         {% csrf_token %}
+        
           <input class="action" type="hidden" name="task" value="cook_status_change"></input>
           <input class="user_id" type="hidden" name="user_id" value="{{ staff.user.id }}"></input>
+        <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
+        <td></td>
+        <td></td>        
         <td><input class = "remove_warning" name = "action" value="Remove 1 Warning" type="submit"></input></td>
           <td>
           <div class="edit_salary">
@@ -68,7 +71,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
             <input name="action" value="Edit Salary" type="submit"></input>
           </div>
           </td>
-          <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
         </form>
       </tr>
 
@@ -100,15 +102,18 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 
       <tr>
-        <td class = "view-details">
+        {% comment %} <td class = "view-details">
           <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
-        </td>
-        <td></td>
-        <td></td>
+        </td> {% endcomment %}
+
         <form method="POST" action="{% url "manager-staff" %}">
         {% csrf_token %}
+        
           <input class="action" type="hidden" name="task" value="salesperson_status_change"></input>
           <input class="user_id" name="user_id" type="hidden" value="{{ staff.user.id }}"></input>
+        <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
+        <td></td>
+        <td></td>          
         <td><input class = "remove_warning" name = "action" value="Remove 1 Warning" type="submit"></input></td>
           <td>
           <div class="edit_salary">
@@ -116,7 +121,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
             <input name="action" value="Edit Salary" type="submit"></input>
           </div>
           </td>
-          <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
         </form>
       </tr>
     {% endfor %}
@@ -146,15 +150,17 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 
       <tr>
-        <td class = "view-details">
+        {% comment %} <td class = "view-details">
           <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
-        </td>
-        <td></td>
-        <td></td>
+        </td> {% endcomment %}
+
         <form method="POST" action="{% url "manager-staff" %}">
         {% csrf_token %}
           <input class="action" type="hidden" name="task" value="deliverer_status_change"></input>
           <input class="user_id" type="hidden" name="user_id" value="{{ staff.user.id }}"></input>
+        <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
+        <td></td>
+        <td></td>  
         <td><input class = "remove_warning" name = "action" value="Remove 1 Warning" type="submit"></input></td>
           <td>
           <div class="edit_salary">
@@ -162,7 +168,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
             <input name="action" value="Edit Salary" type="submit"></input>
           </div>
           </td>
-          <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
         </form>
       </tr>
 

@@ -26,29 +26,30 @@
                 <th>Name</th>
                 <th>Status</th>
                 <th>Rating</th>
-                <th>Number of Complaints</th>
+                {% comment %} <th>Number of Complaints</th> {% endcomment %}
                 <th>Change Status</th>
 
             </tr>
 
-            {% for info in customer_info %}
+            {% for registered in registered_customers %}
             <tr>
-                <td class = "cust-id">{{ customer.user.id }}</td>
-                <td class = "cust-username">{{ customer.user.username }}</td>
-                <td class = "cust-name">{{ customer.user.first_name }} {{ customer.user.last_name }}</td>
-                <td class = "status">{{ customer.status }}</td>
-                <td class = "rating">{{ customer.avg_rating }}</td>
-                <td class = "num-complaints">{{ num_complaints }}</td>
+                <td class = "cust-id">{{ registered.customer.user.id }}</td>
+                <td class = "cust-username">{{ registered.customer.user.username }}</td>
+                <td class = "cust-name">{{ registered.customer.user.first_name }} {{ registered.customer.user.last_name }}</td>
+                <td class = "status">{{ registered.status }}</td>
+                <td class = "rating">{{ registered.avg_rating }}</td>
+                {% comment %} <td class = "num-complaints">{{ num_complaints }}</td> {% endcomment %}
                 <td>
-                <form method="POST" action="{% url "manager-customerdetails" %}">
+                <form method="POST" action="{% url "manager-customers" %}">
                 {% csrf_token %}
-                    <input class="user_id" name="task" type="hidden" value="status_change"></input>
-                    <input class="customer_id" type="hidden" value="{{ customer_id }}"></input>
+                    <input class="customer_id" name="customer_id" type="hidden" value="{{ registered.customer.user.id }}"></input>
+                    <input class="task" name="task" type="hidden" value="status_change"></input>
+                    
                     <div id = "status-change">
-                        <input class="promote" name="action" type="submit" value="promote">Promote to VIP</input>
-                        <input class="demote" name="action" type="submit" value="demote">Demote to Regular</input>
-                        <input class="blacklist" name="action" type="submit" value="blacklist">Blacklist</input>
-                        <input class="remove" name="action" type="submit" value="remove">Remove Registration</input>
+                        <input class="promote" name="action" type="submit" value="Promote to VIP"></input>
+                        <input class="demote" name="action" type="submit" value="Demote to Regular"></input>
+                        <input class="blacklist" name="action" type="submit" value="Blacklist"></input>
+                        <input class="remove" name="action" type="submit" value="Remove Registration"></input>
                     </div>
                 </form>
                 </td>
