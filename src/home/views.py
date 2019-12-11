@@ -4,6 +4,7 @@ from database.models.user import Customer, Manager, Cook, Salesperson, Deliverer
 from database.models.restaurant import Restaurant
 from database.models.address import CustomerAddress, RestaurantAddress, Address
 from helper import parse_req_body, userTypeChecker
+# from django.contrib import admin
 
 # Create your views here.
 
@@ -28,10 +29,16 @@ def nexus(request):
         elif userIs(Salesperson):
             print('redirecting to salesperson-home')
             response = redirect('salesperson-home')
-        else:
+        elif userIs(Customer):
             print('redirecting to customer-home')
             response = redirect('customer-home')
+        else:
+            print('user assumed to be site staff')
+            response = redirect('/admin')
     except:
+        if user.is_staff:
+            print('user is site staff')
+            response = redirect('/admin')
         print('anon user')
         print('redirecting to customer-home')
         response = redirect('customer-home')
