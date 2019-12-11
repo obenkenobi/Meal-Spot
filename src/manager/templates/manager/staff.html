@@ -53,7 +53,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
       <tr>
         <td class = "view-details">
-          <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
+          <a href="{{ staff.get_absolute_url }}" type="submit" target="_blank">View Details</a>
         </td>
         <td></td>
         <td></td>
@@ -101,7 +101,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
       <tr>
         <td class = "view-details">
-          <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
+          <a href="{{ staff.get_absolute_url }}" type="submit" target="_blank">View Details</a>
         </td>
         <td></td>
         <td></td>
@@ -147,7 +147,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
       <tr>
         <td class = "view-details">
-          <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
+          <a href="{% url 'manager-staffdetails' staff.pk %}" type="submit" target="_blank">View Details</a>
         </td>
         <td></td>
         <td></td>

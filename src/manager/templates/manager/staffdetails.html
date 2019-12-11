@@ -60,7 +60,7 @@
 
   {% if user_type == "cook" %}
 
-  <h1 id = "complaints_title">Food Complaints</h1>
+  {% comment %} <h1 id = "complaints_title">Food Complaints</h1>
   <table id = "complaints">
     
     <tr class = "table_header">
@@ -83,7 +83,7 @@
     </tr>
     {% endfor %}
 
-  </table>
+  </table> {% endcomment %}
 
   <h1 id = "orders_title">Order History</h1>
   <table id = "orders">
@@ -109,7 +109,7 @@
   </table>
 
   {% elif user_type == "deliverer" %}
-    <h1 id = "complaints_title">Delivery Complaints</h1>
+    {% comment %} <h1 id = "complaints_title">Delivery Complaints</h1>
     <table id = "complaints">
       <tr class = "table_header">
         <th>Order ID:</th>
@@ -128,7 +128,7 @@
         <td class = "complaint">{{ complaint.delivery_complaint }}</td>
       </tr>
       {% endfor %}
-    </table>
+    </table> {% endcomment %}
 
     <h1 id = "orders_title">Order History</h1>
     <table id = "orders">
@@ -152,7 +152,7 @@
     </table>
 
   {% elif user_type == "salesperson" %}
-    <h1 id = "complaints_title">Supply Complaints</h1>
+    {% comment %} <h1 id = "complaints_title">Supply Complaints</h1>
     <table id = "complaints">
     <tr class = "table_header">
       <th>Order ID:</th>
@@ -170,7 +170,9 @@
       <td class = "rating">{{ complaint.supply_rating }}/5</td>
       <td class = "complaint">{{ complaint.supply_complaint }}</td>
     </tr>
-    {% endfor %}
+    {% endfor %} 
+    </table>
+    {% endcomment %}
 
     <h1 id = "orders_title">Order History</h1>
     <table id = "orders">

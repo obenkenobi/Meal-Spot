@@ -199,63 +199,94 @@ def staffdetails(request, pk):
         user = request.user
         userIs = userTypeChecker(user)
         if userIs(Manager) == True:
-            staff_user = User.objects.get(pk=pk)
-            staff = Staff.objects.get(user=staff_user) 
+            staff_user = User.objects.get(id=pk)
             staffIs = userTypeChecker(staff_user)
-
+            if staffIs(Cook):
+                staff = Cook.objects.get(user__id=pk)
+            elif staffIs(Salesperson):
+                staff = Salesperson.objects.get(user__id=pk)
+            elif staffIs(Deliverer):
+                staff = Deliverer.objects.get(user__id=pk)
+            
             if request.method == 'POST':
                 body = parse_req_body(request.body)
                 task = body['task']
                 action = body['action']
-             
-                if task == 'status_change' and action == 'remove_warning':
-                    if staff.warnings > 1:
-                        staff.warnings -= 1
+
+                if task == 'status_change': 
+                    if action == 'remove_warning':
+                        if staff.warnings > 1:
+                            staff.warnings -= 1
                 
-                elif task == 'status_change' and action == 'fire':
-                    if staffIs(Cook): # check if there is enough cooks
-                        if len(Cook.objects.filter(restaurant=restaurant).filter(status='H')) > 2:
+                    elif action == 'fire':
+                        if staffIs(Cook): # check if there is enough cooks
+                            if len(Cook.objects.filter(restaurant=restaurant).filter(status='H')) > 2:
+                                staff.status = 'N'
+                                staff.restaurant = None
+                                staff.warnings = 0
+                                staff.salary = 0
+                        elif staffIs(Salesperson): # check if there is enough salespeople
+                            if len(Salesperson.objects.filter(restaurant=restaurant).filter(status='H')) > 2:
+                                staff.status = 'N'
+                                staff.restaurant = None
+                                staff.warnings = 0
+                                staff.salary = 0                        
+                        elif staffIs(Deliverer):
                             staff.status = 'N'
                             staff.restaurant = None
                             staff.warnings = 0
-                            staff.salary = 0
-                    elif staffIs(Salesperson): # check if there is enough salespeople
-                        if len(Salesperson.objects.filter(restaurant=restaurant).filter(status='H')) > 2:
-                            staff.status = 'N'
-                            staff.restaurant = None
-                            staff.warnings = 0
-                            staff.salary = 0                        
-                    else:
-                        print('Not enough staff')
+                            staff.salary = 0   
 
-                elif task == 'status_change' and action == 'edit_salary':
-                    salary = body['salary']
-                    staff.salary = salary
+                    elif action == 'edit_salary':
+                        salary = body['salary']
+                        staff.salary = salary
 
-                staff.save()      
+                staff.save()  
 
-            if staffIs(Cook): 
-                staff_type = "cook"
-                complaints = Order_Food.filter(order__restaurant=restaurant).filter(food__cook=staff).filter(food_complaint__isnull=False)
-                orders = Order_Food.filter(order__restaurant=restaurant).filter(food__cook=staff).order_by('-order__created') #not sure if order_by allows this
+                if staffIs(Cook): 
+                    staff_type = "cook"
+                    orders = Order.objects.filter(restaurant=restaurant).filter(order_food__food__cook=staff) 
 
-            elif staffIs(Deliverer):
-                staff_type = "deliverer"
-                complaints = Order.objects.filter(restaurant=restaurant).filter(deliverer=staff).filter(delivery_complaint__isnull=False)
-                orders = Order.objects.filter(restaurant=restaurant).filter(deliverer=staff).order_by('-created')
+                elif staffIs(Deliverer):
+                    staff_type = "deliverer"
+                    orders = Order.objects.filter(restaurant=restaurant).filter(deliverer=staff).order_by('-created')
 
-            elif staffIs(Salesperson):
-                staff_type = "salesperson"
-                complaints = SupplyOrder.objects.filter(restaurant=restaurant).filter(salesperson=staff).filter(supply_complaint__isnull=False)
-                orders = SupplyOrder.objects.filter(restaurant=restaurant).filter(salesperson=staff).order_by('-created')
+                elif staffIs(Salesperson):
+                    staff_type = "salesperson"
+                    orders = SupplyOrder.objects.filter(restaurant=restaurant).filter(salesperson=staff).order_by('-created')
 
-            context = { 
-                'staff': staff,
-                'staff_type': staff_type,
-                'complaints': complaints,
-                'orders': orders,
-            }
-            return render(request, 'manager/staffdetails.html', context=context)
+                context = { 
+                    'staff': staff,
+                    'staff_type': staff_type,
+                    #'complaints': complaints,
+                    'orders': orders,
+                }
+                return render(request, 'manager/staffdetails.html', context=context)   
+
+            elif request.method == 'GET':
+                if staffIs(Cook): 
+                    staff_type = "cook"
+                    # complaints = Order_Food.objects.filter(order__restaurant=restaurant).filter(food__cook=staff)
+                    orders = Order.objects.filter(restaurant=restaurant).filter(order_food__food__cook=staff).all() 
+                    #.order_by('-order__created') #not sure if order_by allows this
+
+                elif staffIs(Deliverer):
+                    staff_type = "deliverer"
+                    # complaints = Order.objects.filter(restaurant=restaurant).filter(deliverer=staff).filter(delivery_complaint__isnull=False)
+                    orders = Order.objects.filter(restaurant=restaurant).filter(deliverer=staff).order_by('-created').all() 
+
+                elif staffIs(Salesperson):
+                    staff_type = "salesperson"
+                    # complaints = SupplyOrder.objects.filter(restaurant=restaurant).filter(salesperson=staff).filter(supply_complaint__isnull=False)
+                    orders = SupplyOrder.objects.filter(restaurant=restaurant).filter(salesperson=staff).order_by('-created').all() 
+
+                context = { 
+                    'staff': staff,
+                    'staff_type': staff_type,
+                    #'complaints': complaints,
+                    'orders': orders,
+                }
+                return render(request, 'manager/staffdetails.html', context=context)
         else:
             return redirect('home-nexus')
     except:

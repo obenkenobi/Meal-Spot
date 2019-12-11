@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User # This is so the built in user is added
-
+from django.shortcuts import reverse
 # Write down user models here
 
 # Abstract UserType model/class
@@ -38,6 +38,9 @@ class Staff(UserType):
             self.warnings = 0
             self.restaurant = None
         self.save()
+    
+    def get_absolute_url(self):
+        return reverse('manager-staffdetails', args=[str(self.user.id)])
 
     class Meta:
         abstract = True
@@ -46,7 +49,8 @@ class Staff(UserType):
 # Non-Staff user types
 
 class Customer(UserType):
-    pass
+    def get_absolute_url(self):
+        return reverse('manager-customerdetails', args=[str(self.user.id)])
 
 
 class Manager(UserType):
