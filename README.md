@@ -13,6 +13,7 @@ You may also want to use a python virtual environment to run this app to avoid d
 3. Now in your terminal, move to the src directory, type ls or dir (depending on your OS) and if manage.py shows up in your
 result, you are good to go.
 4. Type the following commands to setup your project:
+	
 	To see your arguments for manage.py;
 	
 		python manage.py
