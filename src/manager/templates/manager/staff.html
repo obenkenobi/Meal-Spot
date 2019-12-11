@@ -9,14 +9,11 @@
 body {font-family: Arial, Helvetica, sans-serif;}
 * {box-sizing: border-box}
 
-input, #state {
-  width: 100%;
-  padding: 15px;
-  margin: 5px 0 22px 0;
-  display: inline-block;
-  border: none;
-  background: #f1f1f1;
+.edit_salary {
+  display:inline-block;
 }
+
+
 </style>
 {% endblock %}
 
@@ -39,32 +36,42 @@ input, #state {
       <th>Username</th>
       <th>Name</th>
       <th>Number of Warnings</th>
+      <th>Salary</th>      
     </tr>
 
     <div id = "cook-data">
-    {% for cook in cooks %}
+    {% for staff in cooks %}
+
       <tr>
-        <td class = "last-n">{{ cook.user.id }}</td>
-        <td class = "last-n">{{ cook.user.username }}</td>
-        <td class = "first-n">{{ cook.user.first_name }} {{ cook.user.last_name }} </td>
-        <td class = "warnings">{{ cook.warnings }}</td>
+        <td class = "last-n">{{ staff.user.id }}</td>
+        <td class = "last-n">{{ staff.user.username }}</td>
+        <td class = "first-n">{{ staff.user.first_name }} {{ staff.user.last_name }} </td>
+        <td class = "warnings">{{ staff.warnings }}</td>
+        <td class = "staff_salary">{{ staff.salary }}</td>
       </tr>
+
+
       <tr>
-        <th>Salary:</th>
-        <td class = "staff_salary">{{ cook.salary }}</td>
+        <td class = "view-details">
+          <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
+        </td>
+        <td></td>
+        <td></td>
         <form method="POST" action="{% url "manager-staff" %}">
-          {% csrf_token %}
-          <input class="user_id" type="hidden" value="{{ cook.user.id }}"></input>
-          <td><input class = "salary" name="salary" min="0" type="number"></input></td>
-          <td><button class="edit_salary" task="edit_salary" type="submit">Edit Salary</button></td>
-          <td class = "view-details">
-            <a href="{% url 'manager-staffdetails' cook.user.id %}" class="button" target="_blank">View Details</a>
+        {% csrf_token %}
+          <input class="action" type="hidden" name="task" value="cook_status_change"></input>
+          <input class="user_id" type="hidden" name="user_id" value="{{ staff.user.id }}"></input>
+        <td><input class = "remove_warning" name = "action" value="Remove 1 Warning" type="submit"></input></td>
+          <td>
+          <div class="edit_salary">
+            <input name="salary" min="0" type="number" placeholder="Edit Salary"></input> 
+            <input name="action" value="Edit Salary" type="submit"></input>
+          </div>
           </td>
-          <td><button class = "remove_warning" task = "remove_warning" type="submit">Remove 1 Warning</button></td>
-          <td><button class = "fire" task = "fire" type="submit">Fire</button></td>
+          <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
         </form>
-        
       </tr>
+
     {% endfor %}
     </div>
   </table>
@@ -77,34 +84,42 @@ input, #state {
       <th>Username</th>
       <th>Name</th>
       <th>Number of Warnings</th>
+      <th>Salary</th>
     </tr>
 
     
     <div id = "salesperson-data">
-    {% for salesperson in salespeople %}
+    {% for staff in salespeople %}
       <tr>
-        <td class = "last-n">{{ salesperson.user.id }}</td>
-        <td class = "last-n">{{ salesperson.user.username }}</td>
-        <td class = "first-n">{{ salesperson.user.first_name }} {{ salesperson.user.last_name }} </td>
-        <td class = "warnings">{{ salesperson.warnings }}</td>
+        <td class = "last-n">{{ staff.user.id }}</td>
+        <td class = "last-n">{{ staff.user.username }}</td>
+        <td class = "first-n">{{ staff.user.first_name }} {{ staff.user.last_name }} </td>
+        <td class = "warnings">{{ staff.warnings }}</td>
+        <td class = "staff_salary">{{ staff.salary }}</td>
       </tr>
+
+
       <tr>
-        <th>Salary:</th>
-        <td class = "staff_salary">{{ salesperson.salary }}</td>
+        <td class = "view-details">
+          <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
+        </td>
+        <td></td>
+        <td></td>
         <form method="POST" action="{% url "manager-staff" %}">
         {% csrf_token %}
-          <input class="user_id" type="hidden" value="{{ salesperson.user.id }}"></input>
-          <td><input class = "salary" name="salary" min="0" type="number"></input></td>
-          <td><button class="edit_salary" task="edit_salary" type="submit">Edit Salary</button></td>
-          <td class = "view-details">
-            <a href="{% url 'manager-staffdetails' salesperson.user.id %}" class="button" target="_blank">View Details</a>
+          <input class="action" type="hidden" name="task" value="salesperson_status_change"></input>
+          <input class="user_id" name="user_id" type="hidden" value="{{ staff.user.id }}"></input>
+        <td><input class = "remove_warning" name = "action" value="Remove 1 Warning" type="submit"></input></td>
+          <td>
+          <div class="edit_salary">
+            <input name="salary" min="0" type="number" placeholder="Edit Salary"></input> 
+            <input name="action" value="Edit Salary" type="submit"></input>
+          </div>
           </td>
-          <td><button class = "remove_warning" task = "remove_warning" type="submit">Remove 1 Warning</button></td>
-          <td><button class = "fire" task = "fire" type="submit">Fire</button></td>
+          <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
         </form>
-        
       </tr>
-      {% endfor %}
+    {% endfor %}
     </div>
   </table>
 
@@ -116,32 +131,41 @@ input, #state {
       <th>Username</th>
       <th>Name</th>
       <th>Number of Warnings</th>
+      <th>Salary</th>      
     </tr>
 
     <div id = "deliverer-data">
-    {% for deliverer in deliverers %}
+    {% for staff in deliverers %}
       <tr>
-        <td class = "last-n">{{ deliverer.user.id }}</td>
-        <td class = "last-n">{{ deliverer.user.username }}</td>
-        <td class = "first-n">{{ deliverer.user.first_name }} {{ salesperson.user.last_name }} </td>
-        <td class = "warnings">{{ deliverer.warnings }}</td>
+        <td class = "last-n">{{ staff.user.id }}</td>
+        <td class = "last-n">{{ staff.user.username }}</td>
+        <td class = "first-n">{{ staff.user.first_name }} {{ staff.user.last_name }} </td>
+        <td class = "warnings">{{ staff.warnings }}</td>
+        <td class = "staff_salary">{{ staff.salary }}</td>
       </tr>
+
+
       <tr>
-        <th>Salary:</th>
-        <td class = "staff_salary">{{ deliverer.salary }}</td>
+        <td class = "view-details">
+          <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
+        </td>
+        <td></td>
+        <td></td>
         <form method="POST" action="{% url "manager-staff" %}">
         {% csrf_token %}
-          <input class="user_id" type="hidden" value="{{ deliverer.user.id }}"></input>
-          <td><input class = "salary" name="salary" min="0" type="number"></input></td>
-          <td><button class="edit_salary" task="edit_salary" type="submit">Edit Salary</button></td>
-          <td class = "view-details">
-            <a href="{% url 'manager-staffdetails' deliverer.user.id %}" class="button" target="_blank">View Details</a>
+          <input class="action" type="hidden" name="task" value="deliverer_status_change"></input>
+          <input class="user_id" type="hidden" name="user_id" value="{{ staff.user.id }}"></input>
+        <td><input class = "remove_warning" name = "action" value="Remove 1 Warning" type="submit"></input></td>
+          <td>
+          <div class="edit_salary">
+            <input name="salary" min="0" type="number" placeholder="Edit Salary"></input> 
+            <input name="action" value="Edit Salary" type="submit"></input>
+          </div>
           </td>
-          <td><button class = "remove_warning" task = "remove_warning" type="submit">Remove 1 Warning</button></td>
-          <td><button class = "fire" task = "fire" type="submit">Fire</button></td>
+          <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
         </form>
-          
       </tr>
+
     {% endfor %}
     </div>
   </table>

@@ -123,16 +123,26 @@ def staff(request):
 
             if request.method == 'POST':
                 body = parse_req_body(request.body)
-                staff_id = body['staff_id'] #this is a user object, COULD CAUSE ERRORS
-                staff_user = User.objects.get(pk=staff_id)
-                update_staff = Staff.objects.get(user=staff_user) 
+                staff_id = body['user_id'] #this is a user object, COULD CAUSE ERRORS
+                print(body)
+                staff_user = User.objects.get(id=staff_id)
                 staffIs = userTypeChecker(staff_user)
                 task = body['task']
-                if task == 'remove_warning':
+                action = body['action']
+                
+
+                if task == 'cook_status_change':
+                    update_staff = Cook.objects.get(user__id=staff_id) 
+                elif task == 'salesperson_status_change':
+                    update_staff = Salesperson.objects.get(user__id=staff_id)
+                elif task == 'deliverer_status_change':
+                    update_staff = Deliverer.objects.get(user__id=staff_id)      
+                
+                if action == 'Remove 1 Warning':
                     if update_staff.warnings > 1:
                         update_staff.warnings -= 1
-                
-                elif task == 'fire':
+                            
+                elif action == 'Fire':
                     if staffIs(Cook): # check if there is enough cooks
                         if len(Cook.objects.filter(restaurant=restaurant)) > 2:
                             update_staff.status = 'N'
@@ -151,7 +161,7 @@ def staff(request):
                         update_staff.warnings = 0
                         update_staff.salary = 0
 
-                elif task == 'edit_salary':
+                elif action == 'Edit Salary':
                     salary = body['salary']
                     update_staff.salary = salary
 
