@@ -6,6 +6,7 @@ import django.views
 # helper functions for post request
 def deletefood(my_cook, body):
     food_id = int(body['foodId'])
+    print(food_id)
     myfood = restaurant.Food.objects.get(id=food_id)
     myfood.delete()
 

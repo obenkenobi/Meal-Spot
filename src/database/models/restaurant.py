@@ -50,7 +50,8 @@ class Order(models.Model):
         food_orders = self.orderfoods
         desc = ''
         for food_order in food_orders:
-            desc += str(food_order.food.name) + '*' + str(food_order.quantity) + ', '
+            if food_order.food != None:
+                desc += str(food_order.food.name) + '*' + str(food_order.quantity) + ', '
         desc = desc[:len(desc) -2]
         return desc
 
@@ -74,7 +75,7 @@ class Order_Food(models.Model):
             else:
                 return 0
         my_orders = Order.objects.filter(customer=customer).filter(restaurant=restaurant)
-        my_order_foods = Order_Food.objects.filter(order__in=my_orders)
+        my_order_foods = Order_Food.objects.filter(order__in=my_orders).filter(food__isnull=False)
         order_freq = {}
         for my_order_food in my_order_foods:
             food_id = my_order_food.food.id
@@ -102,7 +103,7 @@ class Order_Food(models.Model):
             else:
                 return 0
         my_orders = Order.objects.filter(restaurant=restaurant)
-        order_foods = Order_Food.objects.filter(order__in=my_orders)
+        order_foods = Order_Food.objects.filter(order__in=my_orders).filter(food__isnull=False)
         order_freq = {}
         for order_food in order_foods:
             food_id = order_food.food.id
