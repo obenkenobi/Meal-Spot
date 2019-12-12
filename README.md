@@ -1,5 +1,6 @@
 # Meal-Spot
-#### Online Restaurant System
+#### Online Restaurant System 
+*Built using the Django framework*
 
 ## Requirements
 You need to have the latest version of python installed (3.7+) and pip as well.
@@ -13,8 +14,13 @@ You may also want to use a python virtual environment to run this app to avoid d
 3. Now in your terminal, move to the src directory, type ls or dir (depending on your OS) and if manage.py shows up in your
 result, you are good to go.
 4. Type the following commands to setup your project:
+
+	 To install Django if you haven't:
 	
-	To see your arguments for manage.py;
+		pip install Django 
+
+	
+	To see your arguments for manage.py:
 	
 		python manage.py
 	
