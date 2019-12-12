@@ -45,8 +45,3 @@ In addition the label "Meal Spot" in your top left corner of your navigation bar
 
 ## Bugs
 - There is possibly a bug regarding usernames where if you sign up and you get an error then you can't use that username again, (it still needs to be tested to what extent this bug exists as it has been fixed for customer and manager usertypes). 
-
-- *(fixed)* If you log out in some pages, you will get an error showing up on your page, this is ok, you just logged out but still in 
-a page that you have no permission to be in, jusr type localhost:8000 again in your browser url bar and you will move back to the home page 
-
-- *(fixed)* If you log in, sometimes the signup or login page will show up. Just press the Home buttom (Meal Spot) and it will show the user's correct home page.
