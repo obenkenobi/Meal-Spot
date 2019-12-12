@@ -90,6 +90,9 @@ button:hover {
   <div class="container">
     <h1>Sign Up</h1>
     <p>Please fill in this form to create an account.</p>
+    {% if error != None %}
+    <p class="text-danger">{{ error }}</p>
+    {% endif %}
     <select id="mySelect" name="usertype">
     	<option value="all">User Type</option>
      	<option value="cook">Cook</option>
@@ -116,11 +119,11 @@ button:hover {
 
     <div id="cust">
       <label for="staddr"><b>Street Address</b></label>
-      <input type="text" placeholder="Enter Adrress" name="staddr" required>
+      <input type="text" placeholder="Enter Address" name="staddr">
       <input type="text" placeholder="Apt." name="apt" maxlength="10">
 
       <label for="city"><b>City</b></label>
-      <input type="text" placeholder="Enter City" name="city" maxlength="50" required>
+      <input type="text" placeholder="Enter City" name="city" maxlength="50">
 
       <label for="state"><b>State</b></label>
       <select id="state" name="state">
@@ -130,12 +133,12 @@ button:hover {
       </select>
 
       <label for="zipcode"><b>Zip Code</b></label>
-      <input type="number" placeholder="Enter Zip Code" name="zipcode" required>
+      <input type="number" placeholder="Enter Zip Code" name="zipcode">
     </div>
 
     <div id="mang">
       <label for="restname"><b>Restaurant Name</b></label>
-      <input type="text" placeholder="Enter Restaurant Name" name="restname" required>
+      <input type="text" placeholder="Enter Restaurant Name" name="restname">
     </div>
 
     <div class="clearfix">

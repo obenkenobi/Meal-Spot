@@ -5,6 +5,16 @@
 
 {% block page_css %}
 <!-- page css -->
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box}
+
+.edit_salary {
+  display:inline-block;
+}
+
+
+</style>
 {% endblock %}
 
 {% block page_js %}
@@ -13,4 +23,158 @@
 
 {% block page_content %}
 <!-- page html -->
+
+<div class = "staff">
+  
+  <h2>All Staff</h2>
+  
+  <h4>Cooks</h4>
+  <table id = "cook-table" class="table table-condensed table-hover table-striped ng-table">
+    <!--Table header-->
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Number of Warnings</th>
+      <th>Salary</th>      
+    </tr>
+
+    <div id = "cook-data">
+    {% for staff in cooks %}
+
+      <tr>
+        <td class = "last-n">{{ staff.user.id }}</td>
+        <td class = "last-n">{{ staff.user.username }}</td>
+        <td class = "first-n">{{ staff.user.first_name }} {{ staff.user.last_name }} </td>
+        <td class = "warnings">{{ staff.warnings }}</td>
+        <td class = "staff_salary">{{ staff.salary }}</td>
+      </tr>
+
+
+      <tr>
+        {% comment %} <td class = "view-details">
+          <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
+        </td> {% endcomment %}
+
+        <form method="POST" action="{% url "manager-staff" %}">
+        {% csrf_token %}
+        
+          <input class="action" type="hidden" name="task" value="cook_status_change"></input>
+          <input class="user_id" type="hidden" name="user_id" value="{{ staff.user.id }}"></input>
+        <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
+        <td></td>
+        <td></td>        
+        <td><input class = "remove_warning" name = "action" value="Remove 1 Warning" type="submit"></input></td>
+          <td>
+          <div class="edit_salary">
+            <input name="salary" min="0" type="number" placeholder="Edit Salary"></input> 
+            <input name="action" value="Edit Salary" type="submit"></input>
+          </div>
+          </td>
+        </form>
+      </tr>
+
+    {% endfor %}
+    </div>
+  </table>
+
+  <h4>Salespeople</h4>
+  <table id = "salesperson-table" class="table table-condensed table-hover table-striped ng-table">
+    <!--Table header-->
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Number of Warnings</th>
+      <th>Salary</th>
+    </tr>
+
+    
+    <div id = "salesperson-data">
+    {% for staff in salespeople %}
+      <tr>
+        <td class = "last-n">{{ staff.user.id }}</td>
+        <td class = "last-n">{{ staff.user.username }}</td>
+        <td class = "first-n">{{ staff.user.first_name }} {{ staff.user.last_name }} </td>
+        <td class = "warnings">{{ staff.warnings }}</td>
+        <td class = "staff_salary">{{ staff.salary }}</td>
+      </tr>
+
+
+      <tr>
+        {% comment %} <td class = "view-details">
+          <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
+        </td> {% endcomment %}
+
+        <form method="POST" action="{% url "manager-staff" %}">
+        {% csrf_token %}
+        
+          <input class="action" type="hidden" name="task" value="salesperson_status_change"></input>
+          <input class="user_id" name="user_id" type="hidden" value="{{ staff.user.id }}"></input>
+        <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
+        <td></td>
+        <td></td>          
+        <td><input class = "remove_warning" name = "action" value="Remove 1 Warning" type="submit"></input></td>
+          <td>
+          <div class="edit_salary">
+            <input name="salary" min="0" type="number" placeholder="Edit Salary"></input> 
+            <input name="action" value="Edit Salary" type="submit"></input>
+          </div>
+          </td>
+        </form>
+      </tr>
+    {% endfor %}
+    </div>
+  </table>
+
+  <h4>Deliverers</h4>
+  <table id = "deliverer-table" class="table table-condensed table-hover table-striped ng-table">
+    <!--Table header-->
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Name</th>
+      <th>Number of Warnings</th>
+      <th>Salary</th>      
+    </tr>
+
+    <div id = "deliverer-data">
+    {% for staff in deliverers %}
+      <tr>
+        <td class = "last-n">{{ staff.user.id }}</td>
+        <td class = "last-n">{{ staff.user.username }}</td>
+        <td class = "first-n">{{ staff.user.first_name }} {{ staff.user.last_name }} </td>
+        <td class = "warnings">{{ staff.warnings }}</td>
+        <td class = "staff_salary">{{ staff.salary }}</td>
+      </tr>
+
+
+      <tr>
+        {% comment %} <td class = "view-details">
+          <a href="{% url 'manager-staffdetails' staff.user.id %}" type="submit" target="_blank">View Details</a>
+        </td> {% endcomment %}
+
+        <form method="POST" action="{% url "manager-staff" %}">
+        {% csrf_token %}
+          <input class="action" type="hidden" name="task" value="deliverer_status_change"></input>
+          <input class="user_id" type="hidden" name="user_id" value="{{ staff.user.id }}"></input>
+        <td><input class = "fire" name = "action" value = "Fire" type="submit"></input></td>
+        <td></td>
+        <td></td>  
+        <td><input class = "remove_warning" name = "action" value="Remove 1 Warning" type="submit"></input></td>
+          <td>
+          <div class="edit_salary">
+            <input name="salary" min="0" type="number" placeholder="Edit Salary"></input> 
+            <input name="action" value="Edit Salary" type="submit"></input>
+          </div>
+          </td>
+        </form>
+      </tr>
+
+    {% endfor %}
+    </div>
+  </table>
+
+</div>
+
 {% endblock %}

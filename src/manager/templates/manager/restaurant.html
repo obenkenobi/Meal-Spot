@@ -5,6 +5,19 @@
 
 {% block page_css %}
 <!-- page css -->
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box}
+
+input, #state {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+</style>
 {% endblock %}
 
 {% block page_js %}
@@ -12,5 +25,20 @@
 {% endblock %}
 
 {% block page_content %}
-<!-- page html -->
+<div class="restaurant_details">
+    <h2>Restaurant</h2>
+    <p>{{ restaurant.name }}</p>
+    <form method="POST" action="{% url 'manager-restaurant' %}">
+    {% csrf_token %}
+        <input type="hidden" name="task" value="edit"></input> 
+        <input type="text" placeholder="Edit Name" name="name">
+        <button type="submit" name="action" value="edit_name">Submit</button>
+    <hr>
+    <h2>Description</h2>
+    <p>{{ restaurant.description }}</p>
+        <input type="text" placeholder="Edit Description" name="description">
+        <button type="submit" name="action" value="edit_description">Submit</button>
+    </form>
+</div>
+
 {% endblock %}

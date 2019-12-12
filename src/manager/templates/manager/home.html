@@ -5,19 +5,55 @@
 
 {% block page_css %}
 <!-- page css -->
-
+<style>
+* {box-sizing: border-box}
+body {font-family: Arial, Helvetica, sans-serif;}
+.menu {
+  width: 90%;
+  margin: auto;
+}
+.menu a {
+  border: .5px solid black;
+  background-color: #4CAF50;
+  float: left;
+  padding: 12px;
+  color: white;
+  text-decoration: none;
+  font-size: 17px;
+  width: 50%;
+  height: 100px;
+  text-align: center;
+}
+.menu a:hover {
+  background: rgba(76, 175, 80, 0.3);
+  color: black;
+}
+#text {
+    padding: 35px;
+}
+</style>
 {% endblock %}
 
 {% block page_js %}
-
-<script>
-</script>
-
 
 {% endblock %}
 
 {% block page_content %}
 
-<h1>My Restaurant</h1>
-
+<div class="restaurant_details">
+  <h2 style = "text-align:center">{{ restaurant.name }}</h2>
+  <hr>
+  <h4>Description</h4>
+  <p>{{ restaurant.description }}</p>
+  <a id="edit" class="marg" href="{% url 'manager-restaurant' %}">Edit Restaurant</a>
+</div>
+<hr>
+<div class="menu">
+  <a id="text" class="marg" href="{% url 'manager-deliverybids' %}">Delivery Bids</a>
+  <a id="text" href="{% url 'manager-pendingregistrations' %}">Pending Registrations</a>
+</div>
+<div class="menu">
+ <a id="text" class="marg" href="{% url 'manager-staff' %}">Staff</a>
+ <a id="text" href="{% url 'manager-customers' %}">Customers</a>
+</div>
 {% endblock %}

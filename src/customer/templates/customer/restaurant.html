@@ -1,0 +1,126 @@
+{% extends "base_customer.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+<style>
+#order {
+  margin: 2%;
+}
+</style>
+{% endblock %}
+
+{% block page_js %}
+{% endblock %}
+
+{% block page_content %}
+
+    <div class = "restaurant"></div>
+      <h2 id = "title">{{ restaurant.name }}</h2>
+
+      <p id = "description">{{ restaurant.description}}</p>
+
+    </div>
+  
+    {% comment %} Customer status info {% endcomment %}
+    {% if user.is_authenticated %}
+      {% if status == "N" %}
+      <form method="POST" action="{% url 'customer-restaurant' pk=restaurant.id %}"> {% comment %} Rehister restaurant form {% endcomment %}
+        {% csrf_token %}
+        <input type="hidden" name="task" value="register" />
+        <input type="submit" id="register" value="Register">
+      </form>
+      {% elif status == "P" %}
+      <div>Registration pending ... </div>
+      {% elif status == "R" %}
+      <div>You are Registered</div>
+      {% elif status == "V" %}
+      <div>You are VIP</div>
+      {% else %}
+      <div>You are blacklisted</div>
+      {% endif %}
+    {% else %}
+    <div>You are a visitor</div>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <div class = "recommendations">
+
+      <div class = "history">
+        <h4>Recommendations based on order history:</h4>
+        <table class = "table">
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Rating</th>
+          </tr>
+          {% for food in orderRecFood %}
+          <tr>
+            <td>
+              <span class = "rec-item">{{ food.name }}</span>
+            </td>
+            <td class = "rec-price">{{ food.price }}</td>
+            <td class = "rec-rating">{{ food.avg_rating }}/5</td>
+          </tr>
+          {% endfor %}
+        <table>
+      </div>
+      {% endif %}
+
+      <div class = "popular">
+        <h4>Most popular visitor items:</h4>
+        <table class = "table">
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Rating</th>
+          </tr>
+          {% for food in popularRecFood %}
+          <tr>
+            <td>
+              <span class = "rec-item">{{ food.name }} </span>
+            </td>
+            <td class = "rec-price">{{ food.price }}</td>
+            <td class = "rec-rating">{{ food.avg_rating }}/5</td>
+          </tr>
+          {% endfor %}
+        <table>
+      </div>
+
+    </div>
+    
+    <div class="Menu">
+
+      <h2>Menu:</h2>
+      <table class = "table">
+          <tr>
+            <th>Item</th>
+            <th>Price</th>
+            <th>Rating</th>
+            <th>Description</th>
+          </tr>
+
+          {% comment %} Loop through menu items {% endcomment %}
+          {% for food in foods %}
+          <tr>
+            <td>
+              <b>{{ food.name }}</b>
+            </td>
+            <td class = "price">{{ food.price }}</td>
+            <td class = "rating">{{ food.avg_rating }}/5</td>
+            <td class = "description">{{ food.description }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+    </div>
+
+    {% if status != "B" %}
+    <br>
+    <a href="{% url "customer-restaurant-order" pk=restaurant.id %}">
+      <button id = "order" class="btn btn-primary">Make an order</button>
+    </a>
+    {% endif %}
+
+{% endblock %}

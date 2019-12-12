@@ -29,6 +29,15 @@ class Staff(UserType):
 
     warnings = models.IntegerField(default=0)
     restaurant = models.ForeignKey('Restaurant', on_delete=models.SET_NULL, null=True)
+    salary = models.FloatField(default = 0)
+    
+    def addWarning(self):
+        self.warnings = self.warnings
+        if self.warnings > 3:
+            self.status = 'N'
+            self.warnings = 0
+            self.restaurant = None
+        self.save()
 
     class Meta:
         abstract = True
@@ -48,6 +57,13 @@ class Manager(UserType):
 
 class Cook(Staff):
     food_drops = models.IntegerField(default=0)
+
+    def add_food_drops(self):
+        self.food_drops = self.food_drops + 1
+        if self.food_drops >= 2:
+            self.food_drops = 0 
+            self.addWarning()
+        self.save()
     
     # prob add to Customer view during rating
     # def update_status(self, r1, r2, r3, food_id):
@@ -65,7 +81,15 @@ class Cook(Staff):
 
 
 class Deliverer(Staff):
-    # prob add to Customer view during rating
+    avg_rating = models.FloatField(default=0)
+    num_ratings = models.IntegerField(default=0)
+    def add_rating(self, new_rating):
+        self.avg_rating = (self.avg_rating*self.num_ratings + new_rating)/(self.num_ratings + 1)
+        self.num_ratings = self.num_ratings + 1
+        if self.avg_rating < 2:
+            self.avg_rating = 0
+            self.num_ratings = 0
+            self.addWarning()
     # def update_status(self, r1, r2, r3):
     #     avg_rating = (r1 + r2 + r3) / 3
 
@@ -74,12 +98,10 @@ class Deliverer(Staff):
         
     #     if self.warnings > 3:
     #         self.status = 'N'
-    #         self.restaurant = None        
-    pass    
+    #         self.restaurant = None            
 
 class Salesperson(Staff):
-    commission = models.FloatField(default = 100)
-
+    pass
     # prob add to Cook view during rating
     # def update_commission(self, r1, r2, r3):
     #     sum_rating = r1 + r2 + r3

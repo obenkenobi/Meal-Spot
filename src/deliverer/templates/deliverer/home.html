@@ -14,57 +14,63 @@
 {% block page_content %}
 <!-- page html -->
 <h1>Home</h1>
-<h4>warnings: {{ warnings }}</h4>
+<h4>Warnings: {{ warnings }}</h4>
 <h2>Orders to bid</h2>
-<table style="width:100%">
+<table style="width:100%" class="table table-condensed table-hover table-striped ng-table">
   <tr>
     <th>Order ID</th>
     <th>Amount to bid</th>
-    <th></th>
+    <th>Order Price</th>
+    <th>Bid</th>
   </tr>
-  {% for bid in open_bids %}
+  {% for order in openOrders %}
   <form method="POST" action="{% url "deliverer-home" %}">
     {% csrf_token %}
-    <input type="hidden" name="orderId" value="{{ bid.order.id }}" />
+    <input type="hidden" name="orderId" value="{{ order.id }}" />
     <tr>
-      <th>{{ bid.order.id }}</th>
-      <th><input type="number" name="amount" min="1"></th>
-      <th><input type="submit" value="submit">Bid!</input></th>
+      <td>{{ order.id }}</td>
+      <td><input type="number" name="amount" min="1"></td>
+      <td>{{ order.total_price }}</td>
+      <td><input type="submit" value="Bid!"/></td>
     </tr>
   </form>
   {% endfor %}
 </table>
 
 <h2>Bidded Orders</h2>
-<table style="width:100%">
+<table style="width:100%" class="table table-condensed table-hover table-striped ng-table">
   <tr>
     <th>Order ID</th>
     <th>Bidded amount</th>
+    <th>Order Price</th>
   </tr>
-  {% for bid in pending_bids %}
+  {% for bid in pendingBids %}
   <tr>
-    <th>{{ bid.order.id }}</th>
-    <th>{{ bid.price }}</th>
+    <td>{{ bid.order.id }}</td>
+    <td>{{ bid.price }}</td>
+    <td>{{ bid.order.total_price }}</td>
   </tr>
   {% endfor %}
 </table>
 
 <h2>Accepted Orders</h2>
-<table style="width:100%">
+<table style="width:100%" class="table table-condensed table-hover table-striped ng-table">
   <tr>
     <th>Order ID</th>
     <th>Status</th>
+    <th>Order Price</th>
     <th>Order Link</th>
   </tr>
   {% for bid in winningBids %}
   <tr>
-    <th>{{ bid.order.id }}</th>
-    <th>{{ bid.order.status }}</th>
-    <th>
+    <td>{{ bid.order.id }}</td>
+    <td>{{ bid.order.status }}</td>
+    <td>{{ bid.order.total_price }}</td>
+    <td>
       <a href="{% url "deliverer-order" bid.order.id %}">
         <button>Click to see order</button>
       </a>
-    </th>
+    </td>
   </tr>
   {% endfor %}
 </table>

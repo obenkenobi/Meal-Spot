@@ -1,0 +1,60 @@
+{% extends "base_manager.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+{% endblock %}
+
+{% block page_js %}
+<!-- page javascript -->
+{% endblock %}
+
+{% block page_content %}
+<!-- page html -->
+<div class = "customers">
+        <h2 id = "title">All Customers:</h2>
+  
+  
+        <!--Get list of all customers from restaurant-->
+
+        <table id = "cust-name" class="table table-condensed table-hover table-striped ng-table">
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Rating</th>
+                {% comment %} <th>Number of Complaints</th> {% endcomment %}
+                <th>Change Status</th>
+
+            </tr>
+
+            {% for registered in registered_customers %}
+            <tr>
+                <td class = "cust-id">{{ registered.customer.user.id }}</td>
+                <td class = "cust-username">{{ registered.customer.user.username }}</td>
+                <td class = "cust-name">{{ registered.customer.user.first_name }} {{ registered.customer.user.last_name }}</td>
+                <td class = "status">{{ registered.status }}</td>
+                <td class = "rating">{{ registered.avg_rating }}</td>
+                {% comment %} <td class = "num-complaints">{{ num_complaints }}</td> {% endcomment %}
+                <td>
+                <form method="POST" action="{% url "manager-customers" %}">
+                {% csrf_token %}
+                    <input class="customer_id" name="customer_id" type="hidden" value="{{ registered.customer.user.id }}"></input>
+                    <input class="task" name="task" type="hidden" value="status_change"></input>
+                    
+                    <div id = "status-change">
+                        <input class="promote" name="action" type="submit" value="Promote to VIP"></input>
+                        <input class="demote" name="action" type="submit" value="Demote to Regular"></input>
+                        <input class="blacklist" name="action" type="submit" value="Blacklist"></input>
+                        <input class="remove" name="action" type="submit" value="Remove Registration"></input>
+                    </div>
+                </form>
+                </td>
+            </tr>
+            {% endfor %}
+      </table>
+    </div>
+{% endblock %}

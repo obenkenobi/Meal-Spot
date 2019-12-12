@@ -1,0 +1,57 @@
+{% extends "base_manager.html" %}
+
+<!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
+<!-- feel free to delete this -->
+
+{% block page_css %}
+<!-- page css -->
+{% endblock %}
+
+{% block page_js %}
+<!-- page javascript -->
+{% endblock %}
+
+{% block page_content %}
+<!-- page html -->
+<div id = "order">
+  <h2>All Delivery Bids</h2>
+  {% for info in deliverybids_info %}
+  <table id = "order_table" class="table table-condensed table-hover table-striped ng-table">
+  
+      <tr>
+        <th class = "order_title"><h4>Order ID: {{ info.order.id }} </h4></th>
+      </tr>
+
+      <div id = "deliver_bids">
+        <tr>
+          <th class = "bid_title">Delivery Bids</th>
+        </tr>
+        <tr>
+            <th>ID</th>
+            <th>Price</th>
+            <th>Deliverer ID</th>
+            <th>Deliverer Username</th>
+        </tr>
+
+        {% for bid in info.bids %}
+        <tr>
+          <td class = "bid-id">{{ bid.id }}</td>
+          <td class = "bid-price">{{ bid.price }}</td>
+          <td class = "bid-deliverer-id">{{ bid.deliverer.user.id }}</td>
+          <td class = "bid-deliverer-username">{{ bid.deliverer.user.username }}</td>
+          <td>
+            <form method="POST" action="{% url "manager-deliverybids" %}">
+            {% csrf_token %}
+            {% comment %} <input class="task" name="task" type="hidden" value="choose_bid"></input> {% endcomment %}
+            <input class="bid_id" name="bid_id" type="hidden" value="{{ bid.id }}"></input>
+            <input class="choose_bid" name="choose_bid" type="submit" value="Choose Bid"></input>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </div>
+  </table>
+  {% endfor %}
+  </div>
+</div>
+{% endblock %}

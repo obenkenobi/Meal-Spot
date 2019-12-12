@@ -1,4 +1,4 @@
-{% extends "base_deliverer.html" %}
+{% extends "base_cook.html" %}
 
 <!-- dummy html template for demonstration, only exists so git recognizes an empty folder -->
 <!-- feel free to delete this -->
@@ -16,9 +16,9 @@
 {% if not registering %}
     <h3>Pending registration</h3>
 {% else %}
-    <h1>Restaurants to register</h1>
+    <h1>Resturants to register</h1>
     {% for resturant in restaurants %}
-    <form method="POST" action="{% url "deliverer-register" %}">
+    <form method="POST" action="{% url "cook-register" %}">
         {% csrf_token %}
         <div>
             <span>{{ resturant.name }}</span> 
