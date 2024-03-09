@@ -52,19 +52,21 @@ def home(request):
     my_user = None
     # makes sure user is deliverer
     print('cook home')
+    # todo: create common utility function
     try:
         my_user = request.user
         userIs = userTypeChecker(my_user)
         if userIs(user.Cook) != True:
-            print('user not cook')
+            print('user is a not cook')
             response = redirect('home-nexus')
             return response
     except Exception as e:
+        print('exception occured at cook home')
         print(e)
         response = redirect('home-nexus')
         return response
     except:
-        print('exception occured')
+        print('exception occured at cook home')
         response = redirect('home-nexus')
         return response
   
